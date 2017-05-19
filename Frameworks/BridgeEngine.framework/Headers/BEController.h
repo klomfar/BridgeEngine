@@ -66,7 +66,11 @@ BE_API
 
 /**
  * Controller motion event:
- * @parameter orientation Controller orientation in world coordinate space
+ * @parameter transform Controller transform in world coordinate space
+ * 
+ * The transform tracks with the user's camera in world space,
+ * and is offset relative to the BEController's offsetFromCamera.
+ * See offsetFromCamera property for more details.
  */
 - (void)controllerMotionTransform:(GLKMatrix4)transform;
 
@@ -127,7 +131,12 @@ BE_API
 @property (nonatomic, readonly) BEControllerButtons buttons;
 
 /**
- * Current controller orientation in world coordinate space
+ * Current controller transform in world coordinate space
+ *
+ * The controller's transform tracks with the BE camera in world space,
+ * and its position is offset with offsetFromCamera.
+ *
+ * See offsetFromCamera property for more details.
  */
 @property (nonatomic, readonly) GLKMatrix4 transform;
 
@@ -138,6 +147,10 @@ BE_API
 
 /**
  * Current touch pad position.
+ * x,y Coordinate system is:
+ *   0, 0 is dead center
+ *  -1,-1 is bottom left
+ *  +1,+1 is top right
  */
 @property (nonatomic, readonly) GLKVector2 touchPosition;
 

@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <SceneKit/SceneKit.h>
+
 #import "OpenBE/Core/EventComponentProtocol.h"
 #import "OpenBE/Core/CoreMotionComponentProtocol.h"
 #import "OpenBE/Core/ComponentProtocol.h"

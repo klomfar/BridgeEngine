@@ -15,4 +15,11 @@ BE_API
 @interface BEAppSettings : NSObject
 + (BOOL) booleanValueFromAppSetting:(NSString* __nonnull)settingsKey defaultValueIfSettingIsNotInBundle:(BOOL)defaultValue;
 + (void) setBooleanValue:(BOOL)value forAppSetting:(NSString * __nonnull)settingsKey;
+
+/// Persistant storage of the manualDeviceName of a Bridge Controller.
++ (NSString*_Nullable) manualBridgeControllerDeviceName;
+
+/// Set the persistant value of the manualDeviceName of a Bridge Controller.
++ (void) setManualBridgeControllerDeviceName:(NSString*_Nullable)manualDeviceName;
+
 @end

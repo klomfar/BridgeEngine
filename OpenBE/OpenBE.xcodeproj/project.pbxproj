@@ -9,6 +9,17 @@
 /* Begin PBXBuildFile section */
 		2C22A9AE1EAABC69000A96EF /* BridgeControllerComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C22A9AC1EAABC69000A96EF /* BridgeControllerComponent.h */; };
 		2C22A9AF1EAABC69000A96EF /* BridgeControllerComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2C22A9AD1EAABC69000A96EF /* BridgeControllerComponent.mm */; };
+		2C587C451ECE2BE7000A76B7 /* BridgeControllerManipulationComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C587C3D1ECE2BE7000A76B7 /* BridgeControllerManipulationComponent.h */; };
+		2C587C461ECE2BE7000A76B7 /* BridgeControllerManipulationComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2C587C3E1ECE2BE7000A76B7 /* BridgeControllerManipulationComponent.mm */; };
+		2C587C471ECE2BE7000A76B7 /* InputBeamComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C587C3F1ECE2BE7000A76B7 /* InputBeamComponent.h */; };
+		2C587C481ECE2BE7000A76B7 /* InputBeamComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2C587C401ECE2BE7000A76B7 /* InputBeamComponent.mm */; };
+		2C587C491ECE2BE7000A76B7 /* InteractablePhysicsComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C587C411ECE2BE7000A76B7 /* InteractablePhysicsComponent.h */; };
+		2C587C4A1ECE2BE7000A76B7 /* InteractablePhysicsComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C587C421ECE2BE7000A76B7 /* InteractablePhysicsComponent.m */; };
+		2C587C4B1ECE2BE7000A76B7 /* InteractableSpawnComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C587C431ECE2BE7000A76B7 /* InteractableSpawnComponent.h */; };
+		2C587C4C1ECE2BE7000A76B7 /* InteractableSpawnComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C587C441ECE2BE7000A76B7 /* InteractableSpawnComponent.m */; };
+		2C587C501ECE2BF6000A76B7 /* GeometryHitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C587C4D1ECE2BF6000A76B7 /* GeometryHitTest.h */; };
+		2C587C511ECE2BF6000A76B7 /* GeometryHitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C587C4E1ECE2BF6000A76B7 /* GeometryHitTest.m */; };
+		2C587C521ECE2BF6000A76B7 /* PhysicsEventComponentProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C587C4F1ECE2BF6000A76B7 /* PhysicsEventComponentProtocol.h */; };
 		2C5DA53C1E00EF1900A60606 /* ScanEnvironmentShader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C5DA53A1E00EF1900A60606 /* ScanEnvironmentShader.h */; };
 		2C5DA53D1E00EF1900A60606 /* ScanEnvironmentShader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2C5DA53B1E00EF1900A60606 /* ScanEnvironmentShader.mm */; };
 		2C5DA5421E00F06F00A60606 /* ScanComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C5DA53E1E00F06F00A60606 /* ScanComponent.h */; };
@@ -122,6 +133,17 @@
 /* Begin PBXFileReference section */
 		2C22A9AC1EAABC69000A96EF /* BridgeControllerComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeControllerComponent.h; sourceTree = "<group>"; };
 		2C22A9AD1EAABC69000A96EF /* BridgeControllerComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BridgeControllerComponent.mm; sourceTree = "<group>"; };
+		2C587C3D1ECE2BE7000A76B7 /* BridgeControllerManipulationComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeControllerManipulationComponent.h; sourceTree = "<group>"; };
+		2C587C3E1ECE2BE7000A76B7 /* BridgeControllerManipulationComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BridgeControllerManipulationComponent.mm; sourceTree = "<group>"; };
+		2C587C3F1ECE2BE7000A76B7 /* InputBeamComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputBeamComponent.h; sourceTree = "<group>"; };
+		2C587C401ECE2BE7000A76B7 /* InputBeamComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = InputBeamComponent.mm; sourceTree = "<group>"; };
+		2C587C411ECE2BE7000A76B7 /* InteractablePhysicsComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InteractablePhysicsComponent.h; sourceTree = "<group>"; };
+		2C587C421ECE2BE7000A76B7 /* InteractablePhysicsComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InteractablePhysicsComponent.m; sourceTree = "<group>"; };
+		2C587C431ECE2BE7000A76B7 /* InteractableSpawnComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InteractableSpawnComponent.h; sourceTree = "<group>"; };
+		2C587C441ECE2BE7000A76B7 /* InteractableSpawnComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InteractableSpawnComponent.m; sourceTree = "<group>"; };
+		2C587C4D1ECE2BF6000A76B7 /* GeometryHitTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeometryHitTest.h; sourceTree = "<group>"; };
+		2C587C4E1ECE2BF6000A76B7 /* GeometryHitTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeometryHitTest.m; sourceTree = "<group>"; };
+		2C587C4F1ECE2BF6000A76B7 /* PhysicsEventComponentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicsEventComponentProtocol.h; sourceTree = "<group>"; };
 		2C5DA53A1E00EF1900A60606 /* ScanEnvironmentShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanEnvironmentShader.h; sourceTree = "<group>"; };
 		2C5DA53B1E00EF1900A60606 /* ScanEnvironmentShader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScanEnvironmentShader.mm; sourceTree = "<group>"; };
 		2C5DA53E1E00F06F00A60606 /* ScanComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanComponent.h; sourceTree = "<group>"; };
@@ -293,6 +315,9 @@
 		2DCD70291DFFEF84003691AE /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				2C587C4D1ECE2BF6000A76B7 /* GeometryHitTest.h */,
+				2C587C4E1ECE2BF6000A76B7 /* GeometryHitTest.m */,
+				2C587C4F1ECE2BF6000A76B7 /* PhysicsEventComponentProtocol.h */,
 				2DCD702A1DFFEF84003691AE /* AudioEngine.h */,
 				2DCD702B1DFFEF84003691AE /* AudioEngine.m */,
 				2DCD702C1DFFEF84003691AE /* Camera.h */,
@@ -320,6 +345,14 @@
 		2DCD70521DFFEF8D003691AE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2C587C3D1ECE2BE7000A76B7 /* BridgeControllerManipulationComponent.h */,
+				2C587C3E1ECE2BE7000A76B7 /* BridgeControllerManipulationComponent.mm */,
+				2C587C3F1ECE2BE7000A76B7 /* InputBeamComponent.h */,
+				2C587C401ECE2BE7000A76B7 /* InputBeamComponent.mm */,
+				2C587C411ECE2BE7000A76B7 /* InteractablePhysicsComponent.h */,
+				2C587C421ECE2BE7000A76B7 /* InteractablePhysicsComponent.m */,
+				2C587C431ECE2BE7000A76B7 /* InteractableSpawnComponent.h */,
+				2C587C441ECE2BE7000A76B7 /* InteractableSpawnComponent.m */,
 				2DCD70531DFFEF8D003691AE /* AnimationComponent.h */,
 				2DCD70541DFFEF8D003691AE /* AnimationComponent.m */,
 				2DCD70551DFFEF8D003691AE /* BeamComponent.h */,
@@ -436,6 +469,7 @@
 			files = (
 				2DCD70421DFFEF84003691AE /* Component.h in Headers */,
 				2DCD73071DFFEF9D003691AE /* PathFinding.h in Headers */,
+				2C587C471ECE2BE7000A76B7 /* InputBeamComponent.h in Headers */,
 				2DCD703E1DFFEF84003691AE /* AudioEngine.h in Headers */,
 				2DCD70DE1DFFEF8D003691AE /* RobotMeshControllerComponent.h in Headers */,
 				2DCD70C11DFFEF8D003691AE /* FixedSizeReticleComponent.h in Headers */,
@@ -444,12 +478,15 @@
 				2DCD73061DFFEF9D003691AE /* Math.h in Headers */,
 				2DCD70481DFFEF84003691AE /* EventManager.h in Headers */,
 				2C5DA5481E00F12700A60606 /* ScanBehaviourComponent.h in Headers */,
+				2C587C451ECE2BE7000A76B7 /* BridgeControllerManipulationComponent.h in Headers */,
 				2DCD70D21DFFEF8D003691AE /* NavigationComponent.h in Headers */,
 				6DD7C9431E5CF614006AAC6F /* PortalComponent.h in Headers */,
+				2C587C501ECE2BF6000A76B7 /* GeometryHitTest.h in Headers */,
 				2DCD704A1DFFEF84003691AE /* GeometryComponent.h in Headers */,
 				6D6050F61E4CEE9E006760F3 /* VRWorldComponent.h in Headers */,
 				6DD7C94B1E5CF646006AAC6F /* SpawnComponent.h in Headers */,
 				2DCD70C51DFFEF8D003691AE /* GazePointerProtocol.h in Headers */,
+				2C587C491ECE2BE7000A76B7 /* InteractablePhysicsComponent.h in Headers */,
 				2DCD704E1DFFEF84003691AE /* Scene.h in Headers */,
 				2DCD70B31DFFEF8D003691AE /* MoveToBehaviourComponent.h in Headers */,
 				2DCD70E21DFFEF8D003691AE /* RobotVemojiComponent.h in Headers */,
@@ -461,6 +498,7 @@
 				2DCD730D1DFFEF9D003691AE /* SceneKitTools.h in Headers */,
 				2DCD70A91DFFEF8D003691AE /* ExpressionBehaviourComponent.h in Headers */,
 				2DCD70401DFFEF84003691AE /* Camera.h in Headers */,
+				2C587C521ECE2BF6000A76B7 /* PhysicsEventComponentProtocol.h in Headers */,
 				2DCD70B11DFFEF8D003691AE /* LookAtNodeBehaviourComponent.h in Headers */,
 				2DCD70BF1DFFEF8D003691AE /* FetchEventComponent.h in Headers */,
 				2DCD70A31DFFEF8D003691AE /* BeamComponent.h in Headers */,
@@ -483,6 +521,7 @@
 				2DCD70DA1DFFEF8D003691AE /* RobotBehaviourComponent.h in Headers */,
 				2DCD70461DFFEF84003691AE /* CoreMotionComponentProtocol.h in Headers */,
 				2DCD70D81DFFEF8D003691AE /* RobotActionComponent.h in Headers */,
+				2C587C4B1ECE2BE7000A76B7 /* InteractableSpawnComponent.h in Headers */,
 				2DCD70B71DFFEF8D003691AE /* BlockDemoReticleComponent.h in Headers */,
 				2DCD70DC1DFFEF8D003691AE /* RobotBodyEmojiComponent.h in Headers */,
 				6D6051091E4D07FF006760F3 /* SpawnPortalComponent.h in Headers */,
@@ -576,6 +615,7 @@
 				2DCD70431DFFEF84003691AE /* Component.m in Sources */,
 				2DCD70A41DFFEF8D003691AE /* BeamComponent.m in Sources */,
 				6DD7C9401E5CF5A5006AAC6F /* SpawnPortalComponent.m in Sources */,
+				2C587C4C1ECE2BE7000A76B7 /* InteractableSpawnComponent.m in Sources */,
 				2C5DA5431E00F06F00A60606 /* ScanComponent.m in Sources */,
 				2C22A9AF1EAABC69000A96EF /* BridgeControllerComponent.mm in Sources */,
 				6DD7C93A1E5CF521006AAC6F /* VRWorldComponent.mm in Sources */,
@@ -586,8 +626,10 @@
 				2DCD70DD1DFFEF8D003691AE /* RobotBodyEmojiComponent.m in Sources */,
 				2DCD70A61DFFEF8D003691AE /* BeamUIBehaviourComponent.m in Sources */,
 				2C5DA53D1E00EF1900A60606 /* ScanEnvironmentShader.mm in Sources */,
+				2C587C461ECE2BE7000A76B7 /* BridgeControllerManipulationComponent.mm in Sources */,
 				2DCD70B21DFFEF8D003691AE /* LookAtNodeBehaviourComponent.m in Sources */,
 				2DCD704B1DFFEF84003691AE /* GeometryComponent.m in Sources */,
+				2C587C511ECE2BF6000A76B7 /* GeometryHitTest.m in Sources */,
 				6DD7C94C1E5CF646006AAC6F /* SpawnComponent.m in Sources */,
 				6DD7C9441E5CF614006AAC6F /* PortalComponent.mm in Sources */,
 				2DCD730E1DFFEF9D003691AE /* SceneKitTools.mm in Sources */,
@@ -596,6 +638,7 @@
 				2DCD70DB1DFFEF8D003691AE /* RobotBehaviourComponent.m in Sources */,
 				6DD7C9481E5CF628006AAC6F /* ColorOverlayComponent.mm in Sources */,
 				2DCD70E51DFFEF8D003691AE /* SelectableModelComponent.mm in Sources */,
+				2C587C481ECE2BE7000A76B7 /* InputBeamComponent.mm in Sources */,
 				2DCD70B41DFFEF8D003691AE /* MoveToBehaviourComponent.m in Sources */,
 				2DCD70411DFFEF84003691AE /* Camera.m in Sources */,
 				2DCD70D31DFFEF8D003691AE /* NavigationComponent.m in Sources */,
@@ -612,6 +655,7 @@
 				2DCD70A81DFFEF8D003691AE /* BehaviourComponent.m in Sources */,
 				2DCD70AE1DFFEF8D003691AE /* LookAtBehaviourComponent.m in Sources */,
 				2DCD70BC1DFFEF8D003691AE /* ButtonContainerComponent.m in Sources */,
+				2C587C4A1ECE2BE7000A76B7 /* InteractablePhysicsComponent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

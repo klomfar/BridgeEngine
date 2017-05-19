@@ -13,28 +13,29 @@
 #import <OpenBE/Core/SceneManager.h>
 #import <OpenBE/Core/AudioEngine.h>
 
-#import <OpenBE/Components/RobotBehaviourComponent.h>
-#import <OpenBE/Components/RobotActionComponent.h>
-#import <OpenBE/Components/RobotMeshControllerComponent.h>
 #import <OpenBE/Components/AnimationComponent.h>
-#import <OpenBE/Components/GazeComponent.h>
-#import <OpenBE/Components/FixedSizeReticleComponent.h>
+#import <OpenBE/Components/BeamComponent.h>
 #import <OpenBE/Components/BlockDemoReticleComponent.h>
-#import <OpenBE/Components/RobotSeesMeComponent.h>
-#import <OpenBE/Components/RobotBodyEmojiComponent.h>
-#import <OpenBE/Components/RobotVemojiComponent.h>
 #import <OpenBE/Components/ButtonContainerComponent.h>
 #import <OpenBE/Components/ButtonComponent.h>
-#import <OpenBE/Components/MoveRobotEventComponent.h>
+#import <OpenBE/Components/BridgeControllerComponent.h>
 #import <OpenBE/Components/FetchEventComponent.h>
-#import <OpenBE/Components/BeamComponent.h>
+#import <OpenBE/Components/FixedSizeReticleComponent.h>
+#import <OpenBE/Components/GazeComponent.h>
+#import <OpenBE/Components/MoveRobotEventComponent.h>
+#import <OpenBE/Components/RobotActionComponent.h>
+#import <OpenBE/Components/RobotBehaviourComponent.h>
+#import <OpenBE/Components/RobotBodyEmojiComponent.h>
+#import <OpenBE/Components/RobotMeshControllerComponent.h>
+#import <OpenBE/Components/RobotSeesMeComponent.h>
+#import <OpenBE/Components/RobotVemojiComponent.h>
 #import <OpenBE/Components/ScanEventComponent.h>
 #import <OpenBE/Components/ScanComponent.h>
 #import <OpenBE/Components/SpawnComponent.h>
 #import <OpenBE/Components/SpawnPortalComponent.h>
 #import <OpenBE/Components/VRWorldComponent.h>
 
-#import "OpenBE/Shaders/ScanEnvironmentShader.h"
+#import <OpenBE/Shaders/ScanEnvironmentShader.h>
 
 
 // Behaviors
@@ -60,7 +61,7 @@
 @property (nonatomic, strong) GKEntity * robotEntity;
 @property (nonatomic, strong) ButtonContainerComponent * renderMenu;
 @property (nonatomic, strong) Component *fixedSizeReticle;
-@property (nonatomic, strong) BEController* controller;
+@property (nonatomic, strong) BridgeControllerComponent* bControllerComponent;
 
 @end
 //------------------------------------------------------------------------------
@@ -110,6 +111,9 @@
                        defaultValueIfSettingIsNotInBundle:NO]),
             kBERecordingOptionsEnabled:
                 @([AppSettings booleanValueFromAppSetting:@"enableRecording"
+                       defaultValueIfSettingIsNotInBundle:NO]),
+            kBEEnableStereoScanningBeta:
+                @([AppSettings booleanValueFromAppSetting:@"stereoScanning"
                        defaultValueIfSettingIsNotInBundle:NO]),
         }
         markupNames:_markupNameList
@@ -248,6 +252,12 @@
     //_portal.interactive = [BEAppSettings booleanValueFromAppSetting:SETTING_PLAY_SCRIPT defaultValueIfSettingIsNotInBundle:NO] == NO;
     [[[SceneManager main] createEntity] addComponent:_portal];
     
+    // BController Entity
+    self.bControllerComponent = [[BridgeControllerComponent alloc] initWithBlock:^(){}];
+    GKEntity *controllerEntity = [[SceneManager main] createEntity];
+    [controllerEntity addComponent:self.bControllerComponent];
+    [self.bControllerComponent setEnabled:YES];
+
     // spawn portal
     SpawnPortalComponent * spawnPortalComponent = [[SpawnPortalComponent alloc] init];
     spawnPortalComponent.vrWorldComponent = _vrWorld;
@@ -390,8 +400,7 @@
     }
  
     // setup controller
-    self.controller = [BEController sharedController];
-    _controller.delegate = self;
+    [BEController sharedController].delegate = self;
 
     
     // if we found all the markups, skip markup editing.
@@ -482,7 +491,7 @@
 - (void)mixedRealityUpdateAtTime:(NSTimeInterval)time
 {
     // Update the controller's camera world transform, so we're tracking with it.
-    _controller.cameraTransform = SCNMatrix4ToGLKMatrix4(_mixedReality.localDeviceNode.worldTransform);
+    [BEController sharedController].cameraTransform = SCNMatrix4ToGLKMatrix4(_mixedReality.localDeviceNode.worldTransform);
 
     if( !_experienceIsRunning ) {
         return;
@@ -505,15 +514,24 @@
 
 - (void)controllerButtonDown
 {
-    be_NSDbg(@"[Bridget][Controller] button down");
     [[EventManager main] controllerButtonDown];
+    [_bControllerComponent handleControllerTriggerDown:YES];
 }
 
 - (void)controllerButtonUp
 {
-    be_NSDbg(@"[Bridget][Controller] button up");
     [[EventManager main] controllerButtonUp];
+    [_bControllerComponent handleControllerTriggerDown:NO];
 }
+
+- (void)controllerMotionTransform:(GLKMatrix4)transform {
+    [_bControllerComponent handleMotionTransform:transform];
+}
+
+- (void) controllerTouchPosition:(GLKVector2)position status:(BEControllerTouchStatus)status{
+    [_bControllerComponent handleTouchpadPositionX:position.x positionY:position.y];
+}
+
 
 // Touch handling helpers
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

@@ -1,14 +1,16 @@
-# Welcome to the Bridge Engine Beta 5!
+# Welcome to the Bridge Engine Beta 5.1!
 
 We're glad to have you onboard. We're committed to enhancing Bridge Engine, so we take all of your feedback and support very earnestly.
 
-Check out the [Occipital Youtube Playlist for recent videos on Bridge Engine](https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yuPufWPjCthmZYOOJG9ieRnGAL79).  
+Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yuPufWPjCthmZYOOJG9ieRnGAL79" target="_blank">Occipital Youtube Playlist for recent videos on Bridge Engine</a>.  
 
+#### Beta 5.1 - BSW Edition: Bridge Controller & Laser Manipulator Advanced Example
+Special edition for Boulder Startup Week!  We bring together the latest improvements on the Bridge Controller, lots of your feedback, and demonstrate a Laser Manipulator advanced example.
 
-#### 
+Shoot things from your Bridge Controller, pick up objects, pull them close or far with the trackpad and generally have fun.
 
 #### Beta 5: Bridge Controller 
-Bridge Engine now supports the official controller with 3-DoF rotational tracking, a capacitive touchpad, a trigger & multiple buttons. Additionally, we've loaded the beta with lots of small updates! The BRIDGET sample has improvements to the portal and scan effect; The Unity plugin has matured with a simplified Unity package; We added realistic 3D positional audio support; and you can now record your screen directly from the app using ReplayKit. Note: *Stereo scanning has been temporarly disabled while we address a known issue, but it will be back in the next release.*
+Bridge Engine now supports the official controller with 3DOF rotational tracking, a capacitive touchpad plus buttons a trigger. Additionally, we've loaded the Beta with lots of small updates! The BRIDGET sample has improvements to the portal and scan effect; The Unity plugin has matured with a simplified Unity package; We added Realistic 3D positional audio support; and you can now record your screen directly from the app using ReplayKit. Stereo scanning has been temporarly disabled while we address a known issue, but it will be back in the next release.
 
 
 #### New in Beta 4: Stereo Scanning 
@@ -34,7 +36,7 @@ Want to help us expand the capabilities of Bridge Engine? We'd love contribution
 
 ### Changelog
 
-##### Beta 5 changes
+### Beta 5 changes
 
 - Bridge controller support
 - Quicker robot scan-beam and portal improvements
