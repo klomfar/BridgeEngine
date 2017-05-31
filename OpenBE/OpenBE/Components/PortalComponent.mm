@@ -533,11 +533,13 @@ typedef NS_ENUM (NSUInteger, PortalState) {
 - (void) start{
     [super start];
     
-    self.audioWarpIn = [[AudioEngine main] loadAudioNamed:@"Robot_WarpIn.caf"];
-    self.audioWarpOut = [[AudioEngine main] loadAudioNamed:@"Robot_WarpOut.caf"];
-    
-    self.emergencyExitPowerUp = [[AudioEngine main] loadAudioNamed:@"ExitVR_PowerUp.caf"];
-    self.emergencyExitPowerAbort = [[AudioEngine main] loadAudioNamed:@"ExitVR_PowerAbort.caf"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.audioWarpIn = [[AudioEngine main] loadAudioNamed:@"Robot_WarpIn.caf"];
+        self.audioWarpOut = [[AudioEngine main] loadAudioNamed:@"Robot_WarpOut.caf"];
+        
+        self.emergencyExitPowerUp = [[AudioEngine main] loadAudioNamed:@"ExitVR_PowerUp.caf"];
+        self.emergencyExitPowerAbort = [[AudioEngine main] loadAudioNamed:@"ExitVR_PowerAbort.caf"];
+    });
     
     _open = NO;
     

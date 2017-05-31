@@ -293,6 +293,11 @@ struct BEColorFrameReference;
  */
 - (void)unlockSceneMesh;
 
+/** Return a coarse version of the scene mesh, ideal for physics. 
+ This is only updated after an export or reload operation.
+ */
+- (BEMesh*)coarseMesh;
+
 /** Return the best estimate of the color camera pose for a given a display link timestamp
  
  This is meant to be used in headless mode (when BEView==nil), e.g. from the Unity plugin.

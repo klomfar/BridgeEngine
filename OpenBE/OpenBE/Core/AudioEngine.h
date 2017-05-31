@@ -30,16 +30,19 @@
 
 /**
  * Single shot audio playback at volume.
+ * THREAD SAFE
  */
 - (void) playAudio:(NSString*)named atVolume:(float)volume;
 
 /**
  * Load an audio file and return an audio node.
+ * RUN ON MAIN THREAD ONLY
  */
 - (AudioNode*) loadAudioNamed:(NSString*)name;
 
 /**
  * Take in the Camera node, and update the listener position and orientation.
+ * THREAD SAFE
  */
 - (void) updateListenerFromCameraNode:(SCNNode*)cameraNode;
 
@@ -70,7 +73,10 @@
 
 - (instancetype)initWithName:(NSString*)name buffer:(AVAudioPCMBuffer*)buffer player:(AVAudioPlayerNode*) player;
 
+/// Play the audio.  THREAD SAFE
 - (void)play;
+
+// Stop the audio from playing.  THREAD SAFE
 - (void)stop;
 
 @end

@@ -3,11 +3,11 @@ Bridge Engine for Unity Package
 
 The Unity project `BridgeEngineUnityPackage` is for building the
 `BridgeEngine.unitypackage` (pre-built package included) for development and includes an
-example scenes "Assets/Scenes/MainExample.unity".
+example scene "BridgeEngine/Example/Example.unity".
 
 If you're interested in starting a fresh Unity project from scratch, you can follow along
-with `BridgeEngineUnity-Getting-Started.pdf`, and copy in Models and Scripts from
-`GettingStartedAssets`.
+with `BridgeEngineUnity-Getting-Started.pdf`, and load the Models and Scripts from
+`BridgeEngine/Example` folder.
 
 Special note about GoogleVRDummy.cs
 ------------------------------------

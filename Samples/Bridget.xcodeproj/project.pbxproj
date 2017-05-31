@@ -24,7 +24,6 @@
 		6F5CA0A01C751A4B00A33642 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F5CA09F1C751A4B00A33642 /* AppDelegate.mm */; };
 		6F5CA0A31C751A4B00A33642 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F5CA0A21C751A4B00A33642 /* ViewController.mm */; };
 		6F85C2751C7E69C600152850 /* Assets.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F85C2741C7E69C600152850 /* Assets.scnassets */; };
-		773DED7A1C8F8BF1006233EA /* AppSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 773DED791C8F8BF1006233EA /* AppSettings.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,8 +87,6 @@
 		6F85C2741C7E69C600152850 /* Assets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Assets.scnassets; sourceTree = "<group>"; };
 		6F9041F81C18DD4800FCD94D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		6FF00A3A1C812D61009A3BCD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		773DED761C8F8BDC006233EA /* AppSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppSettings.h; sourceTree = "<group>"; };
-		773DED791C8F8BF1006233EA /* AppSettings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppSettings.mm; sourceTree = "<group>"; };
 		7E5132211AEBF3D000B75178 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		94892A221BB20AA300E8C5E9 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		DA28568D1C6E546E0030250A /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
@@ -185,8 +182,6 @@
 				6F5CA09F1C751A4B00A33642 /* AppDelegate.mm */,
 				6F5CA0A11C751A4B00A33642 /* ViewController.h */,
 				6F5CA0A21C751A4B00A33642 /* ViewController.mm */,
-				773DED761C8F8BDC006233EA /* AppSettings.h */,
-				773DED791C8F8BF1006233EA /* AppSettings.mm */,
 			);
 			path = Bridget;
 			sourceTree = "<group>";
@@ -289,7 +284,6 @@
 				6F5CA0A31C751A4B00A33642 /* ViewController.mm in Sources */,
 				6F5CA0A01C751A4B00A33642 /* AppDelegate.mm in Sources */,
 				6F5CA09D1C751A4B00A33642 /* main.mm in Sources */,
-				773DED7A1C8F8BF1006233EA /* AppSettings.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

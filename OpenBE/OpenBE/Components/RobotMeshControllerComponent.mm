@@ -157,12 +157,14 @@
     
     self.headCtrl = self.animatedHeadCtrl;
     
-    // Init a default audio for movement.
-    // Special set-up happens in the setMovementAudio setter.
-    AudioNode *moveAudio = [[AudioEngine main] loadAudioNamed:@"Robot_IdleMovingLoop.caf"];
-    moveAudio.looping = YES;
-    moveAudio.volume = 0.5;
-    [self setMovementAudio:moveAudio];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // Init a default audio for movement.
+        // Special set-up happens in the setMovementAudio setter.
+        AudioNode *moveAudio = [[AudioEngine main] loadAudioNamed:@"Robot_IdleMovingLoop.caf"];
+        moveAudio.looping = YES;
+        moveAudio.volume = 0.5;
+        [self setMovementAudio:moveAudio];
+    });
 
     // Re-parent the head to a controllable node.
     self.headCtrl = [SCNNode node];
@@ -251,7 +253,9 @@
             }
         };
 
-        _robotBoxUnfoldingSound = [[AudioEngine main] loadAudioNamed:@"Robot_Unboxing.caf"];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.robotBoxUnfoldingSound = [[AudioEngine main] loadAudioNamed:@"Robot_Unboxing.caf"];
+        });
     } else {
         // Robot is already unfolded.
         _robotBoxUnfolded = YES; 
@@ -380,19 +384,26 @@
     if( _moveToTimeInterval > 0 ) {
         self.moveToTimer += seconds;
         
-        if( self.moveToTimer < self.moveToTimeInterval ) {
-            float frac = self.moveToTimer / self.moveToTimeInterval;
-            self.movementAudio.player.volume = self.movementAudio.volume * smoothstepDxf(0.f, 1.f, frac);
-            float progress = smoothstepf(0.f, 1.f, frac); // Try with basic accelerate/decelerate motion.
-            GLKVector3 position = GLKVector3Lerp(self.moveToStart, self.moveToTarget, progress );
-            self.node.position = SCNVector3FromGLKVector3(position);
-            self.movementAudio.position = self.node.position;
-        } else {
-            self.node.position = SCNVector3FromGLKVector3(self.moveToTarget); // Get precisely on target.
-            self.movementAudio.player.volume = 0;
-            self.movementAudio.position = self.node.position;
-            self.moveToTimer = self.moveToTimeInterval = 0; // Clear the timer, stop running movement ops.
-        }
+        // Modify Audio on main thread 
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if( self.moveToTimer < self.moveToTimeInterval ) {
+                if( [_movementAudio.player isPlaying] == NO) {
+                    [_movementAudio play];
+                }
+
+                float frac = self.moveToTimer / self.moveToTimeInterval;
+                self.movementAudio.player.volume = self.movementAudio.volume * smoothstepDxf(0.f, 1.f, frac);
+                float progress = smoothstepf(0.f, 1.f, frac); // Try with basic accelerate/decelerate motion.
+                GLKVector3 position = GLKVector3Lerp(self.moveToStart, self.moveToTarget, progress );
+                self.node.position = SCNVector3FromGLKVector3(position);
+                self.movementAudio.position = self.node.position;
+            } else {
+                self.node.position = SCNVector3FromGLKVector3(self.moveToTarget); // Get precisely on target.
+                self.movementAudio.player.volume = 0;
+                self.movementAudio.position = self.node.position;
+                self.moveToTimer = self.moveToTimeInterval = 0; // Clear the timer, stop running movement ops.
+            }
+        });
     }
 
     // Track the selectable node. Move it up about half the height of the box.

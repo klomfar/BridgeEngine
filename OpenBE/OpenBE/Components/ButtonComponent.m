@@ -26,7 +26,9 @@ typedef void (^callback)(void);
     
     self.callbackBlock = callbackBlock;
     
-    self.buttonClickSound = [[AudioEngine main] loadAudioNamed:@"Robot_MenuClick.caf"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.buttonClickSound = [[AudioEngine main] loadAudioNamed:@"Robot_MenuClick.caf"];
+    });
     
     return self;
 }

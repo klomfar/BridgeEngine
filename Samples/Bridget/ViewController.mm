@@ -5,7 +5,7 @@
 */
 
 #import "ViewController.h"
-#import "AppSettings.h"
+#import "AppDelegate.h"
 
 #import <BridgeEngine/BridgeEngine.h>
 
@@ -13,28 +13,29 @@
 #import <OpenBE/Core/SceneManager.h>
 #import <OpenBE/Core/AudioEngine.h>
 
-#import <OpenBE/Components/RobotBehaviourComponent.h>
-#import <OpenBE/Components/RobotActionComponent.h>
-#import <OpenBE/Components/RobotMeshControllerComponent.h>
 #import <OpenBE/Components/AnimationComponent.h>
-#import <OpenBE/Components/GazeComponent.h>
-#import <OpenBE/Components/FixedSizeReticleComponent.h>
+#import <OpenBE/Components/BeamComponent.h>
 #import <OpenBE/Components/BlockDemoReticleComponent.h>
-#import <OpenBE/Components/RobotSeesMeComponent.h>
-#import <OpenBE/Components/RobotBodyEmojiComponent.h>
-#import <OpenBE/Components/RobotVemojiComponent.h>
 #import <OpenBE/Components/ButtonContainerComponent.h>
 #import <OpenBE/Components/ButtonComponent.h>
-#import <OpenBE/Components/MoveRobotEventComponent.h>
+#import <OpenBE/Components/BridgeControllerComponent.h>
 #import <OpenBE/Components/FetchEventComponent.h>
-#import <OpenBE/Components/BeamComponent.h>
+#import <OpenBE/Components/FixedSizeReticleComponent.h>
+#import <OpenBE/Components/GazeComponent.h>
+#import <OpenBE/Components/MoveRobotEventComponent.h>
+#import <OpenBE/Components/RobotActionComponent.h>
+#import <OpenBE/Components/RobotBehaviourComponent.h>
+#import <OpenBE/Components/RobotBodyEmojiComponent.h>
+#import <OpenBE/Components/RobotMeshControllerComponent.h>
+#import <OpenBE/Components/RobotSeesMeComponent.h>
+#import <OpenBE/Components/RobotVemojiComponent.h>
 #import <OpenBE/Components/ScanEventComponent.h>
 #import <OpenBE/Components/ScanComponent.h>
 #import <OpenBE/Components/SpawnComponent.h>
 #import <OpenBE/Components/SpawnPortalComponent.h>
 #import <OpenBE/Components/VRWorldComponent.h>
 
-#import "OpenBE/Shaders/ScanEnvironmentShader.h"
+#import <OpenBE/Shaders/ScanEnvironmentShader.h>
 
 
 // Behaviors
@@ -50,6 +51,11 @@
 #import <OpenBE/Utils/ComponentUtils.h>
 #import <OpenBE/Utils/SceneKitExtensions.h>
 
+// Hide performance charts, will be fixed in BE 5.2
+@interface BEMixedRealityMode(Samples)
+@property (nonatomic) BOOL performanceChartsHidden;
+@end
+
 //------------------------------------------------------------------------------
 #pragma mark - ViewController ()
 
@@ -60,7 +66,7 @@
 @property (nonatomic, strong) GKEntity * robotEntity;
 @property (nonatomic, strong) ButtonContainerComponent * renderMenu;
 @property (nonatomic, strong) Component *fixedSizeReticle;
-@property (nonatomic, strong) BEController* controller;
+@property (nonatomic, strong) BridgeControllerComponent* bControllerComponent;
 
 @end
 //------------------------------------------------------------------------------
@@ -71,7 +77,7 @@
 {
     BEMixedRealityMode* _mixedReality;
     NSArray*            _markupNameList;
-    BOOL                _experienceIsRunning;
+    BOOL                _sceneIsRunning;
     VRWorldComponent *_vrWorld;
     PortalComponent *_portal;
 }
@@ -87,7 +93,7 @@
     _markupNameList = @[ @"Bridget", @"Rendering Menu"];
 
     BECaptureReplayMode replayMode = BECaptureReplayModeDisabled;
-    if ([AppSettings booleanValueFromAppSetting:@"replayCapture"
+    if ([BEAppSettings booleanValueFromAppSetting:SETTING_REPLAY_CAPTURE
              defaultValueIfSettingIsNotInBundle:NO])
     {
         replayMode = BECaptureReplayModeRealTime;
@@ -100,16 +106,19 @@
             kBECaptureReplayMode:
                 @(replayMode),
             kBEUsingWideVisionLens:
-                @([AppSettings booleanValueFromAppSetting:@"useWVL"
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_USE_WVL
                        defaultValueIfSettingIsNotInBundle:YES]),
             kBEStereoRenderingEnabled:
-                @([AppSettings booleanValueFromAppSetting:@"stereoRendering"
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_RENDERING
                        defaultValueIfSettingIsNotInBundle:YES]),
             kBEUsingColorCameraOnly:
-                @([AppSettings booleanValueFromAppSetting:@"colorCameraOnly"
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_COLOR_CAMERA_ONLY
                        defaultValueIfSettingIsNotInBundle:NO]),
             kBERecordingOptionsEnabled:
-                @([AppSettings booleanValueFromAppSetting:@"enableRecording"
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_ENABLE_RECORDING
+                       defaultValueIfSettingIsNotInBundle:NO]),
+            kBEEnableStereoScanningBeta:
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_SCANNING
                        defaultValueIfSettingIsNotInBundle:NO]),
         }
         markupNames:_markupNameList
@@ -117,8 +126,18 @@
 
     _mixedReality.delegate = self;
 
+    // Hide the performance charts by default.
+    _mixedReality.performanceChartsHidden = YES;
+
     // Link the event manager to this mixed reality instance.
     [EventManager main].mixedRealityMode = _mixedReality;
+
+    // Establish use of reticle or not.
+    if( [BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_RENDERING defaultValueIfSettingIsNotInBundle:YES] ) {
+        [EventManager main].useReticleAsTouchLocation = YES;
+    } else {
+        [EventManager main].useReticleAsTouchLocation = NO;
+    }
     
     [_mixedReality start];
 }
@@ -169,7 +188,7 @@
 
 -(void) setUpEntityComponentSystem
 {
-    BOOL stereo = [AppSettings booleanValueFromAppSetting:@"stereoRendering" defaultValueIfSettingIsNotInBundle:YES];
+    BOOL stereo = [BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_RENDERING defaultValueIfSettingIsNotInBundle:YES];
     
     // main Audio engine and Scene Manager
     [[SceneManager main] initWithMixedRealityMode:_mixedReality stereo:stereo];
@@ -248,6 +267,12 @@
     //_portal.interactive = [BEAppSettings booleanValueFromAppSetting:SETTING_PLAY_SCRIPT defaultValueIfSettingIsNotInBundle:NO] == NO;
     [[[SceneManager main] createEntity] addComponent:_portal];
     
+    // BController Entity
+    self.bControllerComponent = [[BridgeControllerComponent alloc] init];
+    GKEntity *controllerEntity = [[SceneManager main] createEntity];
+    [controllerEntity addComponent:self.bControllerComponent];
+    [self.bControllerComponent setEnabled:YES];
+
     // spawn portal
     SpawnPortalComponent * spawnPortalComponent = [[SpawnPortalComponent alloc] init];
     spawnPortalComponent.vrWorldComponent = _vrWorld;
@@ -390,10 +415,8 @@
     }
  
     // setup controller
-    self.controller = [BEController sharedController];
-    _controller.delegate = self;
+    [BEController sharedController].delegate = self;
 
-    
     // if we found all the markups, skip markup editing.
     if (foundAllMarkup)
     {
@@ -424,25 +447,19 @@
 - (void)mixedRealitySetUpSceneKitWorlds:(BEMappedAreaStatus)mappedAreaStatus
 {
     [self setUpEntityComponentSystem];
-    
-    RobotBehaviourComponent * behaviourComponent = (RobotBehaviourComponent *)[ComponentUtils getComponentFromEntity:self.robotEntity ofClass:[RobotBehaviourComponent class]];
-    [behaviourComponent runIdleBehaviours:YES];
-    [behaviourComponent cameraMovementTriggerAttention:YES];
-    
-    _experienceIsRunning = YES;
-}
+    [self updateReticleInputMode];
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
+    _sceneIsRunning = YES;
 }
 
 - (void)startExperience
 {
     // For this experience, let's switch to a mode with AR objects composited with the passthrough camera.
     [_mixedReality setRenderStyle:BERenderStyleSceneKitAndColorCamera withDuration:0.5];
- 
-    _experienceIsRunning = YES;
+
+    RobotBehaviourComponent * behaviourComponent = (RobotBehaviourComponent *)[ComponentUtils getComponentFromEntity:self.robotEntity ofClass:[RobotBehaviourComponent class]];
+    [behaviourComponent runIdleBehaviours:YES];
+    [behaviourComponent cameraMovementTriggerAttention:YES];
 }
 
 - (void)mixedRealityMarkupEditingEnded
@@ -482,9 +499,9 @@
 - (void)mixedRealityUpdateAtTime:(NSTimeInterval)time
 {
     // Update the controller's camera world transform, so we're tracking with it.
-    _controller.cameraTransform = SCNMatrix4ToGLKMatrix4(_mixedReality.localDeviceNode.worldTransform);
+    [BEController sharedController].cameraTransform = SCNMatrix4ToGLKMatrix4(_mixedReality.localDeviceNode.worldTransform);
 
-    if( !_experienceIsRunning ) {
+    if( !_sceneIsRunning ) {
         return;
     }
     
@@ -503,16 +520,20 @@
     [self updateReticleInputMode];
 }
 
-- (void)controllerButtonDown
-{
-    be_NSDbg(@"[Bridget][Controller] button down");
-    [[EventManager main] controllerButtonDown];
+- (void)controllerButtons:(BEControllerButtons)buttons down:(BEControllerButtons)buttonsDown up:(BEControllerButtons)buttonsUp {
+    if( (buttonsDown & BEControllerButtonPrimary) != 0) {
+        [[EventManager main] controllerButtonDown];
+    }
+    
+    if( (buttonsUp & BEControllerButtonPrimary) != 0) {
+        [[EventManager main] controllerButtonUp];
+    }
 }
 
-- (void)controllerButtonUp
-{
-    be_NSDbg(@"[Bridget][Controller] button up");
-    [[EventManager main] controllerButtonUp];
+- (void)controllerMotionTransform:(GLKMatrix4)transform {
+}
+
+- (void)controllerTouchPosition:(GLKVector2)position status:(BEControllerTouchStatus)status{
 }
 
 // Touch handling helpers
@@ -547,10 +568,16 @@
 
 #pragma mark - Support Methods
 
-/// Hook up reticle visibility to controller connectes status.
+/// Hook reticle visibility to controller connected status.
 - (void) updateReticleInputMode {
-    BOOL enableReticleInput = [BEController sharedController].isConnected;
+    BOOL stereo = [BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_RENDERING defaultValueIfSettingIsNotInBundle:YES];
+    BOOL connected = [BEController sharedController].isConnected;
+    BOOL enableReticleInput = connected || stereo;
+    [EventManager main].useReticleAsTouchLocation = enableReticleInput;
     [_fixedSizeReticle setEnabled:enableReticleInput];
+
+    // Only show Bridge Controller if it's specifically connected. 
+    [_bControllerComponent setEnabled:BEController.sharedController.isBridgeControllerConnected];
 }
 
 @end

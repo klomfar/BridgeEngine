@@ -30,6 +30,7 @@
 - (void) initWithMixedRealityMode:(BEMixedRealityMode *)mixedRealityMode stereo:(BOOL)stereo {
     self.isStereo = stereo;
     self.mixedRealityMode = mixedRealityMode;
+    
     // update scene
     [Scene main].scene = mixedRealityMode.sceneKitScene;
     [Scene main].rootNode = mixedRealityMode.worldNodeWhenRelocalized;
@@ -78,6 +79,10 @@
 
 - (void) addEntity:(GKEntity * ) entity {
     [self.entities addObject:entity];
+}
+
+- (void) removeEntity:(GKEntity *)entity {
+    [self.entities removeObject:entity];
 }
 
 - (GKEntity * ) createEntity {

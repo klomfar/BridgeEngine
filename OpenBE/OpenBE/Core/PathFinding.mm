@@ -170,6 +170,22 @@ struct setNode
 
 - (instancetype) init
 {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                         NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *scenePath = [documentsDirectory stringByAppendingPathComponent:@"BridgeEngineScene"];
+    NSString *occupancyImagePath = [scenePath stringByAppendingPathComponent:@"OccupancyMap.png"];
+
+    UIImage * mapImage = [[UIImage alloc] initWithContentsOfFile:occupancyImagePath];
+    if( mapImage == nil ) {
+        NSLog(@"Failed to load the OccupancyMap.png from %@", occupancyImagePath);
+        return nil;
+    }
+    return [self initWithImage:mapImage];
+}
+
+- (instancetype) initWithImage:(UIImage*) mapImage
+{
     self = [super init];
     if (self) {
         robotRadiusInPixels = 2; // 7.0;
@@ -183,14 +199,7 @@ struct setNode
                                                              NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         NSString *scenePath = [documentsDirectory stringByAppendingPathComponent:@"BridgeEngineScene"];
-        NSString *occupancyImagePath = [scenePath stringByAppendingPathComponent:@"OccupancyMap.png"];
         NSString *occupancyMetadata = [scenePath stringByAppendingPathComponent:@"OccupancyMap.metadata"];
-
-        UIImage * mapImage = [[UIImage alloc] initWithContentsOfFile:occupancyImagePath];
-        if( mapImage == nil ) {
-            NSLog(@"Failed to load the OccupancyMap.png from %@", occupancyImagePath);
-            return nil;
-        }
 
         // Parse the metadata file for three values, OriginX, OriginZ, PixelSize.
         // Example:
@@ -246,34 +255,30 @@ struct setNode
         }
         
         free(rawData);
-        
-        // ------------ Convolve map image by pixel radius of robot -----------
-        for(int y = 0; y < map.height; y++)
+
+
+        matrix mapCopy;
+        mapCopy.resize(map.width, map.height);
+        mapCopy.copy(map);
+
+        // Dialate the occupied regions by the radius
+        for (int y = 0; y < map.height; ++y)
+        for (int x = 0; x < map.width; ++x)
         {
-            for(int x = 0; x < map.width; x++)
+            for (int dy = -robotRadiusInPixels; dy <= robotRadiusInPixels; dy++)
+            for (int dx = -robotRadiusInPixels; dx <= robotRadiusInPixels; dx++)
             {
-                for(int dy = -1*robotRadiusInPixels; dy <= robotRadiusInPixels; dy++)
-                {
-                    for(int dx = -1*robotRadiusInPixels; dx <= robotRadiusInPixels; dx++)
-                    {
-                        if(dy*dy + dx*dx > robotRadiusInPixels*robotRadiusInPixels)
-                        {
-                            continue;
-                        }
-                        
-                        if(dy == 0 && dx == 0) continue;
-                        
-                        int py = y + dy;
-                        int px = x + dx;
-                        
-                        if(py < 0 || py >= map.height || px < 0 || px >= map.width) continue;
-                        
-                        if(map.data[px][py] == 255 && map.data[x][y] != 255)
-                        {
-                            map.data[x][y] = 254;
-                        }
-                    }
-                }
+                const int py = y + dy;
+                const int px = x + dx;
+
+                if(dy*dy + dx*dx > robotRadiusInPixels*robotRadiusInPixels)
+                    continue;
+
+                if(py < 0 || py >= map.height || px < 0 || px >= map.width) continue;
+
+
+                if (mapCopy.data[px][py] == 255)
+                    map.data[x][y] = 255;
             }
         }
         
@@ -370,63 +375,63 @@ struct setNode
         for(int x = 0; x < map.width; x++)
         {
 //            NSLog(@"Labeling at: (%d, %d)\n", x, y);
-            if(map.data[x][y] < 254)
+            if (map.data[x][y] == 255)
+                continue;
+
+            //find neighbors that are not obstacles
+            std::vector<point> neighbors;
+            for(int dy=-1; dy <= 0; dy++)
             {
-                //find neighbors that are not obstacles
-                std::vector<point> neighbors;
-                for(int dy=-1; dy <= 0; dy++)
+                for(int dx=-1; dx <=1; dx++)
                 {
-                    for(int dx=-1; dx <=1; dx++)
+                    if(dy >= 0 && dx >= 0) continue; // only concern yourself with points that could have been previously labelled
+                                                     // This looks NW, N, NE, W of the current point
+                    
+                    int px = x+dx;
+                    int py = y+dy;
+                    
+                    if(px < 0 || px >= map.width || py < 0 || py >= map.height) continue;
+                    
+                    if(map.data[px][py] <= 254)
                     {
-                        if(dy >= 0 && dx >= 0) continue; // only concern yourself with points that could have been previously labelled
-                                                         // This looks NW, N, NE, W of the current point
+                        point p;
+                        p.x = px;
+                        p.y = py;
+                        p.label = disjointSet[py][px]->label;
                         
-                        int px = x+dx;
-                        int py = y+dy;
-                        
-                        if(px < 0 || px >= map.width || py < 0 || py >= map.height) continue;
-                        
-                        if(map.data[px][py] < 254)
-                        {
-                            point p;
-                            p.x = px;
-                            p.y = py;
-                            p.label = disjointSet[py][px]->label;
-                            
-                            neighbors.push_back(p);
-                        }
+                        neighbors.push_back(p);
                     }
                 }
-                
-                if(neighbors.size() == 0)
-                {
-                    // If this point has no neighbors it's deserving of a new label.
-                    // This label might eventually be found to be equivalent to an older label, but we'll get to that.
+            }
+            
+            if(neighbors.size() == 0)
+            {
+                // If this point has no neighbors it's deserving of a new label.
+                // This label might eventually be found to be equivalent to an older label, but we'll get to that.
 
-                    disjointSet[y][x] = new setNode;
-                    disjointSet[y][x]->label = nextLabel;
-                    disjointSet[y][x]->parent = disjointSet[y][x];
-                    
-                    linked.push_back(disjointSet[y][x]);
-                    nextLabel++;
-                } else{
-                    // If there are a few neighbors, we should include them all in the smallest label's set.
-                    int smallestLabel = INT_MAX;
-                    for(int i = 0; i < neighbors.size(); i++)
-                    {
-                        if(neighbors[i].label < smallestLabel)
-                            smallestLabel = neighbors[i].label;
-                    }
-                    
+                disjointSet[y][x] = new setNode;
+                disjointSet[y][x]->label = nextLabel;
+                disjointSet[y][x]->parent = disjointSet[y][x];
+                
+                linked.push_back(disjointSet[y][x]);
+                nextLabel++;
+            } else{
+                // If there are a few neighbors, we should include them all in the smallest label's set.
+                int smallestLabel = INT_MAX;
+                for(int i = 0; i < neighbors.size(); i++)
+                {
+                    if(neighbors[i].label < smallestLabel)
+                        smallestLabel = neighbors[i].label;
+                }
+                
 //                    NSLog(@"\t Has %lu neighbors - smallest label: %d\n", neighbors.size(), smallestLabel);
-                    
-                    // Add the current point to the smallest label set.
-                    disjointSet[y][x] = linked[smallestLabel];
-                    
-                    for(int i=0; i < neighbors.size(); i++)
-                    {
-                        linked[smallestLabel] = [self unionOf:linked[smallestLabel] andSet:disjointSet[neighbors[i].y][neighbors[i].x]];
-                    }
+                
+                // Add the current point to the smallest label set.
+                disjointSet[y][x] = linked[smallestLabel];
+                
+                for(int i=0; i < neighbors.size(); i++)
+                {
+                    linked[smallestLabel] = [self unionOf:linked[smallestLabel] andSet:disjointSet[neighbors[i].y][neighbors[i].x]];
                 }
             }
         }

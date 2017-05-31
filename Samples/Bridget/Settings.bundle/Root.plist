@@ -8,6 +8,26 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>Stereo Scanning</string>
+			<key>Key</key>
+			<string>stereoScanning</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Stereo Rendering</string>
+			<key>Key</key>
+			<string>stereoRendering</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>Use Wide Vision Lens</string>
 			<key>Key</key>
 			<string>useWVL</string>
@@ -26,16 +46,6 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Stereo Rendering</string>
-			<key>Key</key>
-			<string>stereoRendering</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Debugging</string>
@@ -44,7 +54,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Replay Capture</string>
+			<string>Replay last OCC Recording</string>
 			<key>Key</key>
 			<string>replayCapture</string>
 			<key>DefaultValue</key>
@@ -54,7 +64,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Enable Recording</string>
+			<string>Enable OCC In-Scene Recording</string>
 			<key>Key</key>
 			<string>enableRecording</string>
 			<key>DefaultValue</key>

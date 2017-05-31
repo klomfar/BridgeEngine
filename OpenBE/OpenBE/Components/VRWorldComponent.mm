@@ -125,11 +125,14 @@
                                                                 [SceneKit pathForImageResourceNamed:@"Space_back.jpg"],
                                                                 [SceneKit pathForImageResourceNamed:@"Space_front.jpg"]]];
     
-    self.lightsOnAudio = [[AudioEngine main] loadAudioNamed:@"VRWorld_LightsOn.caf"];
     _targetLightLevel = VR_LIGHT_LEVEL_OUTSIDE;
     [self setLightLevel:VR_LIGHT_LEVEL_OUTSIDE];
+
     
-    self.openBayDoorsAudio = [[AudioEngine main] loadAudioNamed:@"VRWorld_BayDoorsOpening.caf"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.lightsOnAudio = [[AudioEngine main] loadAudioNamed:@"VRWorld_LightsOn.caf"];
+        self.openBayDoorsAudio = [[AudioEngine main] loadAudioNamed:@"VRWorld_BayDoorsOpening.caf"];
+    });
 // ------ /Robot Room ----
 #endif
     

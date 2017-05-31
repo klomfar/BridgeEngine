@@ -13,10 +13,8 @@
 #import "../Utils/SceneKitExtensions.h"
 
 @interface AudioEngine () {
-    NSMutableDictionary<NSString*,AVAudioPlayerNode*> *_playerDictionary;
+    NSMutableDictionary<NSString*,AudioNode*>  *_nodeDictionary;
     NSMutableDictionary<NSString*,AVAudioPCMBuffer*>  *_bufferDictionary;
-
-    bool _multichannelOutputEnabled;
 
     // mananging session and configuration changes
     BOOL _isSessionInterrupted;
@@ -42,7 +40,7 @@
         };
         
         // Avoid dead-locking and make sure we init AudioEngine on main thread.
-        if( [NSThread mainThread] ) {
+        if( [NSThread isMainThread] ) {
             initEngine();
         } else {
             dispatch_sync(dispatch_get_main_queue(), initEngine);
@@ -56,8 +54,9 @@
 {
     self = [super init];
     if (self) {
+        NSAssert([NSThread isMainThread], @"AudioEngine called outside of main thread");
         //store audioNodes to play in a dictionary
-        _playerDictionary = [[NSMutableDictionary alloc] init];
+        _nodeDictionary = [[NSMutableDictionary alloc] init];
         _bufferDictionary = [[NSMutableDictionary alloc] init];
 
         // Set up the audio category so we always hear the sound.
@@ -65,30 +64,33 @@
     
         //create audio engine to play sounds
         _engine = [[AVAudioEngine alloc] init];
+        
+        // Create a dummy player node and hook it up.  See if we get an un-elegant solution to bad audio.
+        AVAudioPlayerNode *dummy = [[AVAudioPlayerNode alloc] init];
+        [_engine attachNode:dummy];
+        [_engine connect:dummy to:_engine.mainMixerNode format:nil];
+        dummy = nil;
+        
         _environment = [[AVAudioEnvironmentNode alloc] init];
         [_engine attachNode:_environment];
-
-        [self makeEngineConnections];
 
         // Get notifications about changes in output configuration
         [[NSNotificationCenter defaultCenter] addObserverForName:AVAudioEngineConfigurationChangeNotification
             object:_engine
-            queue:nil
+            queue:[NSOperationQueue mainQueue]
             usingBlock:^(NSNotification *note)
         {
-            
-            // if we've received this notification, something has changed and the engine has been stopped
-            // re-wire all the connections and start the engine
-            _isConfigChangePending = YES;
-            
             if (!_isSessionInterrupted) {
-                NSLog(@"Received a %@ notification!", AVAudioEngineConfigurationChangeNotification);
-                NSLog(@"Re-wiring connections and starting once again");
+//                NSLog(@"Received a %@ notification!", AVAudioEngineConfigurationChangeNotification);
+//                NSLog(@"Re-wiring connections and starting once again");
                 [self makeEngineConnections];
                 [self startEngine];
             }
             else {
-                NSLog(@"Session is interrupted, deferring changes");
+                // if we've received this notification, something has changed and the engine has been stopped
+                // re-wire all the connections and start the engine
+                _isConfigChangePending = YES;
+//                NSLog(@"Session is interrupted, deferring changes");
             }
         }];
 
@@ -100,6 +102,7 @@
 //        [_environment.reverbParameters loadFactoryReverbPreset:AVAudioUnitReverbPresetMediumRoom];
 //        [_environment setReverbBlend:0.2];
 
+        [self makeEngineConnections];
         [self startEngine];
     }
     return self;
@@ -108,90 +111,37 @@
  * If we're connecting with a multichannel format, we need to pick a multichannel rendering algorithm
  */
 - (AVAudio3DMixingRenderingAlgorithm) audioRenderingAlgo {
-#ifdef USE_3DSPATIALIZED_AUDIO
-    return _multichannelOutputEnabled ? AVAudio3DMixingRenderingAlgorithmSoundField : AVAudio3DMixingRenderingAlgorithmSphericalHead; //AVAudio3DMixingRenderingAlgorithmHRTF;
-#else
-    return _multichannelOutputEnabled ? AVAudio3DMixingRenderingAlgorithmSoundField : AVAudio3DMixingRenderingAlgorithmEqualPowerPanning;
-#endif // USE_3DSPATIALIZED_AUDIO
+    NSAssert([NSThread isMainThread], @"AudioEngine called outside of main thread");
+    return AVAudio3DMixingRenderingAlgorithmSphericalHead;
 }
 
 - (void)makeEngineConnections
 {
-    [_engine connect:_environment to:_engine.outputNode format:[self constructOutputConnectionFormatForEnvironment]];
+    NSAssert([NSThread isMainThread], @"AudioEngine called outside of main thread");
+//    NSLog(@"Making AudioEngine connections");
+    [_engine connect:_environment to:_engine.mainMixerNode format:nil];
     
     // Set up the 3d audio environment
     AVAudio3DMixingRenderingAlgorithm renderingAlgo = self.audioRenderingAlgo;
     
     // Connect all of the players to the audio environment, and reset the rendering algorithm to match.
-    for( NSString *playerName in _playerDictionary ) {
-        AVAudioPlayerNode* player = _playerDictionary[playerName];
-        AVAudioBuffer* buffer = _bufferDictionary[playerName];
-        [_engine connect:player to:_environment format:buffer.format];
-        player.renderingAlgorithm = renderingAlgo;
+    for( NSString *nodeName in _nodeDictionary ) {
+        AudioNode* node = _nodeDictionary[nodeName];
+        [_engine connect:node.player to:_environment format:nil];
+        node.player.renderingAlgorithm = renderingAlgo;
     }
 }
 
 
 - (void) startEngine {
-    NSError *error;
+    NSAssert([NSThread isMainThread], @"AudioEngine called outside of main thread");
+    NSError *error = nil;
     BOOL audioStartResult = [_engine startAndReturnError:&error];
-    if (!audioStartResult) {
+    if(audioStartResult == NO || error != nil) {
         NSLog(@"Audio Engine Start Error: %@", error.localizedDescription);
+    } else {
+//        NSLog(@"Audio Engine Started OK");
     }
-}
-
-- (AVAudioFormat *)constructOutputConnectionFormatForEnvironment
-{
-    AVAudioFormat *environmentOutputConnectionFormat = nil;
-    AVAudioChannelCount numHardwareOutputChannels = [_engine.outputNode outputFormatForBus:0].channelCount;
-    const double hardwareSampleRate = [_engine.outputNode outputFormatForBus:0].sampleRate;
-    
-    // if we're connected to multichannel hardware, create a compatible multichannel format for the environment node
-    if (numHardwareOutputChannels > 2 && numHardwareOutputChannels != 3) {
-        if (numHardwareOutputChannels > 8) numHardwareOutputChannels = 8;
-        
-        // find an AudioChannelLayoutTag that the environment node knows how to render to
-        // this is documented in AVAudioEnvironmentNode.h
-        AudioChannelLayoutTag environmentOutputLayoutTag;
-        switch (numHardwareOutputChannels) {
-            case 4:
-                environmentOutputLayoutTag = kAudioChannelLayoutTag_AudioUnit_4;
-                break;
-                
-            case 5:
-                environmentOutputLayoutTag = kAudioChannelLayoutTag_AudioUnit_5_0;
-                break;
-                
-            case 6:
-                environmentOutputLayoutTag = kAudioChannelLayoutTag_AudioUnit_6_0;
-                break;
-                
-            case 7:
-                environmentOutputLayoutTag = kAudioChannelLayoutTag_AudioUnit_7_0;
-                break;
-                
-            case 8:
-                environmentOutputLayoutTag = kAudioChannelLayoutTag_AudioUnit_8;
-                break;
-                
-            default:
-                // based on our logic, we shouldn't hit this case
-                environmentOutputLayoutTag = kAudioChannelLayoutTag_Stereo;
-                break;
-        }
-        
-        // using that layout tag, now construct a format
-        AVAudioChannelLayout *environmentOutputChannelLayout = [[AVAudioChannelLayout alloc] initWithLayoutTag:environmentOutputLayoutTag];
-        environmentOutputConnectionFormat = [[AVAudioFormat alloc] initStandardFormatWithSampleRate:hardwareSampleRate channelLayout:environmentOutputChannelLayout];
-        _multichannelOutputEnabled = true;
-    }
-    else {
-        // stereo rendering format, this is the common case
-        environmentOutputConnectionFormat = [[AVAudioFormat alloc] initStandardFormatWithSampleRate:hardwareSampleRate channels:2];
-        _multichannelOutputEnabled = false;
-    }
-    
-    return environmentOutputConnectionFormat;
 }
 
 #pragma mark - Buffer Management
@@ -200,8 +150,10 @@
 
 /**
  * Load and cache sound buffers by name from <resources>/Sounds/<named>
+ * THEAD SAFE
  */
 - (AVAudioPCMBuffer*)bufferForName:(NSString*)named {
+    NSAssert([NSThread isMainThread], @"AudioEngine called outside of main thread");
     AVAudioPCMBuffer *aBuff = _bufferDictionary[named];
     if(aBuff == nil ) {
         // Attempt loading the audio subfolder.
@@ -217,7 +169,7 @@
         aBuff = [[AVAudioPCMBuffer alloc] initWithPCMFormat:[aFile processingFormat] frameCapacity:(unsigned int)[aFile length]];
         [aFile readIntoBuffer:aBuff error:nil];
         
-        // Keep buffers cached.
+        // Keep buffers cached, do house keeping on main thread.
         _bufferDictionary[named] = aBuff;
     }
     
@@ -226,12 +178,15 @@
 
 /**
  * Create a player node with buffer.
+ * RUN ON MAIN THREAD ONLY
  */
-- (AVAudioPlayerNode*) playerWithBuffer:(AVAudioPCMBuffer*)buffer named:(NSString*)named {
-    AVAudioPlayerNode *player = _playerDictionary[named];
-    if(player == nil) {
+- (AudioNode*) nodeWithBuffer:(AVAudioPCMBuffer*)buffer named:(NSString*)named {
+    NSAssert([NSThread isMainThread], @"AudioEngine playerWithBuffer:named: called outside of main thread");
+    AudioNode *node = _nodeDictionary[named];
+    if(node == nil) {
         //make a node for the sound
-        player = [[AVAudioPlayerNode alloc] init];
+        AVAudioPlayerNode *player = [[AVAudioPlayerNode alloc] init];
+        node = [[AudioNode alloc] initWithName:named buffer:buffer player:player];
         
         //attach the node to audio engine first
         [_engine attachNode:player];
@@ -243,40 +198,45 @@
         player.renderingAlgorithm = self.audioRenderingAlgo;
 
         // Add this to the player pool.
-        _playerDictionary[named] = player;
+        _nodeDictionary[named] = node;
     }
 
-    return player;
+    return node;
 }
 
 /**
  * Single shot audio playback at volume.
+ * THREAD SAFE
  */
 - (void) playAudio:(NSString*)named atVolume:(float)volume {
-    //occasionally, this can get called if the audio engine is not running.
-    if (![_engine isRunning]){
-        NSLog(@"AudioEngine: AudioEngine not running, could not play audio: %@", named);
-        return;
-    }
-    
-    AVAudioPCMBuffer  *buffer = [self bufferForName:named];
-    if( buffer==nil ) {
-        NSLog(@"AudioEngine: Could not play, missing audio: %@", named);
-        return;
-    }
-    
-    AVAudioPlayerNode *player = [self playerWithBuffer:buffer named:named];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //occasionally, this can get called if the audio engine is not running.
+        if (![_engine isRunning]){
+            NSLog(@"AudioEngine: AudioEngine not running, could not play audio: %@", named);
+            return;
+        }
+        
+        AVAudioPCMBuffer  *buffer = [self bufferForName:named];
+        if( buffer==nil ) {
+            NSLog(@"AudioEngine: Could not play, missing audio: %@", named);
+            return;
+        }
+        
+        AudioNode *node = [self nodeWithBuffer:buffer named:named];
 
-    //  Schedule the one-shot for immediate playback.
-    [player scheduleBuffer:buffer atTime:nil options:AVAudioPlayerNodeBufferInterrupts completionHandler:nil];
-    player.volume = volume;
-    [player play];
+        //  Schedule the one-shot for immediate playback.
+        [node.player scheduleBuffer:buffer atTime:nil options:AVAudioPlayerNodeBufferInterrupts completionHandler:nil];
+        node.player.volume = volume;
+        [node.player play];
+    });
 }
 
 /**
  * Load an audio file and return an audio node.
+ * RUN ON MAIN THREAD ONLY
  */
 - (AudioNode*) loadAudioNamed:(NSString*)named {
+    NSAssert([NSThread isMainThread], @"AudioEngine loadAudioNamed: called outside of main thread");
 
     AVAudioPCMBuffer  *buffer = [self bufferForName:named];
     if( buffer==nil ) {
@@ -284,21 +244,18 @@
         return nil;
     }
 
-    // Prep the player.
-    AVAudioPlayerNode *player = [self playerWithBuffer:buffer named:named];
-    
     // Make a stand-alone AudioNode.
-    AudioNode *audioNode = [[AudioNode alloc] initWithName:named buffer:buffer player:player];
+    AudioNode *audioNode = [self nodeWithBuffer:buffer named:named];
     return audioNode;
 }
 
 /**
  * Take in the Camera node, and update the listener position and orientation.
+ * THREAD SAFE
  */
 - (void) updateListenerFromCameraNode:(SCNNode*)cameraNode {
     SCNVector3 sp = cameraNode.position;
-    [_environment setListenerPosition:AVAudioMake3DPoint(sp.x, sp.y, sp.z)];
-
+    
     SCNQuaternion so = cameraNode.orientation;
     GLKQuaternion go = GLKQuaternionMake( so.x, so.y, so.z, so.w );
     GLKVector3 gfwd = GLKQuaternionRotateVector3(go, GLKVector3Make(0, 0, -1));
@@ -308,7 +265,10 @@
     AVAudio3DVector afwd = AVAudioMake3DVector(gfwd.x, gfwd.y, gfwd.z);
     AVAudio3DVector aup = AVAudioMake3DVector(gup.x, gup.y, gup.z);
 
-    [_environment setListenerVectorOrientation:AVAudioMake3DVectorOrientation(afwd, aup)];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_environment setListenerPosition:AVAudioMake3DPoint(sp.x, sp.y, sp.z)];
+        [_environment setListenerVectorOrientation:AVAudioMake3DVectorOrientation(afwd, aup)];
+    });
 }
 
 
@@ -316,6 +276,7 @@
 
 - (void)initAVAudioSession
 {
+    NSAssert([NSThread isMainThread], @"AudioEngine initAVAudioSession called outside of main thread");
     NSError *error;
     
     // Configure the audio session
@@ -365,8 +326,8 @@
         _isSessionInterrupted = YES;
         
         //stop the playback of the nodes
-        for( NSString *playerName in _playerDictionary ) {
-            AVAudioPlayerNode* player = _playerDictionary[playerName];
+        for( NSString *playerName in _nodeDictionary ) {
+            AVAudioPlayerNode* player = _nodeDictionary[playerName].player;
             [player stop];
         }
     }
@@ -450,9 +411,15 @@
     _engine = [[AVAudioEngine alloc] init];
     [_engine attachNode:_environment];
     
-    for( NSString *nodeName in _playerDictionary ) {
-        AVAudioPlayerNode *playerNode = _playerDictionary[nodeName];
-        [_engine attachNode:playerNode];
+    for( NSString *nodeName in _nodeDictionary ) {
+        AudioNode *node = _nodeDictionary[nodeName];
+        [_engine attachNode:node.player];
+        
+        // Restart playback of looping nodes.
+        if( node.looping ) {
+            NSLog(@"Resuming Loopig Audio: %@", nodeName);
+            [node play];
+        }
     }
 }
 
@@ -505,18 +472,23 @@
 }
 
 
+/// Play the audio.  THREAD SAFE
 - (void) play {
-    if( _looping ) {
-        [_player scheduleBuffer:_buffer atTime:nil options:AVAudioPlayerNodeBufferLoops|AVAudioPlayerNodeBufferInterrupts completionHandler:nil];
-    } else {
-        [_player scheduleBuffer:_buffer atTime:nil options:AVAudioPlayerNodeBufferInterrupts completionHandler:nil];
-    }
-    [_player play];
-//    NSLog(@"Playing %@ (%@)", _name, _player);
-//    NSLog(@"%@", [AudioEngine main].engine);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if( _looping ) {
+            [_player scheduleBuffer:_buffer atTime:nil options:AVAudioPlayerNodeBufferLoops|AVAudioPlayerNodeBufferInterrupts completionHandler:nil];
+        } else {
+            [_player scheduleBuffer:_buffer atTime:nil options:AVAudioPlayerNodeBufferInterrupts completionHandler:nil];
+        }
+        [_player play];
+//        NSLog(@"%@ Playing %@ (%@)", [NSThread isMainThread]?@"MAIN":@"BG", _name, _player);
+    });
 }
 
+// Stop the audio from playing.  THREAD SAFE
 - (void) stop {
-    [_player stop];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_player stop];
+    });
 }
 @end

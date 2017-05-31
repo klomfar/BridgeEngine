@@ -22,7 +22,6 @@
 
 BE_API
 @interface BEDebugSettingsViewController : UITableViewController
-
 @property(nonatomic, weak) id<BEDebugSettingsDelegate> delegate;
 
 /// Add a User Default's setting switch.

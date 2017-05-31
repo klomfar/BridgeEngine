@@ -5,10 +5,9 @@
 */
 
 #import "ViewController.h"
-#import "AppSettings.h"
+#import "AppDelegate.h"
 
 #import <BridgeEngine/BridgeEngine.h>
-#import <BridgeEngine/BEController.h>
 #import "CustomRenderMode.h"
 #import <cassert>
 
@@ -19,6 +18,11 @@
 // Since -Y is up in Bridge Engine convention, the pivot rotates from the typical convention.
 
 static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.0);
+
+// Hide performance charts, will be fixed in BE 5.2
+@interface BEMixedRealityMode(Samples)
+@property (nonatomic) BOOL performanceChartsHidden;
+@end
 
 //------------------------------------------------------------------------------
 
@@ -99,13 +103,13 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
     _markupNameList = @[ @"tree", @"chair", @"gift" ];
 
     BECaptureReplayMode replayMode = BECaptureReplayModeDisabled;
-    if ([AppSettings booleanValueFromAppSetting:@"replayCapture"
+    if ([BEAppSettings booleanValueFromAppSetting:SETTING_REPLAY_CAPTURE
            defaultValueIfSettingIsNotInBundle:NO])
     {
         replayMode = BECaptureReplayModeRealTime;
     }
     
-    self.runningInStereo = [AppSettings booleanValueFromAppSetting:@"stereoRendering"
+    self.runningInStereo = [BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_RENDERING
                                 defaultValueIfSettingIsNotInBundle:YES];
     
     _mixedReality = [[BEMixedRealityMode alloc]
@@ -114,26 +118,31 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
             kBECaptureReplayMode:
                 @(replayMode),
             kBEUsingWideVisionLens:
-                @([AppSettings booleanValueFromAppSetting:@"useWVL"
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_USE_WVL
                        defaultValueIfSettingIsNotInBundle:YES]),
             kBEStereoRenderingEnabled: @(self.runningInStereo),
             kBEUsingColorCameraOnly:
-                @([AppSettings booleanValueFromAppSetting:@"colorCameraOnly"
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_COLOR_CAMERA_ONLY
                        defaultValueIfSettingIsNotInBundle:NO]),
             kBERecordingOptionsEnabled:
-                @([AppSettings booleanValueFromAppSetting:@"enableRecording"
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_ENABLE_RECORDING
+                       defaultValueIfSettingIsNotInBundle:NO]),
+            kBEEnableStereoScanningBeta:
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_SCANNING
                        defaultValueIfSettingIsNotInBundle:NO]),
             kBEMapperVolumeResolutionKey:
-                @([AppSettings floatValueFromAppSetting:@"mapperVoxelResolution"
+                @([BEAppSettings floatValueFromAppSetting:@"mapperVoxelResolution"
                        defaultValueIfSettingIsNotInBundle:0.02]),
         }
         markupNames:_markupNameList
     ];
     
-    BEController *controller = [BEController sharedController];
-    controller.delegate = self;
+    [BEController sharedController].delegate = self;
 
     _mixedReality.delegate = self;
+
+    // Hide the performance charts by default.
+    _mixedReality.performanceChartsHidden = YES;
     
     [_mixedReality start];
 }
@@ -404,6 +413,9 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
 
 - (void)mixedRealityUpdateAtTime:(NSTimeInterval)time
 {
+    // Update the controller's camera world transform, so we're tracking with it.
+    [BEController sharedController].cameraTransform = SCNMatrix4ToGLKMatrix4(_mixedReality.localDeviceNode.worldTransform);
+
     // This method is called before rendering each frame.
     // It is safe to modify SceneKit objects from here.
     
