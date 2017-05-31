@@ -8,7 +8,7 @@ Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yu
 Unity 5.6 and GoogleVR 1.40 on iOS does not work well together. Please develop on <a href="https://unity3d.com/get-unity/download/archive" target="_blank">Unity 5.5.0f3</a> when using Bridge Engine for Unity package.
 
 #### Beta 5.1: Stereo Scanning
-Keep your iPhone in the Bridge Headset and scan your world by looking around!
+Keep your iPhone in the Bridge Headset and scan your world by looking around!  In-headset scanning is re-enabled however the feature is still in beta, please give us your feedback.
 
 Also featured in this release:
 
@@ -16,12 +16,11 @@ Also featured in this release:
 - BE For Unity - tracking of reticle works even if no raycasts hit a collider
 - Brand new Bridge Controller model, you'll see it in Bridget Sample when one is connected and you look down
 - Corrected Bridge controller rotation, works better in all orientations
-- Corrected Bridge controller track pad tracking and state updates, touch.y is +1 for front tip of controller
+- Corrected Bridge controller touchpad tracking and state updates, touch.y is +1 for front tip of controller
 - Debug setting UI at start of samples, makes for easier record and playback development workflow
-- Manual Bridge controller selection, for crowded environments like hackathons
+- Debug option for manual Bridge controller selection, for crowded environments like hackathons
 - Improved pathfinding, respects surfaces above Bridget and what is scanned floor
 - Audio Engine init thread safety checks, so iOS 10 audio doesn't stop working
-- Auto-adjusting exposure while relocalizing, so your daytime scans can work at night
 
 #### Beta 5: Bridge Controller 
 Bridge Engine now supports the official controller with 3-DoF rotational tracking, a capacitive touchpad, a trigger & multiple buttons. Additionally, we've loaded the beta with lots of small updates! The BRIDGET sample has improvements to the portal and scan effect; The Unity plugin has matured with a simplified Unity package; We added realistic 3D positional audio support; and you can now record your screen directly from the app using ReplayKit. Note: *Stereo scanning has been temporarly disabled while we address a known issue, but it will be back in the next release.*
