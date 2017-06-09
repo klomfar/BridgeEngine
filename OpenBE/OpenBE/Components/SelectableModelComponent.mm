@@ -46,9 +46,9 @@
         
         _target.node.categoryBitMask |= RAYCAST_IGNORE_BIT;
         _target.node.geometry.firstMaterial.lightingModelName = SCNLightingModelConstant;
-        [_target.node setRenderingOrder:TRANSPARENCY_RENDERING_ORDER+100];
         
         [self.node addChildNode:_target.node];
+        [self.node setReadsFromDepthBufferRecursively:YES];
 
         self.callbackBlock = nil;
     }

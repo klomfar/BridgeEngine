@@ -1,11 +1,21 @@
-# Welcome to the Bridge Engine Beta 5.1!
+# Welcome to the Bridge Engine Beta 5.2!
 
 We're glad to have you onboard. We're committed to enhancing Bridge Engine, so we take all of your feedback and support very earnestly.
 
 Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yuPufWPjCthmZYOOJG9ieRnGAL79" target="_blank">Occipital Youtube Playlist for recent videos on Bridge Engine</a>.  
 
 #### KNOWN ISSUES
-Unity 5.6 and GoogleVR 1.40 on iOS does not work well together. Please develop on <a href="https://unity3d.com/get-unity/download/archive" target="_blank">Unity 5.5.0f3</a> when using Bridge Engine for Unity package.
+- Scanning may stop if optical tracking is lost.
+- In some cases doing a Mono Scan and Mono Render mode will lead to rendering SceneKit elements with incorrect occlusion by the real world.
+- iOS 11.0 beta does not run mixed reality, VR-only
+- Unity 5.6 and GoogleVR 1.40 on iOS does not work well together. Please develop on <a href="https://unity3d.com/get-unity/download/archive" target="_blank">Unity 5.5.3f1</a> when using Bridge Engine for Unity package.
+
+#### Beta 5.2: Maintenance Release
+- Fixed a case where iOS audio system would stop working, until you plug or unplug headphones.  AudioEngine has been rebuilt to play nice.
+- Improved pathfinding performance
+- Added Auto Exposure into public release
+- Added light map to Bridge Controller model, so you can see it in all light conditions
+- Improved stereo scanning UI; tap through (no controller needed) and better instructions
 
 #### Beta 5.1: Stereo Scanning
 Keep your iPhone in the Bridge Headset and scan your world by looking around!  In-headset scanning is re-enabled however the feature is still in beta, please give us your feedback.

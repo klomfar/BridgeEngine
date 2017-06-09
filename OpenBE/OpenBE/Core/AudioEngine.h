@@ -66,12 +66,13 @@
 @property(nonatomic) float volume;
 @property(nonatomic, readonly) float duration;
 @property(nonatomic) BOOL looping;
+@property(nonatomic) BOOL playing;
 @property(nonatomic) SCNVector3 position;
 
 // Internal player object... useful for looping control in the RobotMeshControllerComponent, but normaly don't touch.
 @property(nonatomic, strong) AVAudioPlayerNode *player;
 
-- (instancetype)initWithName:(NSString*)name buffer:(AVAudioPCMBuffer*)buffer player:(AVAudioPlayerNode*) player;
+// Allocate new AudioNode objects with AudioEngine.
 
 /// Play the audio.  THREAD SAFE
 - (void)play;

@@ -133,4 +133,38 @@
     [_robotMeshComponent.robotNode removeAnimationForKey:key fadeOutDuration:duration];
 }
 
+/*  FIXME: Need to fill in the new iOS 11 SCNAnimatable stubs to robotNode
+- (void) addAnimationPlayer:(nonnull SCNAnimationPlayer *)player forKey:(nullable NSString *)key {
+<#statements#>
+}
+
+
+- (nullable SCNAnimationPlayer *) animationPlayerForKey:(nonnull NSString *)key {
+<#statements#>
+}
+
+
+- (void) removeAnimationForKey:(nonnull NSString *)key blendOutDuration:(CGFloat)duration {
+<#statements#>
+}
+
+
+- (void) setSpeed:(CGFloat)speed forAnimationKey:(nonnull NSString *)key {
+<#statements#>
+}
+
+
+- (nonnull id) copyWithZone:(nullable NSZone *)zone {
+<#statements#>
+}
+
+- (void) encodeWithCoder:(nonnull NSCoder *)aCoder {
+<#statements#>
+}
+
+- (nullable instancetype) initWithCoder:(nonnull NSCoder *)aDecoder {
+<#statements#>
+}
+*/
+
 @end

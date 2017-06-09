@@ -49,6 +49,8 @@ BE_API extern NSString* const kBEEnableStereoScanningBeta;
 /// control the voxel size used for the mapping phase. Larger voxels allow scanning a larger area, at decreased accuracy
 BE_API extern NSString* const kBEMapperVolumeResolutionKey;
 
+/// enable camera to auto expose while relocalizing
+BE_API extern NSString* const kBEAutoExposeWhileRelocalizing;
 
 //------------------------------------------------------------------------------
 

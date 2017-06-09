@@ -65,7 +65,7 @@
 @property (nonatomic, strong) RobotActionComponent* robot;
 @property (nonatomic, strong) GKEntity * robotEntity;
 @property (nonatomic, strong) ButtonContainerComponent * renderMenu;
-@property (nonatomic, strong) Component *fixedSizeReticle;
+@property (nonatomic, strong) FixedSizeReticleComponent *fixedSizeReticle;
 @property (nonatomic, strong) BridgeControllerComponent* bControllerComponent;
 
 @end
@@ -90,7 +90,11 @@
     // Here is a list of markup we'll use for our sample.
     // If the user decides, the locations of this markup will be saved on device.
 
-    _markupNameList = @[ @"Bridget", @"Rendering Menu"];
+    if ([BEAppSettings booleanValueFromAppSetting:SETTING_SHOW_RENDER_TYPES defaultValueIfSettingIsNotInBundle:NO]) {
+        _markupNameList = @[ @"Bridget", @"Rendering Menu"];
+    } else {
+        _markupNameList = @[]; // Go with auto-placement of bridget for better default Stereo Set-up experience. 
+    }
 
     BECaptureReplayMode replayMode = BECaptureReplayModeDisabled;
     if ([BEAppSettings booleanValueFromAppSetting:SETTING_REPLAY_CAPTURE
@@ -383,7 +387,9 @@
         buttonPortalComponent,
         ].mutableCopy;
     
-    [self setupRenderingMenu];
+    if ([BEAppSettings booleanValueFromAppSetting:SETTING_SHOW_RENDER_TYPES defaultValueIfSettingIsNotInBundle:NO]) {
+        [self setupRenderingMenu];
+    }
     
     // Ready to start the Scene Manager- this will start all the components in the scene.
     [[SceneManager main] startWithMixedRealityMode:_mixedReality];
@@ -399,6 +405,20 @@
     
     scale = 0.4;
     [_renderMenu.node setScale:SCNVector3Make(scale, scale, scale)];
+    
+    
+    // Find a roughly good starting position. If available, this will load floor and cover maps
+    // and find an open and uncovered area. Otherwise we'll use the normal obstacle occupancy map
+    // which may e.g. place the robot under a table.
+    GLKVector3 openPositon;
+    if (pathFindingComponent.noCoverPathFinding != nil) {
+        openPositon = [pathFindingComponent findLargestOpenAreaPoint:pathFindingComponent.noCoverPathFinding];
+    } else {
+        openPositon = [pathFindingComponent findLargestOpenAreaPoint:pathFindingComponent.pathFinding];
+    }
+
+    pathFindingComponent.reachableReferencePoint = openPositon;
+    [robotMeshControllerComponent setPosition:openPositon];
     
     //---------------------------------------------------------------------
     // now go to the markup if we need to
@@ -416,6 +436,7 @@
  
     // setup controller
     [BEController sharedController].delegate = self;
+    [self updateReticleInputMode];
 
     // if we found all the markups, skip markup editing.
     if (foundAllMarkup)
@@ -447,7 +468,6 @@
 - (void)mixedRealitySetUpSceneKitWorlds:(BEMappedAreaStatus)mappedAreaStatus
 {
     [self setUpEntityComponentSystem];
-    [self updateReticleInputMode];
 
     _sceneIsRunning = YES;
 }
@@ -477,8 +497,18 @@
     
     if ([markupChangedName isEqualToString: @"Bridget"])
     {
-        RobotMeshControllerComponent *meshController = (RobotMeshControllerComponent *)[self.robotEntity componentForClass:[RobotMeshControllerComponent class]];
-        [meshController setPosition:SCNVector3ToGLKVector3(markupNode.position)];
+        // Double check and align to nearest open point.
+        PathFindMoveToBehaviourComponent * pathFindingComponent = (PathFindMoveToBehaviourComponent*)[self.robotEntity componentForClass:PathFindMoveToBehaviourComponent.class];
+        GLKVector3 markupPoint = SCNVector3ToGLKVector3(markupNode.position);
+        if( [pathFindingComponent occupied:markupPoint] == NO ) {
+            pathFindingComponent.reachableReferencePoint = markupPoint;
+
+            RobotMeshControllerComponent *meshController = (RobotMeshControllerComponent *)[self.robotEntity componentForClass:[RobotMeshControllerComponent class]];
+            [meshController setPosition:markupPoint];
+        } else {
+            RobotBehaviourComponent *robotBehaviour = (RobotBehaviourComponent *)[self.robotEntity componentForClass:[RobotBehaviourComponent class]];
+            [robotBehaviour beSad];
+        }
     }
     else if ([markupChangedName isEqualToString: @"Rendering Menu"])
     {
@@ -572,7 +602,8 @@
 - (void) updateReticleInputMode {
     BOOL stereo = [BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_RENDERING defaultValueIfSettingIsNotInBundle:YES];
     BOOL connected = [BEController sharedController].isConnected;
-    BOOL enableReticleInput = connected || stereo;
+    BOOL enableReticleInput = (connected || stereo);
+    
     [EventManager main].useReticleAsTouchLocation = enableReticleInput;
     [_fixedSizeReticle setEnabled:enableReticleInput];
 

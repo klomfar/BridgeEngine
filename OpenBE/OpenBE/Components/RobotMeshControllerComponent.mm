@@ -157,12 +157,14 @@
     
     self.headCtrl = self.animatedHeadCtrl;
     
+    self.movementPeakVolume = 0.5;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         // Init a default audio for movement.
         // Special set-up happens in the setMovementAudio setter.
         AudioNode *moveAudio = [[AudioEngine main] loadAudioNamed:@"Robot_IdleMovingLoop.caf"];
         moveAudio.looping = YES;
-        moveAudio.volume = 0.5;
+        moveAudio.volume = 0;
         [self setMovementAudio:moveAudio];
     });
 
@@ -190,7 +192,11 @@
         [_robotBoxUnfoldingAnim setFadeInDuration:0];
         [_robotBoxUnfoldingAnim setFadeOutDuration:0];
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
+        SCNAnimationEvent *liftBodyToPositionEvent = [SCNAnimationEvent animationEventWithKeyTime:0.75 block:^(id<SCNAnimation> _Nonnull animation, id  _Nonnull animatedObject, BOOL playingBackward) {
+#else
         SCNAnimationEvent *liftBodyToPositionEvent = [SCNAnimationEvent animationEventWithKeyTime:0.75 block:^(CAAnimation * _Nonnull animation, id  _Nonnull animatedObject, BOOL playingBackward) {
+#endif
             RobotMeshControllerComponent *strongSelf = weakSelf;
             [SCNTransaction begin];
             [SCNTransaction setAnimationDuration:(1-0.75)*strongSelf.robotBoxUnfoldingAnim.duration];
@@ -200,7 +206,11 @@
         }];
 
         CGFloat nearEndFrame = (_robotBoxUnfoldingAnim.duration-(10.0/60.0))/_robotBoxUnfoldingAnim.duration;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
+        SCNAnimationEvent *finishUnboxingEvent = [SCNAnimationEvent animationEventWithKeyTime:nearEndFrame block:^(id<SCNAnimation> _Nonnull animation, id  _Nonnull animatedObject, BOOL playingBackward) {
+#else
         SCNAnimationEvent *finishUnboxingEvent = [SCNAnimationEvent animationEventWithKeyTime:nearEndFrame block:^(CAAnimation * _Nonnull animation, id  _Nonnull animatedObject, BOOL playingBackward) {
+#endif
             RobotMeshControllerComponent *strongSelf = weakSelf;
             if( strongSelf ) {
                 strongSelf->_robotBoxUnfolded = YES;
@@ -392,14 +402,14 @@
                 }
 
                 float frac = self.moveToTimer / self.moveToTimeInterval;
-                self.movementAudio.player.volume = self.movementAudio.volume * smoothstepDxf(0.f, 1.f, frac);
+                self.movementAudio.volume = self.movementPeakVolume * smoothstepDxf(0.f, 1.f, frac);
                 float progress = smoothstepf(0.f, 1.f, frac); // Try with basic accelerate/decelerate motion.
                 GLKVector3 position = GLKVector3Lerp(self.moveToStart, self.moveToTarget, progress );
                 self.node.position = SCNVector3FromGLKVector3(position);
                 self.movementAudio.position = self.node.position;
             } else {
                 self.node.position = SCNVector3FromGLKVector3(self.moveToTarget); // Get precisely on target.
-                self.movementAudio.player.volume = 0;
+                self.movementAudio.volume = 0;
                 self.movementAudio.position = self.node.position;
                 self.moveToTimer = self.moveToTimeInterval = 0; // Clear the timer, stop running movement ops.
             }
@@ -426,7 +436,7 @@
     _movementAudio = movementAudio;
     
     if( _movementAudio != nil ) {
-        _movementAudio.player.volume = 0;
+        _movementAudio.volume = 0;
         _movementAudio.looping = YES;
         [_movementAudio play];
     }

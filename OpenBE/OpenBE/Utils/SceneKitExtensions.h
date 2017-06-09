@@ -49,6 +49,7 @@
 - (void) setOpacityRecursively:(float)opacity;
 - (void) setEmissionRecursively:(id)emissiveValue;
 - (void) setWritesToDepthBufferRecursively:(BOOL)doDepthTest;
+- (void) setReadsFromDepthBufferRecursively:(BOOL)doDepthTest;
 
 @end
 

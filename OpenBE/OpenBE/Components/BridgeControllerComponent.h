@@ -17,8 +17,6 @@
 /// Initialize the BridgeController
 - (instancetype) init;
 
-- (void) setDepthTesting:(BOOL)doDepthTest;
-
 - (void) start;
 - (void) setEnabled:(bool)enabled;
 - (bool) isEnabled;

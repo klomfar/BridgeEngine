@@ -150,33 +150,6 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    // Here we initialize two gesture recognizers as a way to expose features.
-    
-    {
-        // Allocate and initialize the first tap gesture.
-        
-        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-        
-        // Specify that the gesture must be a single tap.
-        
-        tapRecognizer.numberOfTapsRequired = 1;
-        
-        // Add the tap gesture recognizer to the view.
-        
-        [self.view addGestureRecognizer:tapRecognizer];
-    }
-    
-    {
-        // Allocate and initialize the second gesture as a double-tap one.
-        
-        UITapGestureRecognizer *twoFingerTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeRenderMode)];
-        
-        twoFingerTapRecognizer.numberOfTouchesRequired = 2;
-        
-        [self.view addGestureRecognizer:twoFingerTapRecognizer];
-    }
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -191,6 +164,8 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
     [_mixedReality setRenderStyle:BERenderStyleSceneKitAndColorCamera withDuration:0.5];
 
     _experienceIsRunning = YES;
+    
+    [self addGestureRecognizers];
 }
 
 - (void)updateObjectPositionWithMarkupName:(NSString*)markupName
@@ -282,6 +257,27 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
 
     [self.highlightNode setHidden:NO];
 }
+
+#pragma mark - User Interaction
+
+- (void)addGestureRecognizers {
+    // Allocate and initialize the first tap gesture.
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    
+    // Specify that the gesture must be a single tap.
+    tapRecognizer.numberOfTapsRequired = 1;
+    
+    // Add the tap gesture recognizer to the view.
+    [self.view addGestureRecognizer:tapRecognizer];
+    
+    // Allocate and initialize the second gesture as a double-tap one.
+    UITapGestureRecognizer *twoFingerTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeRenderMode)];
+    twoFingerTapRecognizer.numberOfTouchesRequired = 2;
+    [self.view addGestureRecognizer:twoFingerTapRecognizer];
+}
+
+#pragma mark - Mixed Reality Delegate
+
 // --------------------------------------------
 // MixedReality Delegate Methods
 

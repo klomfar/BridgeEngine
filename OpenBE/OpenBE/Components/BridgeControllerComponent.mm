@@ -32,10 +32,9 @@ typedef void (^callback)(void);
     if(self)
     {
         self.node = [SCNNode node];
-        [[Scene main].rootNode addChildNode:self.node];
         
         //get mesh for the controller
-        SCNScene *bControllerScene =  [SCNScene sceneInFrameworkOrAppNamed:@"BridgeController.scn"];
+        SCNScene *bControllerScene =  [SCNScene sceneInFrameworkOrAppNamed:@"BridgeController-LightMap.scn"];
         self.ControllerNode = [[bControllerScene rootNode] childNodeWithName:@"Controller" recursively:YES];
         [self.ControllerNode setCategoryBitMaskRecursively:RAYCAST_IGNORE_BIT | BEShadowCategoryBitMaskCastShadowOntoSceneKit | BEShadowCategoryBitMaskCastShadowOntoEnvironment];
         [self.ControllerNode setEmissionRecursively:[UIColor colorWithWhite:0.1 alpha:1]];
@@ -49,12 +48,8 @@ typedef void (^callback)(void);
         
         [[Scene main].rootNode addChildNode:self.node];
     }
+    
     return self;
-}
-
-- (void) setDepthTesting:(BOOL)doDepthTest
-{
-    [self.ControllerNode setWritesToDepthBufferRecursively:doDepthTest];
 }
 
 - (void) start{

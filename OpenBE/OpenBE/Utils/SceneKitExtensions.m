@@ -219,6 +219,12 @@
     }
 }
 
+- (void) setReadsFromDepthBufferRecursively:(BOOL)doDepthTest {
+    self.geometry.firstMaterial.readsFromDepthBuffer = doDepthTest;
+    for( SCNNode * child in self.childNodes ) {
+        [child setReadsFromDepthBufferRecursively:doDepthTest];
+    }
+}
 
 + (SCNNode*) firstNodeFromSceneNamed:(NSString*)sceneName
 {

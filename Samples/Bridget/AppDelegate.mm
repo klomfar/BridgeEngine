@@ -121,7 +121,8 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
 - (void) prepareDebugSettingsVC:(BEDebugSettingsViewController*)vc {
     [vc addKey:SETTING_STEREO_SCANNING label:@"Stereo Scanning" defaultBool:YES];
     [vc addKey:SETTING_STEREO_RENDERING label:@"Stereo Rendering" defaultBool:YES];
-
+    [vc addKey:SETTING_SHOW_RENDER_TYPES label:@"Show Render Types" defaultBool:NO];
+    
     [vc addKey:SETTING_USE_WVL label:@"Use Wide Vision Lens" defaultBool:YES];
     [vc addKey:SETTING_COLOR_CAMERA_ONLY label:@"Color Camera Only" defaultBool:NO];
     
@@ -140,6 +141,7 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_COLOR_CAMERA_ONLY];
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_REPLAY_CAPTURE];
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_ENABLE_RECORDING];
+    [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_SHOW_RENDER_TYPES];
 }
 
 /**

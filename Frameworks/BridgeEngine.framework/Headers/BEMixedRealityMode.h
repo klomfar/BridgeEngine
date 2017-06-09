@@ -79,6 +79,7 @@ BE_API
  - `kBEUsingColorCameraOnly`: Whether the engine should try to connect to a Structure Sensor. Default is NO.
  - `kBEStereoRenderingEnabled`: If YES, we render two views, as if for a head-mounted display. If NO, we render a single (mono) view. Default is NO.
  - `kBERecordingOptionsEnabled`: If YES, a button to record a replay sequence will appear in mono mode. This option does nothing if kBEStereoRenderingEnabled or `kBECaptureReplayMode` are also enabled. **IMPORTANT**: this option will disable touch interactions, as the Record button will instantiate a tap recognizer.
+ - `kBEAutoExposeWhileRelocalizing`: If YES, the iOS color camera will auto-expose while trying to relocalize. Use this if lighting may have changed since the mapped area was captured. Default is NO.
  
  @param markupNames An optional list of markup names, which will persist in the scene over multiple runs of the appl. In your app, you may call [BEMixedRealityMode startMarkupEditing] to load our internal UI for setting and saving markup.
  */
