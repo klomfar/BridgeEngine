@@ -7,7 +7,7 @@ Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yu
 #### KNOWN ISSUES
 - Scanning may stop if optical tracking is lost.
 - In some cases doing a Mono Scan and Mono Render mode will lead to rendering SceneKit elements with incorrect occlusion by the real world.
-- iOS 11.0 beta does not run mixed reality, VR-only
+- iOS 11.0 beta does not run
 - Unity 5.6 and GoogleVR 1.40 on iOS does not work well together. Please develop on <a href="https://unity3d.com/get-unity/download/archive" target="_blank">Unity 5.5.3f1</a> when using Bridge Engine for Unity package.
 
 #### Beta 5.2: Maintenance Release
