@@ -5,17 +5,23 @@ We're glad to have you onboard. We're committed to enhancing Bridge Engine, so w
 Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yuPufWPjCthmZYOOJG9ieRnGAL79" target="_blank">Occipital Youtube Playlist for recent videos on Bridge Engine</a>.  
 
 #### KNOWN ISSUES
-- Scanning may stop if optical tracking is lost.
-- In some cases doing a Mono Scan and Mono Render mode will lead to rendering SceneKit elements with incorrect occlusion by the real world.
-- iOS 11.0 beta does not run
-- Unity 5.6 and GoogleVR 1.40 on iOS does not work well together. Please develop on <a href="https://unity3d.com/get-unity/download/archive" target="_blank">Unity 5.5.3f1</a> when using Bridge Engine for Unity package.
+- Scanning stops mapping new geometry if tracking from the color camera is lost.
+- In some cases doing scanning and using the mono rendering mode will lead to rendering SceneKit elements with incorrect occlusion by the real world
+- iOS 11.0 beta does not work
+- Unity 5.6 does not work. Please develop on <a href="https://unity3d.com/get-unity/download/archive" target="_blank">Unity 5.5.3f1</a> when using Bridge Engine for Unity package.
 
 #### Beta 5.2: Maintenance Release
-- Fixed a case where iOS audio system would stop working, until you plug or unplug headphones.  AudioEngine has been rebuilt to play nice.
-- Improved pathfinding performance
-- Added Auto Exposure into public release
-- Added light map to Bridge Controller model, so you can see it in all light conditions
-- Improved stereo scanning UI; tap through (no controller needed) and better instructions
+We're cleaning up a few odds and ends. Keep up the great feedback!
+
+The biggest issue we cleared up was an unusual case of iOS 10's whole audio system stopping from playing any audio when OpenBE's `AudioEngine` attempted to play an audio clip. Get this update to clear it up. No code changes required.
+
+There is a new Bridge Engine option `kBEAutoExposeWhileRelocalizing` that you can try out. This will enable the color camera to auto expose while relocalizing, which can re-establish a lock in changing light conditions. Let us know what you think.
+
+Other odds and ends:
+
+- Improved pathfinding performance, both speed and quality.  Please let us know if Bridget gets stuck anywhere!
+- Baked in some lighting onto the Bridge Controller model, so you can see it in all light conditions.
+- Improved the in-headset scanning UI; you can tap through with no controller needed, and improved the in-headset hud instructions.
 
 #### Beta 5.1: Stereo Scanning
 Keep your iPhone in the Bridge Headset and scan your world by looking around!  In-headset scanning is re-enabled however the feature is still in beta, please give us your feedback.
