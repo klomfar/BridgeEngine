@@ -115,6 +115,8 @@
     return self;
 }
 
+#pragma mark - Setup
+
 - (void) start {
     [super start];
     
@@ -138,18 +140,8 @@
     self.robotBoxRootCtrl = [_robotNode childNodeWithName:@"BoxRoot" recursively:YES];
     self.targetLookAtPosition = GLKVector3Make(1000.f, 0.f, 1000.f);
     
-    
-    { // Add some physics bodies to the model
-        SCNNode *vemojiHeadNode = [_animatedHeadCtrl childNodeWithName:@"Vemoji_Head_Mesh" recursively:NO];
-        SCNPhysicsBody *vemojiHeadPhysics = [SCNPhysicsBody bodyWithType:SCNPhysicsBodyTypeKinematic shape:nil]; 
-        vemojiHeadNode.physicsBody = vemojiHeadPhysics;
-        
-        _bodyCtrl.physicsBody = [SCNPhysicsBody bodyWithType:SCNPhysicsBodyTypeKinematic shape:nil];
-        SCNNode *larm = [_rootCtrl childNodeWithName:@"Boxy_LArmMesh" recursively:YES];
-        larm.physicsBody = [SCNPhysicsBody bodyWithType:SCNPhysicsBodyTypeKinematic shape:nil];
-
-        SCNNode *rarm = [_rootCtrl childNodeWithName:@"Boxy_RArm_Mesh" recursively:YES];
-        rarm.physicsBody = [SCNPhysicsBody bodyWithType:SCNPhysicsBodyTypeKinematic shape:nil];
+    if (!self.startWithUnboxingSequence) {
+        [self setupRobotPhysics];
     }
     
     // default
@@ -245,9 +237,6 @@
         // Make the robotBox model a selectable that we can target.
         _robotBoxRadius = 0.2;
         self.robotBoxSelectable = [[SelectableModelComponent alloc] initWithMarkupName:@"RobotBox" withRadius:_robotBoxRadius];
-        SCNVector3 boxPos = self.node.position;
-        boxPos.y -= _robotBoxRadius;
-        _robotBoxSelectable.node.position = boxPos;
         
         // Defer hooking up the component so we don't mutate the SceneManager entities while starting.
         [[SceneManager main].mixedRealityMode runBlockInRenderThread:^(void) {
@@ -255,10 +244,12 @@
             [_robotBoxSelectable start];
         }];
 
+        // Handle selecting the box, kick off the box unfolding sequence and remove the callback handler.
         _robotBoxSelectable.callbackBlock = ^{
             RobotMeshControllerComponent *strongSelf = weakSelf;
             if( strongSelf ) {
                 [strongSelf setRobotBoxUnfolded:YES];
+                [strongSelf setupRobotPhysics];
                 strongSelf->_robotBoxSelectable.callbackBlock = nil;
             }
         };
@@ -278,7 +269,17 @@
 
     //  [SceneKit printSceneHierarchy:self.node];
 }
-
+                                                  
+- (void)setupRobotPhysics {
+    SCNNode *colliderNode = [SCNNode nodeWithGeometry:[SCNBox boxWithWidth:1.38 height:1.61 length:0.89 chamferRadius:0]];
+    colliderNode.scale = {self.scale, self.scale, self.scale};
+    colliderNode.position = {0, 0.7, 0};
+    colliderNode.opacity = 0.0;
+    colliderNode.name = @"Robot Collider";
+    colliderNode.physicsBody = [SCNPhysicsBody bodyWithType:SCNPhysicsBodyTypeKinematic shape:nil];
+    [self.robotBodyNode addChildNode:colliderNode];
+}
+                                                  
 #pragma mark - CAAnimation control
 
 - (BOOL) isAnimated  {
@@ -337,6 +338,10 @@
     [self handleMoveTo:0];
 }
 
+- (void) setRotationEuler:(GLKVector3) euler {
+    self.robotBodyNode.eulerAngles = SCNVector3FromGLKVector3(euler);
+}
+                                                  
 - (void) updateWithDeltaTime:(NSTimeInterval)seconds {
     if( ![self isEnabled] ) return;
     if( ![Scene main].rootNode ) return;

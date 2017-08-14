@@ -6,16 +6,21 @@
 
 #pragma once
 
-#import <BridgeEngine/BridgeEngineAPI.h>
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
+
+#if TARGET_OS_IOS
+#import <BridgeEngine/BridgeEngineAPI.h>
+#else
+#import "BridgeEngineAPI.h"
+#endif
 
 //------------------------------------------------------------------------------
 
 /**
  * Bridge controller button bit values
  */
-typedef NS_ENUM(unsigned, BEControllerButtons) {
+typedef NS_OPTIONS(NSUInteger, BEControllerButtons) {
     BEControllerButtonPrimary   = 1<<0, // Trigger pulled or CODAWheel clicker
     BEControllerButtonSecondary = 1<<1, // Bridge Button 1 - App button with (•••)
     BEControllerButtonHomePower = 1<<2, // Bridge Button 2 - Home/Power button with (o)

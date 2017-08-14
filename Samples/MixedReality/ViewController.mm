@@ -19,11 +19,6 @@
 
 static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.0);
 
-// Hide performance charts, will be fixed in BE 5.2
-@interface BEMixedRealityMode(Samples)
-@property (nonatomic) BOOL performanceChartsHidden;
-@end
-
 //------------------------------------------------------------------------------
 
 #pragma mark - ViewController ()
@@ -141,9 +136,6 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
 
     _mixedReality.delegate = self;
 
-    // Hide the performance charts by default.
-    _mixedReality.performanceChartsHidden = YES;
-    
     [_mixedReality start];
 }
 

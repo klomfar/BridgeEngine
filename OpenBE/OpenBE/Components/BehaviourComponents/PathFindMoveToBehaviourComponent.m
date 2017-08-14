@@ -104,8 +104,6 @@ typedef void (^callback)(void);
 - (void) start {
     [super start];
 
-    self.pathFinding = [[PathFinding alloc] init];
-    
     {
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                              NSUserDomainMask, YES);
@@ -136,14 +134,19 @@ typedef void (^callback)(void);
                 coverImageBuf[i+1] = 255 * (occupied ? 1 : 0);
                 coverImageBuf[i+2] = 255 * (occupied ? 1 : 0);
                 coverImageBuf[i+3] = 255;
+                
+                // Invert the floorImageBuf for our path finding to work.
+                floorImageBuf[i] = 255 - floorImageBuf[i];
             }
             [PathFindMoveToBehaviourComponent lockImage:&floorImage buffer:floorImageBuf];
-            [PathFindMoveToBehaviourComponent lockImage:&coveringImage buffer:coverImageBuf];
+            self.pathFinding = [[PathFinding alloc] initWithImage:floorImage];
 
+            [PathFindMoveToBehaviourComponent lockImage:&coveringImage buffer:coverImageBuf];
             self.noCoverPathFinding = [[PathFinding alloc] initWithImage:coveringImage];
         }
         else
         {
+            self.pathFinding = [[PathFinding alloc] init];
             self.noCoverPathFinding = nil;
         }
     }

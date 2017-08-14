@@ -66,6 +66,10 @@ typedef void (^callback)(void);
 
 - (void) updateWithDeltaTime:(NSTimeInterval)seconds{
     [super updateWithDeltaTime:seconds];
+    
+    if (!self.isEnabled) {
+        return;
+    }
 
     BEController *controller = BEController.sharedController;
     BEControllerButtons buttons = controller.buttons;

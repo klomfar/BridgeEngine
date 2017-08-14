@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2C22A9AE1EAABC69000A96EF /* BridgeControllerComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C22A9AC1EAABC69000A96EF /* BridgeControllerComponent.h */; };
 		2C22A9AF1EAABC69000A96EF /* BridgeControllerComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2C22A9AD1EAABC69000A96EF /* BridgeControllerComponent.mm */; };
+		2C4C7F0F1F27487200E69154 /* ProjectedGeometryComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C4C7F0D1F27487200E69154 /* ProjectedGeometryComponent.h */; };
+		2C4C7F101F27487200E69154 /* ProjectedGeometryComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C4C7F0E1F27487200E69154 /* ProjectedGeometryComponent.m */; };
 		2C5DA53C1E00EF1900A60606 /* ScanEnvironmentShader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C5DA53A1E00EF1900A60606 /* ScanEnvironmentShader.h */; };
 		2C5DA53D1E00EF1900A60606 /* ScanEnvironmentShader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2C5DA53B1E00EF1900A60606 /* ScanEnvironmentShader.mm */; };
 		2C5DA5421E00F06F00A60606 /* ScanComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C5DA53E1E00F06F00A60606 /* ScanComponent.h */; };
@@ -122,6 +124,8 @@
 /* Begin PBXFileReference section */
 		2C22A9AC1EAABC69000A96EF /* BridgeControllerComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeControllerComponent.h; sourceTree = "<group>"; };
 		2C22A9AD1EAABC69000A96EF /* BridgeControllerComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BridgeControllerComponent.mm; sourceTree = "<group>"; };
+		2C4C7F0D1F27487200E69154 /* ProjectedGeometryComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectedGeometryComponent.h; sourceTree = "<group>"; };
+		2C4C7F0E1F27487200E69154 /* ProjectedGeometryComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectedGeometryComponent.m; sourceTree = "<group>"; };
 		2C5DA53A1E00EF1900A60606 /* ScanEnvironmentShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanEnvironmentShader.h; sourceTree = "<group>"; };
 		2C5DA53B1E00EF1900A60606 /* ScanEnvironmentShader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScanEnvironmentShader.mm; sourceTree = "<group>"; };
 		2C5DA53E1E00F06F00A60606 /* ScanComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanComponent.h; sourceTree = "<group>"; };
@@ -346,10 +350,12 @@
 				2DCD70841DFFEF8D003691AE /* MoveRobotEventComponent.m */,
 				2DCD70851DFFEF8D003691AE /* NavigationComponent.h */,
 				2DCD70861DFFEF8D003691AE /* NavigationComponent.m */,
-				6DD7C9411E5CF614006AAC6F /* PortalComponent.h */,
-				6DD7C9421E5CF614006AAC6F /* PortalComponent.mm */,
 				2DCD70871DFFEF8D003691AE /* PhysicsContactAudioComponent.h */,
 				2DCD70881DFFEF8D003691AE /* PhysicsContactAudioComponent.m */,
+				6DD7C9411E5CF614006AAC6F /* PortalComponent.h */,
+				6DD7C9421E5CF614006AAC6F /* PortalComponent.mm */,
+				2C4C7F0D1F27487200E69154 /* ProjectedGeometryComponent.h */,
+				2C4C7F0E1F27487200E69154 /* ProjectedGeometryComponent.m */,
 				2DCD708B1DFFEF8D003691AE /* RobotActionComponent.h */,
 				2DCD708C1DFFEF8D003691AE /* RobotActionComponent.mm */,
 				2DCD708D1DFFEF8D003691AE /* RobotBehaviourComponent.h */,
@@ -444,6 +450,7 @@
 				2DCD73061DFFEF9D003691AE /* Math.h in Headers */,
 				2DCD70481DFFEF84003691AE /* EventManager.h in Headers */,
 				2C5DA5481E00F12700A60606 /* ScanBehaviourComponent.h in Headers */,
+				2C4C7F0F1F27487200E69154 /* ProjectedGeometryComponent.h in Headers */,
 				2DCD70D21DFFEF8D003691AE /* NavigationComponent.h in Headers */,
 				6DD7C9431E5CF614006AAC6F /* PortalComponent.h in Headers */,
 				2DCD704A1DFFEF84003691AE /* GeometryComponent.h in Headers */,
@@ -571,6 +578,7 @@
 				2DCD73081DFFEF9D003691AE /* PathFinding.mm in Sources */,
 				2DCD70491DFFEF84003691AE /* EventManager.m in Sources */,
 				2DCD70B81DFFEF8D003691AE /* BlockDemoReticleComponent.m in Sources */,
+				2C4C7F101F27487200E69154 /* ProjectedGeometryComponent.m in Sources */,
 				2C5DA5491E00F12700A60606 /* ScanBehaviourComponent.m in Sources */,
 				2DCD70D11DFFEF8D003691AE /* MoveRobotEventComponent.m in Sources */,
 				2DCD70431DFFEF84003691AE /* Component.m in Sources */,

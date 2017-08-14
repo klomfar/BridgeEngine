@@ -823,13 +823,6 @@ struct setNode
             return 1.414213f;
     };
 
-    auto euclidieanDist = [](const GraphLocation& a, const GraphLocation& b) -> float
-    {
-        const float xTerm = ((float)a.first - b.first);
-        const float yTerm = ((float)a.second - b.second);
-        return std::sqrt(xTerm*xTerm + yTerm*yTerm);
-    };
-
     auto diagonalDist = [](const GraphLocation& a, const GraphLocation& b) -> float
     {
         const int dx = abs(a.first - b.first);

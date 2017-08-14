@@ -34,9 +34,9 @@
 #import <OpenBE/Components/SpawnComponent.h>
 #import <OpenBE/Components/SpawnPortalComponent.h>
 #import <OpenBE/Components/VRWorldComponent.h>
+#import <OpenBE/Components/ProjectedGeometryComponent.h>
 
 #import <OpenBE/Shaders/ScanEnvironmentShader.h>
-
 
 // Behaviors
 #import <OpenBE/Components/BehaviourComponents/BeamUIBehaviourComponent.h>
@@ -48,13 +48,9 @@
 #import <OpenBE/Components/BehaviourComponents/PathFindMoveToBehaviourComponent.h>
 #import <OpenBE/Components/BehaviourComponents/ScanBehaviourComponent.h>
 
+
 #import <OpenBE/Utils/ComponentUtils.h>
 #import <OpenBE/Utils/SceneKitExtensions.h>
-
-// Hide performance charts, will be fixed in BE 5.2
-@interface BEMixedRealityMode(Samples)
-@property (nonatomic) BOOL performanceChartsHidden;
-@end
 
 //------------------------------------------------------------------------------
 #pragma mark - ViewController ()
@@ -67,6 +63,7 @@
 @property (nonatomic, strong) ButtonContainerComponent * renderMenu;
 @property (nonatomic, strong) FixedSizeReticleComponent *fixedSizeReticle;
 @property (nonatomic, strong) BridgeControllerComponent* bControllerComponent;
+@property (nonatomic, strong) ProjectedGeometryComponent *robotProjectionComponent;
 
 @end
 //------------------------------------------------------------------------------
@@ -78,6 +75,7 @@
     BEMixedRealityMode* _mixedReality;
     NSArray*            _markupNameList;
     BOOL                _sceneIsRunning;
+    BOOL                _experienceIsRunning; // Hold input events until we're done markup editing and experience is going. 
     VRWorldComponent *_vrWorld;
     PortalComponent *_portal;
 }
@@ -89,12 +87,17 @@
     // Markup is optional physical annotations of a scanned scene, that persist between app launches.
     // Here is a list of markup we'll use for our sample.
     // If the user decides, the locations of this markup will be saved on device.
-
-    if ([BEAppSettings booleanValueFromAppSetting:SETTING_SHOW_RENDER_TYPES defaultValueIfSettingIsNotInBundle:NO]) {
-        _markupNameList = @[ @"Bridget", @"Rendering Menu"];
+    NSMutableArray<NSString*> *markupNames = @[].mutableCopy;
+    if (![BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_SCANNING defaultValueIfSettingIsNotInBundle:NO]) {
+        [markupNames addObject:@"Bridget"];
+        if ([BEAppSettings booleanValueFromAppSetting:SETTING_SHOW_RENDER_TYPES defaultValueIfSettingIsNotInBundle:NO]) {
+            [markupNames addObject:@"Rendering Menu"];
+        }
     } else {
         _markupNameList = @[]; // Go with auto-placement of bridget for better default Stereo Set-up experience. 
     }
+    _markupNameList = markupNames.copy;
+    
 
     BECaptureReplayMode replayMode = BECaptureReplayModeDisabled;
     if ([BEAppSettings booleanValueFromAppSetting:SETTING_REPLAY_CAPTURE
@@ -129,9 +132,6 @@
     ];
 
     _mixedReality.delegate = self;
-
-    // Hide the performance charts by default.
-    _mixedReality.performanceChartsHidden = YES;
 
     // Link the event manager to this mixed reality instance.
     [EventManager main].mixedRealityMode = _mixedReality;
@@ -207,6 +207,12 @@
     self.fixedSizeReticle = [[FixedSizeReticleComponent alloc] init];
     //Component *fixedSizeReticle = [[BlockDemoReticleComponent alloc] init];
     [gazeEntity addComponent:_fixedSizeReticle];
+    
+    // BController Entity
+    self.bControllerComponent = [[BridgeControllerComponent alloc] init];
+    GKEntity *controllerEntity = [[SceneManager main] createEntity];
+    [controllerEntity addComponent:self.bControllerComponent];
+    [self.bControllerComponent setEnabled:YES];
 
     [self updateReticleInputMode];
     
@@ -229,7 +235,13 @@
 
     ScanComponent * scanComponent = [[ScanComponent alloc] init];
     [self.robotEntity addComponent:scanComponent];
-
+    
+    // Markup Projection Object
+    SCNNode *robotBoxNode = [SCNNode firstNodeFromSceneNamed:@"Robot_Box.dae"];
+    robotBoxNode.eulerAngles = {-M_PI, 0, 0};  // flip it to upright
+    self.robotProjectionComponent = [[ProjectedGeometryComponent alloc] initWithChildNode:robotBoxNode];
+    self.robotProjectionComponent.node.scale = {0.25, 0.25, 0.25};
+    
     // Behaviour Components
     RobotBehaviourComponent * behaviourComponent = [[RobotBehaviourComponent alloc] init];
     [self.robotEntity addComponent:behaviourComponent];
@@ -267,16 +279,11 @@
     _portal.overlayComponent = colorOverlay;
     _vrWorld.portalComponent = _portal;
     _portal.robotEntity = self.robotEntity;
+    _portal.bridgeControllerComponent = self.bControllerComponent;
     _portal.stereoRendering = stereo;
     //_portal.interactive = [BEAppSettings booleanValueFromAppSetting:SETTING_PLAY_SCRIPT defaultValueIfSettingIsNotInBundle:NO] == NO;
     [[[SceneManager main] createEntity] addComponent:_portal];
     
-    // BController Entity
-    self.bControllerComponent = [[BridgeControllerComponent alloc] init];
-    GKEntity *controllerEntity = [[SceneManager main] createEntity];
-    [controllerEntity addComponent:self.bControllerComponent];
-    [self.bControllerComponent setEnabled:YES];
-
     // spawn portal
     SpawnPortalComponent * spawnPortalComponent = [[SpawnPortalComponent alloc] init];
     spawnPortalComponent.vrWorldComponent = _vrWorld;
@@ -467,6 +474,9 @@
 
 - (void)mixedRealitySetUpSceneKitWorlds:(BEMappedAreaStatus)mappedAreaStatus
 {
+    _experienceIsRunning = NO;
+    _sceneIsRunning = NO;
+
     [self setUpEntityComponentSystem];
 
     _sceneIsRunning = YES;
@@ -480,10 +490,16 @@
     RobotBehaviourComponent * behaviourComponent = (RobotBehaviourComponent *)[ComponentUtils getComponentFromEntity:self.robotEntity ofClass:[RobotBehaviourComponent class]];
     [behaviourComponent runIdleBehaviours:YES];
     [behaviourComponent cameraMovementTriggerAttention:YES];
+    
+    _experienceIsRunning = YES;
+    
+    [self updateReticleInputMode];
 }
 
 - (void)mixedRealityMarkupEditingEnded
 {
+    self.robotProjectionComponent.node.hidden = YES;
+    
     // If markup editing is over, then any experience in the scene may be started.
     [self startExperience];
 }
@@ -500,11 +516,13 @@
         // Double check and align to nearest open point.
         PathFindMoveToBehaviourComponent * pathFindingComponent = (PathFindMoveToBehaviourComponent*)[self.robotEntity componentForClass:PathFindMoveToBehaviourComponent.class];
         GLKVector3 markupPoint = SCNVector3ToGLKVector3(markupNode.position);
+        GLKVector3 markupRotationEuler = SCNVector3ToGLKVector3(markupNode.eulerAngles);
         if( [pathFindingComponent occupied:markupPoint] == NO ) {
             pathFindingComponent.reachableReferencePoint = markupPoint;
 
             RobotMeshControllerComponent *meshController = (RobotMeshControllerComponent *)[self.robotEntity componentForClass:[RobotMeshControllerComponent class]];
             [meshController setPosition:markupPoint];
+            [meshController setRotationEuler:markupRotationEuler];
         } else {
             RobotBehaviourComponent *robotBehaviour = (RobotBehaviourComponent *)[self.robotEntity componentForClass:[RobotBehaviourComponent class]];
             [robotBehaviour beSad];
@@ -524,6 +542,22 @@
         [_renderMenu.node setPosition:p];
         [_renderMenu.node setRotation:markupNode.rotation];
     }
+}
+
+- (BOOL)mixedRealityBridgeShouldProjectMarkupNode:(NSString *)markupName position:(SCNVector3)position eulerAngles:(SCNVector3)eulerAngles
+{
+    if ([markupName isEqualToString: @"Bridget"])
+    {
+        self.robotProjectionComponent.node.position = position;
+        self.robotProjectionComponent.node.eulerAngles = eulerAngles;
+        self.robotProjectionComponent.node.hidden = NO;
+        
+        return NO;
+    } else {
+        self.robotProjectionComponent.node.hidden = YES;
+    }
+    
+    return YES;
 }
 
 - (void)mixedRealityUpdateAtTime:(NSTimeInterval)time
@@ -551,12 +585,14 @@
 }
 
 - (void)controllerButtons:(BEControllerButtons)buttons down:(BEControllerButtons)buttonsDown up:(BEControllerButtons)buttonsUp {
-    if( (buttonsDown & BEControllerButtonPrimary) != 0) {
-        [[EventManager main] controllerButtonDown];
-    }
-    
-    if( (buttonsUp & BEControllerButtonPrimary) != 0) {
-        [[EventManager main] controllerButtonUp];
+    if( _experienceIsRunning ) {
+        if( (buttonsDown & BEControllerButtonPrimary) != 0) {
+            [[EventManager main] controllerButtonDown];
+        }
+        
+        if( (buttonsUp & BEControllerButtonPrimary) != 0) {
+            [[EventManager main] controllerButtonUp];
+        }
     }
 }
 
@@ -569,23 +605,32 @@
 // Touch handling helpers
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [[EventManager main] touchesBegan:touches withEvent:event];
+    if( _experienceIsRunning ) {
+        [[EventManager main] touchesBegan:touches withEvent:event];
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [[EventManager main]  touchesEnded:touches withEvent:event];
+    if( _experienceIsRunning ) {
+        [[EventManager main]  touchesEnded:touches withEvent:event];
+    }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [[EventManager main] touchesCancelled:touches withEvent:event];
+    if( _experienceIsRunning ) {
+        [[EventManager main] touchesCancelled:touches withEvent:event];
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [[EventManager main] touchesMoved:touches withEvent:event];
+    if( _experienceIsRunning ) {
+        [[EventManager main] touchesMoved:touches withEvent:event];
+    }
 }
+
 - (void)handleTwoFingerTap:(UITapGestureRecognizer *)sender
 {
     // Increment through render styles, with fading transitions.
@@ -605,7 +650,7 @@
     BOOL enableReticleInput = (connected || stereo);
     
     [EventManager main].useReticleAsTouchLocation = enableReticleInput;
-    [_fixedSizeReticle setEnabled:enableReticleInput];
+    [_fixedSizeReticle setEnabled:enableReticleInput && _experienceIsRunning];
 
     // Only show Bridge Controller if it's specifically connected. 
     [_bControllerComponent setEnabled:BEController.sharedController.isBridgeControllerConnected];

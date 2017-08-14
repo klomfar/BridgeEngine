@@ -48,6 +48,7 @@ typedef NS_ENUM (NSUInteger, RobotBodies) {
 - (GLKVector3) getForward;
 
 - (void) setPosition:(GLKVector3) position;
+- (void) setRotationEuler:(GLKVector3) euler;
 
 - (void) start;
 - (void) moveTo:(GLKVector3)moveToTarget moveIn:(float)seconds;

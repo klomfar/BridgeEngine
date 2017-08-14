@@ -52,6 +52,11 @@ BE_API extern NSString* const kBEMapperVolumeResolutionKey;
 /// enable camera to auto expose while relocalizing
 BE_API extern NSString* const kBEAutoExposeWhileRelocalizing;
 
+/// set FPS for the bridge engine (this only works in headless mode)
+BE_API extern NSString* const kBEFpsForTracking;
+
+
+
 //------------------------------------------------------------------------------
 
 /// Bridge Engine Capture Replay Mode

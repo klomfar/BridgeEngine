@@ -8,13 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
+/// Use the 120° Wide View Lens
 #define SETTING_USE_WVL                         @"useWVL"
-#define SETTING_COLOR_CAMERA_ONLY               @"colorCameraOnly"
-#define SETTING_STEREO_RENDERING                @"stereoRendering"
-#define SETTING_STEREO_SCANNING                 @"stereoScanning"
-#define SETTING_REPLAY_CAPTURE                  @"replayCapture"
-#define SETTING_ENABLE_RECORDING                @"enableRecording"
 
+/// Load existing scan and track using only the Color Camera, no structure sensor.  This is useful for debugging a live scene while wired.
+#define SETTING_COLOR_CAMERA_ONLY               @"colorCameraOnly"
+
+/// Render in stereo, for use in Bridge Headset
+#define SETTING_STEREO_RENDERING                @"stereoRendering"
+
+/// Use the in-headset stereo scanning UI
+#define SETTING_STEREO_SCANNING                 @"stereoScanning"
+
+/// Replay the last OCC recording.  This is useful for debugging and highly repeatable.
+#define SETTING_REPLAY_CAPTURE                  @"replayCapture"
+
+/// Enable the OCC in-scene recording interface.
+#define SETTING_ENABLE_RECORDING                @"enableRecording"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

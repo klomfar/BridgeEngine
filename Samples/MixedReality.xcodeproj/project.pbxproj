@@ -20,7 +20,6 @@
 		6F5CA0A81C751A4B00A33642 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F5CA0A71C751A4B00A33642 /* Assets.xcassets */; };
 		6F5CA0AB1C751A4B00A33642 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F5CA0A91C751A4B00A33642 /* LaunchScreen.storyboard */; };
 		6F85C2751C7E69C600152850 /* Assets.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F85C2741C7E69C600152850 /* Assets.scnassets */; };
-		6FF00A3B1C812D61009A3BCD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6FF00A3A1C812D61009A3BCD /* Settings.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -73,7 +72,6 @@
 		6F7265D61C1B91EC0001C800 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		6F85C2741C7E69C600152850 /* Assets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Assets.scnassets; sourceTree = "<group>"; };
 		6F9041F81C18DD4800FCD94D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		6FF00A3A1C812D61009A3BCD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		7E5132211AEBF3D000B75178 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		94892A221BB20AA300E8C5E9 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		DA28568D1C6E546E0030250A /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
@@ -146,7 +144,6 @@
 			isa = PBXGroup;
 			children = (
 				6F7255EA1C77F99D00409AA2 /* MixedReality.xcconfig */,
-				6FF00A3A1C812D61009A3BCD /* Settings.bundle */,
 				6F5CA0A71C751A4B00A33642 /* Assets.xcassets */,
 				6F85C2741C7E69C600152850 /* Assets.scnassets */,
 				6F5CA0AC1C751A4B00A33642 /* Info.plist */,
@@ -232,7 +229,6 @@
 				6F5CA0A81C751A4B00A33642 /* Assets.xcassets in Resources */,
 				6F5CA0AB1C751A4B00A33642 /* LaunchScreen.storyboard in Resources */,
 				6F5CA0A61C751A4B00A33642 /* Main.storyboard in Resources */,
-				6FF00A3B1C812D61009A3BCD /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

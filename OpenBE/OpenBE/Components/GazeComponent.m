@@ -13,6 +13,7 @@
 
 @interface GazeComponent()
 @property (strong) GKEntity * activeEntity;
+@property CFTimeInterval lastUpdate;
 @end
 
 @implementation GazeComponent
@@ -25,6 +26,13 @@
 
 - (void) updateWithDeltaTime:(NSTimeInterval)seconds {
     if( ![self isEnabled] ) return;
+    
+    // Let's only run this 5 times a second!
+    CFTimeInterval startTime = CACurrentMediaTime();
+    if (startTime - self.lastUpdate < 1.0 / 5.0) {
+        return;
+    }
+    self.lastUpdate = startTime;
     
     float maxDistance = GAZE_INTERSECTION_FAR_DISTANCE;
         

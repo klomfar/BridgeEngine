@@ -68,7 +68,6 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
     self.navController = [beDebugSettingsStoryboard instantiateInitialViewController];
     BEDebugSettingsViewController *debugSettingsVC = (BEDebugSettingsViewController *)_navController.viewControllers.firstObject;
     [self prepareDebugSettingsVC:debugSettingsVC];
-    _navController.navigationBarHidden = YES;
 
     [_window setRootViewController:_navController];
 
@@ -111,6 +110,7 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
 
 /**
  * Add all the debug setting options to the VC.
+ * See AppDelegate.h for details
  */
 - (void) prepareDebugSettingsVC:(BEDebugSettingsViewController*)vc {
     [vc addKey:SETTING_STEREO_SCANNING label:@"Stereo Scanning" defaultBool:YES];
@@ -143,6 +143,7 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UIViewController *mainVC = [mainStoryboard instantiateInitialViewController];
     [_navController pushViewController:mainVC animated:YES];
+    [_navController setNavigationBarHidden:YES animated:YES];
 }
 
 @end
