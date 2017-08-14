@@ -18,7 +18,7 @@ First, and most significant to many developers: **The Bridge Engine Unity Plugin
 The second thing is a series of general UX improvements across the board:
 
 - Stereo Scanning UX is improved: Now, the selection menu will always remain upright.
-- Markup is improved, it now projects where an object will be placed and has an updated UI.
+- Markup is improved, it now projects where an object will be placed and has an updated UI.  Use a custom markup object by implementing the `- (BOOL) mixedRealityBridgeShouldProjectMarkupNode:(NSString *)markupName position:(SCNVector3)position eulerAngles:(SCNVector3)eulerAngles` delegate method.
 - Debug Settings have been redesigned.
 - Performance has been improved: You may notice a significant in-experience FPS increase.
 - New sample! The Laser Manipulator, which demonstrates use of Bridge Controller's touchpad and 3-DoF tracking.
