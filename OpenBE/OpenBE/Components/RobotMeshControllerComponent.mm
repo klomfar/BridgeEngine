@@ -129,7 +129,7 @@
     [self.robotTransformNode addChildNode:self.robotBodyNode];
     
     self.robotNode = [SCNNode firstNodeFromSceneNamed:@"Robot_NonZeroed.dae"];
-    [self fixupMaterialsFor:self.robotNode];
+    [self setLightingModelForChildren:self.robotNode];
     
     [self.robotBodyNode addChildNode:self.robotNode];
     self.animatedHeadCtrl = [self.robotNode childNodeWithName:@"Head_Ctrl" recursively:YES];
@@ -177,7 +177,7 @@
         _robotBoxUnfolded = NO;
 
         self.robotBoxNode = [SCNNode firstNodeFromSceneNamed:@"Robot_Unboxing.dae"];
-        [self fixupMaterialsFor:_robotBoxNode];
+        [self setLightingModelForChildren:_robotBoxNode];
         [self.robotTransformNode addChildNode:self.robotBoxNode];
         
         self.robotBoxUnfoldingAnim = [AnimationComponent animationWithSceneNamed:@"Robot_Unboxing.dae"];
@@ -729,10 +729,10 @@ float angleDifference(float a, float b) {
 }
 
 /**
- * this is used fo make material settings on the hierarchy this is a pain in the ass to set manually in Xcode every time
+ * this is used to make material settings on the hierarchy this is a pain to set manually in Xcode every time
  * the character is exported from modo.
  */
--(void) fixupMaterialsFor:(SCNNode*)robot
+- (void)setLightingModelForChildren:(SCNNode*)robot
 {
     [robot _enumerateHierarchyUsingBlock:^(SCNNode * _Nonnull node, BOOL * _Nonnull stop) {
         [node.geometry.materials enumerateObjectsUsingBlock:^(SCNMaterial * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

@@ -191,7 +191,7 @@ struct setNode
     self = [super init];
     if (self) {
         robotRadiusInPixels = 2; // 7.0;
-        pixelSizeInMeters = 0.3; // 0.03;
+        pixelSizeInMeters = 0.04; // 0.04;
         worldCenterX = -2.89995;
         worldCenterY= -2.90582;
         
@@ -205,27 +205,21 @@ struct setNode
 
         // Parse the metadata file for three values, OriginX, OriginZ, PixelSize.
         // Example:
-        // OriginX -3.5293
-        // OriginZ -1.42487
-        // PixelSize 0.04
+        // { "OriginX" :-3.5293,
+        //   "OriginZ": -1.42487,
+        //   "MetersPerPixel" : 0.04 }
         NSString *metadata = [[NSString alloc] initWithContentsOfFile:occupancyMetadata encoding:NSUTF8StringEncoding error:nil];
-        if( metadata != nil ) {
-            NSMutableDictionary<NSString*,NSNumber*> *dict = [[NSMutableDictionary alloc] initWithCapacity:3];
-            NSScanner *mdScanner = [NSScanner scannerWithString:metadata];
-            while(mdScanner.isAtEnd == NO) {
-                NSString *key = nil;
-                double dblValue = NAN;
-                
-                [mdScanner scanCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:&key];
-                [mdScanner scanDouble:&dblValue];
-                if( key != nil && isnan(dblValue) == false ) {
-                    dict[key] = @(dblValue);
-                }
-            }
+        if( metadata != nil && [metadata length] > 0 ) {
+            NSError *error;
+            NSData *data = [metadata dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data
+                                             options:kNilOptions
+                                             error:&error];
+            NSAssert(error == nil, @"Error decoding occupancy map : %@", error.localizedDescription);
             
-            worldCenterX = dict[@"OriginX"].doubleValue;
-            worldCenterY = dict[@"OriginZ"].doubleValue;
-            pixelSizeInMeters = dict[@"PixelSize"].doubleValue;
+            worldCenterX = [jsonDictionary[@"OriginX"] doubleValue];
+            worldCenterY = [jsonDictionary[@"OriginZ"] doubleValue];
+            pixelSizeInMeters = [jsonDictionary[@"MetersPerPixel"] doubleValue];
         } else {
             NSLog(@"Failed to load the OccupancyMap.metadata from %@", occupancyMetadata);
             return nil;

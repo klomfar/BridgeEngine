@@ -44,11 +44,11 @@
         self.target = [[ButtonComponent alloc] initWithImage:[SceneKit pathForImageResourceNamed:@"target-white-128.png"] andBlock:nil];
         [_target.frontMaterial setTransparency:0.5*0.4];
         
-        _target.node.categoryBitMask |= RAYCAST_IGNORE_BIT;
         _target.node.geometry.firstMaterial.lightingModelName = SCNLightingModelConstant;
         
         [self.node addChildNode:_target.node];
         [self.node setReadsFromDepthBufferRecursively:YES];
+        self.node.name = @"Target";
 
         self.callbackBlock = nil;
     }
@@ -125,10 +125,7 @@
                                                 [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0] ;
         // tints the final output of shading
         [_target.frontMaterial.multiply setContents:targetColor];
-        
-        _target.node.categoryBitMask |= RAYCAST_IGNORE_BIT;
         _target.node.hidden = hidden;
-        
     }
 }
 

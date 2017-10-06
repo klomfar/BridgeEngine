@@ -19,35 +19,33 @@
         self.node.name = @"ProjectedGeometry";
         self.node.hidden = YES;
         
-        [self fixupMaterialsForNode:self.node];
+        [self setShaderForChildren:self.node];
     }
     
     return self;
 }
 
 // This recursive method sets the shader type for the component and all child nodes to the projection shader in combined shader.
-- (void)fixupMaterialsForNode:(SCNNode *)node {
-    [node.geometry.firstMaterial handleBindingOfSymbol:@"shaderType" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
-        glUniform1f(location, 3.f);
-    }];
-    
+- (void)setShaderForChildren:(SCNNode *)rootNode {
     SCNProgram * program = [SCNProgram programWithShader:@"Shaders/CombinedShader/combinedShader"];
     [program setOpaque:NO];
     
-    node.geometry.firstMaterial.program = program;
-    node.geometry.firstMaterial.blendMode = SCNBlendModeReplace;
-    
-    node.geometry.firstMaterial.readsFromDepthBuffer = false;
-    node.geometry.firstMaterial.writesToDepthBuffer = false;
-    node.renderingOrder = TRANSPARENCY_RENDERING_ORDER + 1000;
-    
-    node.castsShadow = NO;
-    
-    [SCNTransaction lock]; /* We reference a zombie if we don't wrap this. */
-    for (SCNNode *childNode in node.childNodes) {
-        [self fixupMaterialsForNode:childNode];
-    }
-    [SCNTransaction unlock];
+    [rootNode _enumerateHierarchyUsingBlock:^(SCNNode * _Nonnull node, BOOL * _Nonnull stop) {
+        node.renderingOrder = TRANSPARENCY_RENDERING_ORDER + 1000;
+        node.castsShadow = NO;
+        
+        [node.geometry.materials enumerateObjectsUsingBlock:^(SCNMaterial * _Nonnull material, NSUInteger idx, BOOL * _Nonnull stop) {
+            [material handleBindingOfSymbol:@"shaderType" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
+                glUniform1f(location, 3.f);
+            }];
+            
+            material.program = program;
+            material.blendMode = SCNBlendModeReplace;
+            
+            material.readsFromDepthBuffer = false;
+            material.writesToDepthBuffer = false;
+        }];
+    }];
 }
 
 @end

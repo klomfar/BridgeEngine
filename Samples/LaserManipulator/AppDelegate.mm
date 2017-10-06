@@ -135,7 +135,7 @@ namespace {
 /**
  * Reset all the settings for release.
  */
-- (void) prepareSettingsForRelease {
+- (void) resetSettingsToDefaults {
     [BEAppSettings setBooleanValue:YES forAppSetting:SETTING_STEREO_SCANNING];
     [BEAppSettings setBooleanValue:YES forAppSetting:SETTING_STEREO_RENDERING];
     [BEAppSettings setBooleanValue:YES forAppSetting:SETTING_USE_WVL];

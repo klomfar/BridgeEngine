@@ -475,10 +475,14 @@
             return nil;
         }
         
-        // SCNHitTestOptionCategoryBitMask only works on iOS 10 !!!
-        //NSDictionary *options = @{SCNHitTestSortResultsKey:@YES, SCNHitTestBackFaceCullingKey:@NO, SCNHitTestOptionCategoryBitMask:@(~(NSUInteger)RAYCAST_IGNORE_BIT)};
-        
-        NSDictionary *options = @{SCNHitTestSortResultsKey:@YES, SCNHitTestBackFaceCullingKey:@NO};
+        NSDictionary *options = @{SCNHitTestBackFaceCullingKey:@NO};
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
+        options = @{SCNHitTestOptionSortResults:@YES, SCNHitTestBackFaceCullingKey:@NO};
+        if (@available(iOS 11.0, *)) {
+            options = @{SCNHitTestOptionSearchMode:@1 /*SCNHitTestSearchModeAll*/,
+                        SCNHitTestBackFaceCullingKey:@NO};
+        }
+#endif
         hitTestResults = [[Scene main].scene.rootNode hitTestWithSegmentFromPoint:from toPoint:to options:options];
 //        NSLog(@"%ld reticle intersection hits", hitTestResults.count);
     } else {

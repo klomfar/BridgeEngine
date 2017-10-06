@@ -26,6 +26,11 @@
 /// Enable the OCC in-scene recording interface.
 #define SETTING_ENABLE_RECORDING                @"enableRecording"
 
+/// Check to make sure we are executing on device
+#if TARGET_IPHONE_SIMULATOR
+#error Bridge Engine Framework requires an iOS device to build. It cannot be run on the simulator.
+#endif
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

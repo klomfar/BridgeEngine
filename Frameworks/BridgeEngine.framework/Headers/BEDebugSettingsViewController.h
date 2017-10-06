@@ -13,7 +13,7 @@
 @protocol BEDebugSettingsDelegate <NSObject>
 
 /// Reset all the settings for release.
-- (void) prepareSettingsForRelease;
+- (void) resetSettingsToDefaults;
 
 /// User tapped on "Begin" to start the BE experience.
 - (void) debugSettingsBegin;

@@ -119,8 +119,8 @@ BE_API
 /// Shared instance, BEController is a singleton.
 + (BEController*)sharedController;
 
-// Preventing a classical init, use sharedController.
-- (instancetype)init NS_UNAVAILABLE;
+// Allow inidividual init of BEController for controlled shutdown.
+- (instancetype)init;
 
 /// Delegate to receive the controller events.
 @property (nonatomic, weak) id<BEControllerDelegate> delegate;

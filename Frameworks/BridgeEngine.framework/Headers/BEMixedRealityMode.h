@@ -91,7 +91,7 @@ BE_API
  - `kBETrackerFallbackOnIMUEnabled`: If YES, will fallback to IMU-based rotational-only pose updates if the visual tracker is lost. Default is YES.
  - `kBEVisualInertialPoseFilterEnabled`: If YES, the tracker output will be smoother, but with potentially a slightly higher latency. Default is YES.
  - `kBEAutoExposeWhileRelocalizing`: If YES, the iOS color camera will auto-expose while trying to relocalize. Use this if lighting may have changed since the mapped area was captured. Default is NO.
- - `kBEFpsForTracking` : This value should be set when running the engine in headless mode. It's used to improve tracking performance by setting a baseline for frame rate prediction. Set this number to the FPS of your display loop and the engine will attempt to keep tracking data and display data as close to sync as possible.
+ - `kBEExpectedFpsForTrackingEstimation` : This value should be set when running the engine in headless mode. It's used to improve tracking performance by setting an expected display speed for frame rate prediction. Set this number to the FPS of your display loop and the engine will attempt to keep tracking data and display data as close to sync as possible.
  Accepted values are 60 or 30. The default value is 60.
  NOTE: When not in headless mode this setting has no effect.
 
@@ -112,7 +112,7 @@ BE_API
  - `kBERecordingOptionsEnabled`: If YES, a button to record a replay sequence will appear in mono mode. This option does nothing if kBEStereoRenderingEnabled or `kBECaptureReplayMode` are also enabled. **IMPORTANT**: this option will disable touch interactions, as the Record button will instantiate a tap recognizer.
  - `kBETrackerFallbackOnIMUEnabled`: If YES, will fallback to IMU-based rotational-only pose updates if the visual tracker is lost. Default is YES.
  - `kBEVisualInertialPoseFilterEnabled`: If YES, the tracker output will be smoother, but with potentially a slightly higher latency. Default is YES.
- - `kBEFpsForTracking` : This value should be set when running the engine in headless mode. It's used to improve tracking performance by setting a baseline for frame rate prediction.  Set this number to the FPS of your display loop and the engine will attempt to keep tracking data and display data as close to sync as possible.
+ - `kBEExpectedFpsForTrackingEstimation` : This value should be set when running the engine in headless mode. It's used to improve tracking performance by setting an expected display speed for frame rate prediction.  Set this number to the FPS of your display loop and the engine will attempt to keep tracking data and display data as close to sync as possible.
  Accepted values are 60 or 30. The default value is 60.
  NOTE: When not in headless mode this setting has no effect.
  
@@ -317,6 +317,7 @@ struct BEColorFrameReference;
 @interface BEMixedRealityPrediction : NSObject
 @property (nonatomic,readonly) BOOL couldPredict;
 @property (nonatomic,readonly) GLKMatrix4 predictedColorCameraPose;
+@property (nonatomic,readonly) GLKMatrix4 predictedColorCameraProjection;
 @property (nonatomic,readonly) NSTimeInterval predictedPoseTimestamp;
 @property (nonatomic,readonly) struct BEColorFrameReference* associatedColorFrame;
 @property (nonatomic,readonly) GLKMatrix4 associatedColorFramePose;

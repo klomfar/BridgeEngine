@@ -6,11 +6,11 @@
 	<dict>
 		<key>Algorithm.metallib</key>
 		<data>
-		TNNOQxREN09m9IUJuh7CAqsbqRM=
+		t95pYF4io94iNrS+xZtj0KfKlO4=
 		</data>
 		<key>Assets.car</key>
 		<data>
-		8zCX+9Q6uY6Fo3RPnfoVUlByCzA=
+		sCuZmPliZaclR7JS6sTV4j4+cgM=
 		</data>
 		<key>BEBridgeControllerSelection.storyboardc/Info.plist</key>
 		<data>
@@ -18,15 +18,15 @@
 		</data>
 		<key>BEBridgeControllerSelection.storyboardc/UINavigationController-iJt-ON-whR.nib</key>
 		<data>
-		jam1fD5CPgWDAen5J2sRevqdXa0=
+		oG4rWf+BsdbLUDxXMBthNUQcqAI=
 		</data>
 		<key>BEBridgeControllerSelection.storyboardc/WQ5-B7-46p-view-k9P-4g-G1c.nib</key>
 		<data>
-		OlVzXA7m7uR8BRAvw3udWAesvls=
+		QP0W2dLz8gcTw+McUESl+N9h5ko=
 		</data>
 		<key>BEDebugSettings.storyboardc/BEDebugSettingsVC.nib</key>
 		<data>
-		cD370fkO2+K2p7HRZQJVs9KXdlk=
+		B0tpE4ZVxNCTBKUPwj6IqkColMg=
 		</data>
 		<key>BEDebugSettings.storyboardc/Info.plist</key>
 		<data>
@@ -34,23 +34,19 @@
 		</data>
 		<key>BEDebugSettings.storyboardc/Ocd-2z-Gez-view-fs3-cD-tXl.nib</key>
 		<data>
-		Ms+g42y1cRAkKNxLODPAknBWCdw=
+		xa9DV8ZXo4OoqwziDcqLrF/csgQ=
 		</data>
 		<key>BEDebugSettings.storyboardc/UINavigationController-369-of-kNx.nib</key>
 		<data>
-		ADdfJbytdhKOVnIcVbfmNzWGzsg=
+		b/KhQwEpC+F3RJMHUvOiUwCCBxM=
 		</data>
 		<key>BEMixedRealityUI.nib</key>
 		<data>
-		6HrLzf5ln1FJcFRoGfaLItCj37Q=
-		</data>
-		<key>BridgeEngine.scnassets/.DS_Store</key>
-		<data>
-		BQqGp1A95uZR2a5laDUHXW+NkZE=
+		AevIjB6jmjsZ4IqT4zyQ8BxVFjU=
 		</data>
 		<key>BridgeEngine.scnassets/axes.dae</key>
 		<data>
-		CwS6Xrt+UQXE83qmh08SMA7E8Bs=
+		ADvkUi0xBhwoOVvbHAthmFyjBlc=
 		</data>
 		<key>BridgeEngine.scnassets/axes.png</key>
 		<data>
@@ -142,7 +138,7 @@
 		</data>
 		<key>Core.metallib</key>
 		<data>
-		LFfke37ivpNOjkl47jaqdDnfV+c=
+		pRjBh/+FDqGaWAXAXO1RdpaMggE=
 		</data>
 		<key>Headers/BEAppSettings.h</key>
 		<data>
@@ -150,11 +146,11 @@
 		</data>
 		<key>Headers/BEController.h</key>
 		<data>
-		wFyyGV2uJWD5h9a6FTdFhhSOt8M=
+		9AUuyWYbm7ylqUBY0YekD0zKak0=
 		</data>
 		<key>Headers/BEDebugSettingsViewController.h</key>
 		<data>
-		tZgW9ZkQ2O+8oSh6d5/EioQUUWk=
+		G+fRvAAymMGcopoBLng2SbwYM1Q=
 		</data>
 		<key>Headers/BEDebugging.h</key>
 		<data>
@@ -162,7 +158,7 @@
 		</data>
 		<key>Headers/BEEngine.h</key>
 		<data>
-		0P9ajMRKQIaVOZXxMlVGk1rzEbE=
+		PhCa4h6/6g8GBp4TEpwEsPIkevw=
 		</data>
 		<key>Headers/BEMesh.h</key>
 		<data>
@@ -170,7 +166,7 @@
 		</data>
 		<key>Headers/BEMixedRealityMode.h</key>
 		<data>
-		/nryDWFFjw7xnPHb4Umy4xRgonM=
+		jhsCpG+SqxEg+32k1/MShCY0iZQ=
 		</data>
 		<key>Headers/BEProfiling.h</key>
 		<data>
@@ -194,7 +190,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		1Q+tpdbkXmbyqUi1qR+s8f1jdE8=
+		9V048VQdgWp7TfDU1v4zJCyQU20=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -207,22 +203,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			TNNOQxREN09m9IUJuh7CAqsbqRM=
+			t95pYF4io94iNrS+xZtj0KfKlO4=
 			</data>
 			<key>hash2</key>
 			<data>
-			4Wm2TrYeEUPMzqApO6Pg+eVonjFt1tz16vwdlciJsNo=
+			WgMcW91HC1MBCThgCG2qN0xQ5Dg0kirbN1r50lOGSds=
 			</data>
 		</dict>
 		<key>Assets.car</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			8zCX+9Q6uY6Fo3RPnfoVUlByCzA=
+			sCuZmPliZaclR7JS6sTV4j4+cgM=
 			</data>
 			<key>hash2</key>
 			<data>
-			acLRyxhs4disVhygvHbCPzSOqp7sbUTo6v7kFAIzo+k=
+			/8sVs8NjhUNq0a7BOV5KBLn1jw4GdJXH+Vr9m1kapFc=
 			</data>
 		</dict>
 		<key>BEBridgeControllerSelection.storyboardc/Info.plist</key>
@@ -240,33 +236,33 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			jam1fD5CPgWDAen5J2sRevqdXa0=
+			oG4rWf+BsdbLUDxXMBthNUQcqAI=
 			</data>
 			<key>hash2</key>
 			<data>
-			rIsEbGahfy2becGo2I9/qzQFXHhhR01mGWM5L+cdbIA=
+			yFgGiTTUtgGrptp+cOR8YG1EL6cc1U925zxm/I5A5/s=
 			</data>
 		</dict>
 		<key>BEBridgeControllerSelection.storyboardc/WQ5-B7-46p-view-k9P-4g-G1c.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			OlVzXA7m7uR8BRAvw3udWAesvls=
+			QP0W2dLz8gcTw+McUESl+N9h5ko=
 			</data>
 			<key>hash2</key>
 			<data>
-			aLI8Cjg7gKxRKeFz4kKBcYd6B/1630/tynyobeJ+dPs=
+			9CHzviMy9wWFygtcdYFkAbFuvJFRRXY78XpdW0j0tIQ=
 			</data>
 		</dict>
 		<key>BEDebugSettings.storyboardc/BEDebugSettingsVC.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			cD370fkO2+K2p7HRZQJVs9KXdlk=
+			B0tpE4ZVxNCTBKUPwj6IqkColMg=
 			</data>
 			<key>hash2</key>
 			<data>
-			ej8M5ZbFzo9vc2cvUm/A2O0BArjKCSlLUnuP9jpKU+E=
+			odW5bLTvm1veNzxgUV9H4bCQVWgk8x/IIItNiPgImLA=
 			</data>
 		</dict>
 		<key>BEDebugSettings.storyboardc/Info.plist</key>
@@ -284,44 +280,44 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Ms+g42y1cRAkKNxLODPAknBWCdw=
+			xa9DV8ZXo4OoqwziDcqLrF/csgQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			GBcXAYDRzdgAzse3vKgVbZzK4jGnetX4i/6ZdigSyjA=
+			OpkLNOo2lvwjPA8wt5aL4rsDvCJ69Mi4iOKHFb6xmDA=
 			</data>
 		</dict>
 		<key>BEDebugSettings.storyboardc/UINavigationController-369-of-kNx.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			ADdfJbytdhKOVnIcVbfmNzWGzsg=
+			b/KhQwEpC+F3RJMHUvOiUwCCBxM=
 			</data>
 			<key>hash2</key>
 			<data>
-			5tCF/El/7crmAqcpO9EKg6W4aoBCU+esqlPDp5ic8dg=
+			kmaa5A+OUga3qhTgs4CMD1ICbDxpRyGwHPQJlKPODxw=
 			</data>
 		</dict>
 		<key>BEMixedRealityUI.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			6HrLzf5ln1FJcFRoGfaLItCj37Q=
+			AevIjB6jmjsZ4IqT4zyQ8BxVFjU=
 			</data>
 			<key>hash2</key>
 			<data>
-			oXk4XY6H8Jbqx/UEUPxfqnLrk43skrfYsLRIi3R8flI=
+			ckTkEitCZtZX8GcHaz2ydGToZPYgprdkysILAicE7t0=
 			</data>
 		</dict>
 		<key>BridgeEngine.scnassets/axes.dae</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			CwS6Xrt+UQXE83qmh08SMA7E8Bs=
+			ADvkUi0xBhwoOVvbHAthmFyjBlc=
 			</data>
 			<key>hash2</key>
 			<data>
-			lzLdbQe0TzCBwOK9Y42M3SMAsaH41qt3D6PgDn+9ZP0=
+			QB4kGSh5M04dHw9M+LvTb+Y0OUVBdVka6Wgoe0QWlxk=
 			</data>
 		</dict>
 		<key>BridgeEngine.scnassets/axes.png</key>
@@ -570,11 +566,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			LFfke37ivpNOjkl47jaqdDnfV+c=
+			pRjBh/+FDqGaWAXAXO1RdpaMggE=
 			</data>
 			<key>hash2</key>
 			<data>
-			mfcACn6PdCcdcdAbY9+jCDOFbT0YWuuWP3ZIVo81tv4=
+			w/JO8Istt0Jqdd/zMF9B3sDMqs69hHcERHiD3i1uXXI=
 			</data>
 		</dict>
 		<key>Headers/BEAppSettings.h</key>
@@ -592,22 +588,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			wFyyGV2uJWD5h9a6FTdFhhSOt8M=
+			9AUuyWYbm7ylqUBY0YekD0zKak0=
 			</data>
 			<key>hash2</key>
 			<data>
-			5//cIIh/TMEWoxEnzK+2wUTiLMmNSnt2zSYPU9VkBSM=
+			KIfwilCShQAxaZWPhSUHu1MMUMY9E1f129o/ZWCqCZY=
 			</data>
 		</dict>
 		<key>Headers/BEDebugSettingsViewController.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			tZgW9ZkQ2O+8oSh6d5/EioQUUWk=
+			G+fRvAAymMGcopoBLng2SbwYM1Q=
 			</data>
 			<key>hash2</key>
 			<data>
-			t8kZOIkeKYLj8WDbqdQPNbSNInOCKp//RamSisg/2s0=
+			QZ6tUzy14KmEOnrTrknNYJlUUMHLRcp4Crz9qC9Pik0=
 			</data>
 		</dict>
 		<key>Headers/BEDebugging.h</key>
@@ -625,11 +621,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			0P9ajMRKQIaVOZXxMlVGk1rzEbE=
+			PhCa4h6/6g8GBp4TEpwEsPIkevw=
 			</data>
 			<key>hash2</key>
 			<data>
-			80+1w5raYX6eCAkmY4GHmqf5vgNRUGsr74AT2u5Jb2U=
+			HN5LdqnGPkr9+KilsavHYZfqyeO+8y+IGwMq/a6MnWQ=
 			</data>
 		</dict>
 		<key>Headers/BEMesh.h</key>
@@ -647,11 +643,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			/nryDWFFjw7xnPHb4Umy4xRgonM=
+			jhsCpG+SqxEg+32k1/MShCY0iZQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			W4i0FA42KlNKD59P6dtxaHMnQvXMuo8fJA2mDLMBP5s=
+			fR1qewIJrroiAdGhH1ELm/1RFGEWvDna5pI6Ff3kExI=
 			</data>
 		</dict>
 		<key>Headers/BEProfiling.h</key>

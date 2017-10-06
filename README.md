@@ -1,14 +1,35 @@
-# Welcome to the Bridge Engine Beta 6!
+# Welcome to the Bridge Engine Beta 6.1!
 
 We're glad to have you onboard. We're committed to enhancing Bridge Engine, so we take all of your feedback and support very earnestly.
 
 Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yuPufWPjCthmZYOOJG9ieRnGAL79" target="_blank">Occipital Youtube Playlist for recent videos on Bridge Engine</a>.  
 
 #### KNOWN ISSUES
-- In some cases, doing scanning and using the mono rendering mode will lead to rendering SceneKit elements with incorrect occlusion with the real world.
-- iOS 11 support is still underway. On iOS 11, you will experience thread sanitizer warnings when you run Bridge Engine. Additionally, running with mono rendering will render a black screen instead of the camera view, and object selection in mono is temperamental. This will be addressed in a future update, but for now you can still prepare for iOS 11 by running Bridge Engine in debug mode.
-- Unity 5.6 requires a newer version of GoogleVR which we don't support at this time. Please develop on <a href="https://unity3d.com/get-unity/download/archive" target="_blank">Unity 5.5.3f1</a> when using Bridge Engine for Unity package.
-- Unity plugin Mixed Reality limitations: 1) Currently, rendering is stereo (in-headset) only, and 2) Casting shadows onto the real world is not yet supported. These are temporary limitations and will be addressed later.
+- iOS 11 contains a bug that makes it occasionally take up to 30 seconds to detect the Structure Sensor. You may be able to accelerate this by unplugging and reconnecting the sensor.
+- On first run of a new app, Bridge Engine will fail to start and instead show a black screen.
+
+### Improvements in Beta 6.1: iOS 11 and Unity Updates
+Bridge Engine is now ready for **iOS 11** and the **latest version of Unity!**
+
+We've updated Bridge Engine to work with iOS 11's new threading rules. Bridge Engine is now able to run in the iOS 11 environment succesfully. If you haven't updated, now is the time!
+
+We've also reworked the Unity Plugin so you can develop Mixed Reality experiences using the newest version of Unity (`2017.1.1` as of this update).  We have an additional demo scene called *MR Example Without GoogleVR*, which demonstrates the Unity Plugin in action without any GoogleVR dependencies at all, although we do still offer a GoogleVR version to retain an easy upgrade path.
+
+Finally, we've created custom Unity shaders for camera texture to world projection, obstacle avoidance, and a few more.  You can now change how your world is textured by switching materials on your `BEScene`.
+
+**Improvements**
+
+- **iOS 11** is now supported
+- **Unity 5.6** through **Unity 2017.1.1** are now supported.
+- **GoogleVR** is now optional in the Unity Plugin
+- The Unity plugin now supports custom materials for Bridge Engine shading.
+- The Unity plugin now supports shadows on the real world mesh.
+
+**Fixes**
+
+- Fixed: SceneKit elements render with incorrect occlusion with the real world in Mono rendering mode.
+- Fixed: Unity Rendering now supports Stereo *and* Mono rendering.
+- Fixed: Reduced texture size in the space skybox to improve Bridget performance.
 
 ### New in Beta 6: Mixed Reality in Unity & Major UI/UX Updates
 We have two major things happening in this release.
