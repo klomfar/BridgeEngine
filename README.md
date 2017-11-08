@@ -7,7 +7,7 @@ Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yu
 #### KNOWN ISSUES
 - iOS 11 contains a bug that makes it occasionally take up to 30 seconds to detect the Structure Sensor. You may be able to accelerate this by unplugging and reconnecting the sensor.
 
-###Improvements in Beta 6.2: Stability and Rendering Updates
+### Improvements in Beta 6.2: Stability and Rendering Updates
 
 Bridge Engine has been updated with better iPhone 8 support and general stability and performance improvements.
 
