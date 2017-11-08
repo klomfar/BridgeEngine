@@ -1,4 +1,4 @@
-# Welcome to the Bridge Engine Beta 6.1!
+# Welcome to the Bridge Engine Beta 6.2!
 
 We're glad to have you onboard. We're committed to enhancing Bridge Engine, so we take all of your feedback and support very earnestly.
 
@@ -6,7 +6,27 @@ Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yu
 
 #### KNOWN ISSUES
 - iOS 11 contains a bug that makes it occasionally take up to 30 seconds to detect the Structure Sensor. You may be able to accelerate this by unplugging and reconnecting the sensor.
-- On first run of a new app, Bridge Engine will fail to start and instead show a black screen.
+
+###Improvements in Beta 6.2: Stability and Rendering Updates
+
+Bridge Engine has been updated with better iPhone 8 support and general stability and performance improvements.
+
+We've updated Bridge Engine to enable **1440x1080** support on the iPhone 8! This new resolution improves the bridge engine field of view and rendering quality significantly.
+
+We've also increased stability and performance of Bridge Engine as a whole by streamlining some of our shaders.
+
+**Improvements**
+
+- **1440x1080** video capture format enabled for iPhone 8. *Bridge engine selects this format automatically so no code changes are needed.*
+- Small stereo rendering performance (0.2ms per frame) improvement in Scenekit
+
+**Fixes**
+
+- Fixed: Black screen on first launch
+- Fixed: Turning on bluetooth causes app to freeze
+- Fixed: Auto Exposure not working in Unity Plugin
+- Fixed: Relocalization sign not showing in Scenekit
+
 
 ### Improvements in Beta 6.1: iOS 11 and Unity Updates
 Bridge Engine is now ready for **iOS 11** and the **latest version of Unity!**
@@ -105,7 +125,7 @@ Want to help us expand the capabilities of Bridge Engine? We'd love contribution
 - New sample! The Laser Manipulator
 - Stereo Scanning UX updates
 - Markup redesign
-- Debug settings simplified 
+- Debug settings simplified
 - Performance: Significant FPS improvements
 
 ##### Beta 5 changes

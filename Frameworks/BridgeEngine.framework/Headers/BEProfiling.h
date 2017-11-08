@@ -115,7 +115,7 @@ namespace BE
  */
 #if BE_PROFILING
 #  define BE_KDEBUG_SCOPED_SIGN(varName,...) BE::KDebugScopedSign varName (__VA_ARGS__)
-#  define BE_KDEBUG_SIGN(...) BE::kdebugPost(__VA_ARGS__)
+#  define BE_KDEBUG_SIGN(...) BE::KDebugSign::post(__VA_ARGS__)
 #else
 #  define BE_KDEBUG_SCOPED_SIGN(varName, code, ...) BE_MULTI_STATEMENT_MACRO()
 #  define BE_KDEBUG_SIGN(code, ...) BE_MULTI_STATEMENT_MACRO()

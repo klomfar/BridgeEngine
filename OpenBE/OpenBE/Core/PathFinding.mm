@@ -210,16 +210,25 @@ struct setNode
         //   "MetersPerPixel" : 0.04 }
         NSString *metadata = [[NSString alloc] initWithContentsOfFile:occupancyMetadata encoding:NSUTF8StringEncoding error:nil];
         if( metadata != nil && [metadata length] > 0 ) {
-            NSError *error;
-            NSData *data = [metadata dataUsingEncoding:NSUTF8StringEncoding];
-            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data
-                                             options:kNilOptions
-                                             error:&error];
-            NSAssert(error == nil, @"Error decoding occupancy map : %@", error.localizedDescription);
+            NSMutableDictionary<NSString*,NSNumber*> *dict = [[NSMutableDictionary alloc] initWithCapacity:3];
+            NSScanner *mdScanner = [NSScanner scannerWithString:metadata];
             
-            worldCenterX = [jsonDictionary[@"OriginX"] doubleValue];
-            worldCenterY = [jsonDictionary[@"OriginZ"] doubleValue];
-            pixelSizeInMeters = [jsonDictionary[@"MetersPerPixel"] doubleValue];
+            int i = 0;
+            while(mdScanner.isAtEnd == NO) {
+                NSString *key = nil;
+                double dblValue = NAN;
+                
+                [mdScanner scanCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:&key];
+                [mdScanner scanDouble:&dblValue];
+                if( key != nil && isnan(dblValue) == false ) {
+                    dict[key] = @(dblValue);
+                }
+            }
+            
+            worldCenterX = dict[@"OriginX"].doubleValue;
+            worldCenterY = dict[@"OriginZ"].doubleValue;
+            pixelSizeInMeters = dict[@"PixelSize"].doubleValue;
+            NSAssert(++i < 10, @"The path planner can't read the Occupancy Metadata file");
         } else {
             NSLog(@"Failed to load the OccupancyMap.metadata from %@", occupancyMetadata);
             return nil;

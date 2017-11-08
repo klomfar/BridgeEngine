@@ -10,7 +10,7 @@
 		</data>
 		<key>Assets.car</key>
 		<data>
-		sCuZmPliZaclR7JS6sTV4j4+cgM=
+		qtQzf98dqy3dEZSEowgNLY5fSG0=
 		</data>
 		<key>BEBridgeControllerSelection.storyboardc/Info.plist</key>
 		<data>
@@ -18,15 +18,15 @@
 		</data>
 		<key>BEBridgeControllerSelection.storyboardc/UINavigationController-iJt-ON-whR.nib</key>
 		<data>
-		oG4rWf+BsdbLUDxXMBthNUQcqAI=
+		oWJHgfl2yofQqPhxxZsAcrpW1M0=
 		</data>
 		<key>BEBridgeControllerSelection.storyboardc/WQ5-B7-46p-view-k9P-4g-G1c.nib</key>
 		<data>
-		QP0W2dLz8gcTw+McUESl+N9h5ko=
+		brqmd54XOQrBVbthZL1BGzMzLYY=
 		</data>
 		<key>BEDebugSettings.storyboardc/BEDebugSettingsVC.nib</key>
 		<data>
-		B0tpE4ZVxNCTBKUPwj6IqkColMg=
+		FyBPgwvTqfznYk+l4qRuMDRCrxw=
 		</data>
 		<key>BEDebugSettings.storyboardc/Info.plist</key>
 		<data>
@@ -34,15 +34,15 @@
 		</data>
 		<key>BEDebugSettings.storyboardc/Ocd-2z-Gez-view-fs3-cD-tXl.nib</key>
 		<data>
-		xa9DV8ZXo4OoqwziDcqLrF/csgQ=
+		MiaoHEdYz0gdpdBn08JMnNy6OFs=
 		</data>
 		<key>BEDebugSettings.storyboardc/UINavigationController-369-of-kNx.nib</key>
 		<data>
-		b/KhQwEpC+F3RJMHUvOiUwCCBxM=
+		LFuga7vA4Flgmpg5v1gJ2y6AVhc=
 		</data>
 		<key>BEMixedRealityUI.nib</key>
 		<data>
-		AevIjB6jmjsZ4IqT4zyQ8BxVFjU=
+		mUmDKDfA2SFuCrp6QC26n8WZ3CE=
 		</data>
 		<key>BridgeEngine.scnassets/axes.dae</key>
 		<data>
@@ -170,7 +170,7 @@
 		</data>
 		<key>Headers/BEProfiling.h</key>
 		<data>
-		xXUQE4+AE8w2LEPIN+NtgU7vC8w=
+		rpiFFgqojKz1+4QoODLyqN6IoEs=
 		</data>
 		<key>Headers/BEShader.h</key>
 		<data>
@@ -190,7 +190,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		9V048VQdgWp7TfDU1v4zJCyQU20=
+		GP6sAiuBQYT+7HaxdMER/EYFbv0=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -214,11 +214,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			sCuZmPliZaclR7JS6sTV4j4+cgM=
+			qtQzf98dqy3dEZSEowgNLY5fSG0=
 			</data>
 			<key>hash2</key>
 			<data>
-			/8sVs8NjhUNq0a7BOV5KBLn1jw4GdJXH+Vr9m1kapFc=
+			n93bnTqdrTAR4YDl/h7yn0JTky3DCBxlpSWWHEoZBvo=
 			</data>
 		</dict>
 		<key>BEBridgeControllerSelection.storyboardc/Info.plist</key>
@@ -236,33 +236,33 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			oG4rWf+BsdbLUDxXMBthNUQcqAI=
+			oWJHgfl2yofQqPhxxZsAcrpW1M0=
 			</data>
 			<key>hash2</key>
 			<data>
-			yFgGiTTUtgGrptp+cOR8YG1EL6cc1U925zxm/I5A5/s=
+			Hr95rhK5Nv0WOLxxTCEhmGNy0oadaA6MClNwkS6KuU8=
 			</data>
 		</dict>
 		<key>BEBridgeControllerSelection.storyboardc/WQ5-B7-46p-view-k9P-4g-G1c.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			QP0W2dLz8gcTw+McUESl+N9h5ko=
+			brqmd54XOQrBVbthZL1BGzMzLYY=
 			</data>
 			<key>hash2</key>
 			<data>
-			9CHzviMy9wWFygtcdYFkAbFuvJFRRXY78XpdW0j0tIQ=
+			x8KiF4Besqa7utwkSVf3iL2Ind7WYmuuEh1ObrK5/ts=
 			</data>
 		</dict>
 		<key>BEDebugSettings.storyboardc/BEDebugSettingsVC.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			B0tpE4ZVxNCTBKUPwj6IqkColMg=
+			FyBPgwvTqfznYk+l4qRuMDRCrxw=
 			</data>
 			<key>hash2</key>
 			<data>
-			odW5bLTvm1veNzxgUV9H4bCQVWgk8x/IIItNiPgImLA=
+			gyePPHhcRwKKPv1tg4emF1pTrtNf8rgi8Y4ZFRh8RJY=
 			</data>
 		</dict>
 		<key>BEDebugSettings.storyboardc/Info.plist</key>
@@ -280,33 +280,33 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			xa9DV8ZXo4OoqwziDcqLrF/csgQ=
+			MiaoHEdYz0gdpdBn08JMnNy6OFs=
 			</data>
 			<key>hash2</key>
 			<data>
-			OpkLNOo2lvwjPA8wt5aL4rsDvCJ69Mi4iOKHFb6xmDA=
+			CKW78/y80cVWHg/BT3lRWvoOeRT3B9MnX9GS1NHx750=
 			</data>
 		</dict>
 		<key>BEDebugSettings.storyboardc/UINavigationController-369-of-kNx.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			b/KhQwEpC+F3RJMHUvOiUwCCBxM=
+			LFuga7vA4Flgmpg5v1gJ2y6AVhc=
 			</data>
 			<key>hash2</key>
 			<data>
-			kmaa5A+OUga3qhTgs4CMD1ICbDxpRyGwHPQJlKPODxw=
+			ixJoQhkdNFigN1HDh/PF/FsK/9iOYGo5UY95RYLScv8=
 			</data>
 		</dict>
 		<key>BEMixedRealityUI.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			AevIjB6jmjsZ4IqT4zyQ8BxVFjU=
+			mUmDKDfA2SFuCrp6QC26n8WZ3CE=
 			</data>
 			<key>hash2</key>
 			<data>
-			ckTkEitCZtZX8GcHaz2ydGToZPYgprdkysILAicE7t0=
+			M/klso/rRWB9qbhbPcrF3zAUSwfr34KIQ8AXIbImHc8=
 			</data>
 		</dict>
 		<key>BridgeEngine.scnassets/axes.dae</key>
@@ -654,11 +654,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			xXUQE4+AE8w2LEPIN+NtgU7vC8w=
+			rpiFFgqojKz1+4QoODLyqN6IoEs=
 			</data>
 			<key>hash2</key>
 			<data>
-			1FoJA2CYy3Fez70VO2HKexFP0VpFm87RN+Juh6jSvCQ=
+			JDlkatNln3NOUcJWz0fGoegeT0+816C3nY9NOopX/mE=
 			</data>
 		</dict>
 		<key>Headers/BEShader.h</key>
