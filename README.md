@@ -1,11 +1,17 @@
-# Welcome to the Bridge Engine Beta 6.2!
+# Welcome to the Bridge Engine Beta 6.3!
 
 We're glad to have you onboard. We're committed to enhancing Bridge Engine, so we take all of your feedback and support very earnestly.
 
-Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yuPufWPjCthmZYOOJG9ieRnGAL79" target="_blank">Occipital Youtube Playlist for recent videos on Bridge Engine</a>.  
+Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yuPufWPjCthmZYOOJG9ieRnGAL79" target="_blank">Occipital YouTube Playlist for recent videos on Bridge Engine</a>.  
 
 #### KNOWN ISSUES
 - iOS 11 contains a bug that makes it occasionally take up to 30 seconds to detect the Structure Sensor. You may be able to accelerate this by unplugging and reconnecting the sensor.
+
+### New in Beta 6.3: iPhone X Support
+
+Bridge Engine has been updated to support the iPhone X!  We've standardized the field of view across all devices and added accurate camera intrinsics for the iPhone X.
+
+More iPhone X updates will be coming soon, including additional improvements to the iPhone X's FOV.  
 
 ### Improvements in Beta 6.2: Stability and Rendering Updates
 
@@ -18,14 +24,14 @@ We've also increased stability and performance of Bridge Engine as a whole by st
 **Improvements**
 
 - **1440x1080** video capture format enabled for iPhone 8. *Bridge engine selects this format automatically so no code changes are needed.*
-- Small stereo rendering performance (0.2ms per frame) improvement in Scenekit
+- Small stereo rendering performance (0.2ms per frame) improvement in SceneKit
 
 **Fixes**
 
 - Fixed: Black screen on first launch
 - Fixed: Turning on bluetooth causes app to freeze
-- Fixed: Auto Exposure not working in Unity Plugin
-- Fixed: Relocalization sign not showing in Scenekit
+- Fixed: Auto Exposure while relocalizing `kBEAutoExposeWhileRelocalizing` now works in Unity Plugin
+- Fixed: Relocalization sign not showing in SceneKit
 
 
 ### Improvements in Beta 6.1: iOS 11 and Unity Updates

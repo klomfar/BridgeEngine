@@ -209,10 +209,14 @@
     [gazeEntity addComponent:_fixedSizeReticle];
     
     // BController Entity
-    self.bControllerComponent = [[BridgeControllerComponent alloc] init];
-    GKEntity *controllerEntity = [[SceneManager main] createEntity];
-    [controllerEntity addComponent:self.bControllerComponent];
-    [self.bControllerComponent setEnabled:YES];
+    if ([BEAppSettings booleanValueFromAppSetting:SETTING_SHOW_CONTROLLER defaultValueIfSettingIsNotInBundle:NO])
+    {
+       self.bControllerComponent = [[BridgeControllerComponent alloc] init];
+        GKEntity *controllerEntity = [[SceneManager main] createEntity];
+        [controllerEntity addComponent:self.bControllerComponent];
+        [self.bControllerComponent setEnabled:YES];
+        
+    }
 
     [self updateReticleInputMode];
     

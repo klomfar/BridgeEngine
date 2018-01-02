@@ -6,11 +6,11 @@
 	<dict>
 		<key>Algorithm.metallib</key>
 		<data>
-		t95pYF4io94iNrS+xZtj0KfKlO4=
+		VT9t5eef5VYt2nwJCZSTRnIrxMs=
 		</data>
 		<key>Assets.car</key>
 		<data>
-		qtQzf98dqy3dEZSEowgNLY5fSG0=
+		XH3+rr7p5XLu9cp8fTrjSdPPqz4=
 		</data>
 		<key>BEBridgeControllerSelection.storyboardc/Info.plist</key>
 		<data>
@@ -18,15 +18,15 @@
 		</data>
 		<key>BEBridgeControllerSelection.storyboardc/UINavigationController-iJt-ON-whR.nib</key>
 		<data>
-		oWJHgfl2yofQqPhxxZsAcrpW1M0=
+		DJaRHel2Fo+rDVh0gPK5UweHmRY=
 		</data>
 		<key>BEBridgeControllerSelection.storyboardc/WQ5-B7-46p-view-k9P-4g-G1c.nib</key>
 		<data>
-		brqmd54XOQrBVbthZL1BGzMzLYY=
+		fuQC50n/kkq37BVVq8Qi75cGfR4=
 		</data>
 		<key>BEDebugSettings.storyboardc/BEDebugSettingsVC.nib</key>
 		<data>
-		FyBPgwvTqfznYk+l4qRuMDRCrxw=
+		mZqhvzKjmXcfxrbnq6DWf+HioUY=
 		</data>
 		<key>BEDebugSettings.storyboardc/Info.plist</key>
 		<data>
@@ -34,15 +34,15 @@
 		</data>
 		<key>BEDebugSettings.storyboardc/Ocd-2z-Gez-view-fs3-cD-tXl.nib</key>
 		<data>
-		MiaoHEdYz0gdpdBn08JMnNy6OFs=
+		9e6s9njJwrEg7p1J+NdTWjkDNM4=
 		</data>
 		<key>BEDebugSettings.storyboardc/UINavigationController-369-of-kNx.nib</key>
 		<data>
-		LFuga7vA4Flgmpg5v1gJ2y6AVhc=
+		fniQm9/mu3VzTZBIHQwZf+31nfA=
 		</data>
 		<key>BEMixedRealityUI.nib</key>
 		<data>
-		mUmDKDfA2SFuCrp6QC26n8WZ3CE=
+		s0UN4+IwGuEVF//n51SeDj7jKk0=
 		</data>
 		<key>BridgeEngine.scnassets/axes.dae</key>
 		<data>
@@ -138,7 +138,7 @@
 		</data>
 		<key>Core.metallib</key>
 		<data>
-		pRjBh/+FDqGaWAXAXO1RdpaMggE=
+		UIbvctyjIMLkQ+x1AbeMyvfigZc=
 		</data>
 		<key>Headers/BEAppSettings.h</key>
 		<data>
@@ -190,7 +190,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		GP6sAiuBQYT+7HaxdMER/EYFbv0=
+		0x3g87DeD0ZZez5Dkmh4w4WEN2U=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -203,22 +203,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			t95pYF4io94iNrS+xZtj0KfKlO4=
+			VT9t5eef5VYt2nwJCZSTRnIrxMs=
 			</data>
 			<key>hash2</key>
 			<data>
-			WgMcW91HC1MBCThgCG2qN0xQ5Dg0kirbN1r50lOGSds=
+			vAaWRrLUPPGkCGPq/jR7I8BOPMZa7MW2E2WXZO4TkeI=
 			</data>
 		</dict>
 		<key>Assets.car</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			qtQzf98dqy3dEZSEowgNLY5fSG0=
+			XH3+rr7p5XLu9cp8fTrjSdPPqz4=
 			</data>
 			<key>hash2</key>
 			<data>
-			n93bnTqdrTAR4YDl/h7yn0JTky3DCBxlpSWWHEoZBvo=
+			RK9yF8q4ctRrQ7zOUNOZcWBdHOVvPEpgsMm+rDNvbmI=
 			</data>
 		</dict>
 		<key>BEBridgeControllerSelection.storyboardc/Info.plist</key>
@@ -236,33 +236,33 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			oWJHgfl2yofQqPhxxZsAcrpW1M0=
+			DJaRHel2Fo+rDVh0gPK5UweHmRY=
 			</data>
 			<key>hash2</key>
 			<data>
-			Hr95rhK5Nv0WOLxxTCEhmGNy0oadaA6MClNwkS6KuU8=
+			mAB+BVyVIMgiBYre6bFzVIkxHseZDrzbA4/uSwThgGA=
 			</data>
 		</dict>
 		<key>BEBridgeControllerSelection.storyboardc/WQ5-B7-46p-view-k9P-4g-G1c.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			brqmd54XOQrBVbthZL1BGzMzLYY=
+			fuQC50n/kkq37BVVq8Qi75cGfR4=
 			</data>
 			<key>hash2</key>
 			<data>
-			x8KiF4Besqa7utwkSVf3iL2Ind7WYmuuEh1ObrK5/ts=
+			G9No/uJPGfmw1dXGSXw5Yc//zKPf4IuyrAGL1ExGwKI=
 			</data>
 		</dict>
 		<key>BEDebugSettings.storyboardc/BEDebugSettingsVC.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			FyBPgwvTqfznYk+l4qRuMDRCrxw=
+			mZqhvzKjmXcfxrbnq6DWf+HioUY=
 			</data>
 			<key>hash2</key>
 			<data>
-			gyePPHhcRwKKPv1tg4emF1pTrtNf8rgi8Y4ZFRh8RJY=
+			YgFXQUYRaKIq8nGJl3g4+mjZi+pKPB/wN5twEBmvl2k=
 			</data>
 		</dict>
 		<key>BEDebugSettings.storyboardc/Info.plist</key>
@@ -280,33 +280,33 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			MiaoHEdYz0gdpdBn08JMnNy6OFs=
+			9e6s9njJwrEg7p1J+NdTWjkDNM4=
 			</data>
 			<key>hash2</key>
 			<data>
-			CKW78/y80cVWHg/BT3lRWvoOeRT3B9MnX9GS1NHx750=
+			6UCRLfFifV6KXLad4OU01S0g12aqNz4hxOEChZjw0VE=
 			</data>
 		</dict>
 		<key>BEDebugSettings.storyboardc/UINavigationController-369-of-kNx.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			LFuga7vA4Flgmpg5v1gJ2y6AVhc=
+			fniQm9/mu3VzTZBIHQwZf+31nfA=
 			</data>
 			<key>hash2</key>
 			<data>
-			ixJoQhkdNFigN1HDh/PF/FsK/9iOYGo5UY95RYLScv8=
+			4WmIhKY0E1ZtqygGFfY9Ym2DoX4OeORkxlYweFcV+9M=
 			</data>
 		</dict>
 		<key>BEMixedRealityUI.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			mUmDKDfA2SFuCrp6QC26n8WZ3CE=
+			s0UN4+IwGuEVF//n51SeDj7jKk0=
 			</data>
 			<key>hash2</key>
 			<data>
-			M/klso/rRWB9qbhbPcrF3zAUSwfr34KIQ8AXIbImHc8=
+			oVxb720yn7TrA6SmebZzsW4qpISKo+eg8Bzk2Qf0iH0=
 			</data>
 		</dict>
 		<key>BridgeEngine.scnassets/axes.dae</key>
@@ -566,11 +566,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			pRjBh/+FDqGaWAXAXO1RdpaMggE=
+			UIbvctyjIMLkQ+x1AbeMyvfigZc=
 			</data>
 			<key>hash2</key>
 			<data>
-			w/JO8Istt0Jqdd/zMF9B3sDMqs69hHcERHiD3i1uXXI=
+			/m8OMwJVv+gv7xtiwq27be12PPhJhy/WImHV8MyOSwY=
 			</data>
 		</dict>
 		<key>Headers/BEAppSettings.h</key>

@@ -27,6 +27,9 @@
 /// Enable the OCC in-scene recording interface.
 #define SETTING_ENABLE_RECORDING                @"enableRecording"
 
+/// Tells us to show the bridge controller component
+#define SETTING_SHOW_CONTROLLER                 @"showControllerComponent"
+
 /// Check to make sure we are executing on device
 #if TARGET_IPHONE_SIMULATOR
 #error Bridge Engine Framework requires an iOS device to build. It cannot be run on the simulator.

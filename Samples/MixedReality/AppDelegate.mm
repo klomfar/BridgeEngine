@@ -121,6 +121,7 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
     
     [vc addKey:SETTING_REPLAY_CAPTURE label:@"Replay last OCC Recording" defaultBool:NO];
     [vc addKey:SETTING_ENABLE_RECORDING label:@"Enable OCC In-Scene Recording" defaultBool:NO];
+    
     vc.delegate = self;
 }
 

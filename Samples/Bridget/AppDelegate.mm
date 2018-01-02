@@ -128,6 +128,8 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
     
     [vc addKey:SETTING_REPLAY_CAPTURE label:@"Replay last OCC Recording" defaultBool:NO];
     [vc addKey:SETTING_ENABLE_RECORDING label:@"Enable OCC In-Scene Recording" defaultBool:NO];
+    [vc addKey:SETTING_SHOW_CONTROLLER label:@"Show Bridge Controller" defaultBool:NO];
+    
     vc.delegate = self;
 }
 
@@ -142,6 +144,7 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_REPLAY_CAPTURE];
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_ENABLE_RECORDING];
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_SHOW_RENDER_TYPES];
+    [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_SHOW_CONTROLLER];
 }
 
 /**
