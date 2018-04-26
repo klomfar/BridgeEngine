@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -22,7 +22,7 @@
 
 #import <BridgeEngine/BEDebugging.h>
 
-#define ROBOT_HOVER_HEIGHT 0.5f
+#define ROBOT_HOVER_HEIGHT 0.322f
 #define ROBOT_LOOK_AT_MIN_DISTANCE .2f
 #define ROBOT_LOOK_X_ROTATION_LIMIT (M_PI_2-0.01)
 #define ROBOT_LOOK_Y_ROTATION_LIMIT (M_PI_4-0.01)
@@ -81,6 +81,7 @@
 @property (nonatomic, strong) SCNNode *robotBoxNode;
 @property (nonatomic, strong) SCNNode *robotBoxRootCtrl;
 @property (nonatomic, strong) CAAnimation *robotBoxUnfoldingAnim;
+@property (nonatomic, strong) CAAnimation *robotIdleAnim;
 @property (nonatomic, strong) AudioNode *robotBoxUnfoldingSound;
 
 @end
@@ -128,10 +129,19 @@
     self.robotBodyNode = [SCNNode node];
     [self.robotTransformNode addChildNode:self.robotBodyNode];
     
-    self.robotNode = [SCNNode firstNodeFromSceneNamed:@"Robot_NonZeroed.dae"];
-    [self setLightingModelForChildren:self.robotNode];
+    if ([SceneManager main].renderingAPI == BEViewRenderingAPIOpenGLES2) {
+        // In GL we load the non-pbr robot.  It happens to be the same DAE as the idle animation. :)
+        self.robotNode = [SCNNode firstNodeFromSceneNamed:@"Animations/Robot_NonZeroed_Idle.dae"];
+        [self setGLLightingModelForChildren:self.robotNode];  // This sets our lighting to constant, instead of PBR
+    } else {
+        // In metal lets load the PBR Robot
+        self.robotNode = [SCNNode firstNodeFromSceneNamed:@"Robot/Robot_NonZeroed.scn"];
+    }
     
+    self.robotNode.position = SCNVector3Make(0,0,0);
+    [self loadIdleAnimation];
     [self.robotBodyNode addChildNode:self.robotNode];
+    
     self.animatedHeadCtrl = [self.robotNode childNodeWithName:@"Head_Ctrl" recursively:YES];
     self.rootCtrl = [self.robotNode childNodeWithName:@"Root_Ctrl" recursively:YES];
     self.sensorCtrl = [self.robotNode childNodeWithName:@"Sensor_Root" recursively:YES];
@@ -176,11 +186,20 @@
         // Prepare for unboxing sequence. 
         _robotBoxUnfolded = NO;
 
-        self.robotBoxNode = [SCNNode firstNodeFromSceneNamed:@"Robot_Unboxing.dae"];
-        [self setLightingModelForChildren:_robotBoxNode];
+        if ([SceneManager main].renderingAPI == BEViewRenderingAPIOpenGLES2) {
+            // In GL we load the non-pbr robot.  It happens to be the same DAE as the idle animation. :)
+            self.robotBoxNode = [SCNNode firstNodeFromSceneNamed:@"Robot_Unboxing.dae"];
+            [self setGLLightingModelForChildren:self.robotBoxNode];  // This sets our lighting to constant, instead of PBR
+        } else {
+            // In metal lets load the PBR Robot
+            self.robotBoxNode = [SCNNode firstNodeFromSceneNamed:@"Robot/Robot_Unboxing.scn"];
+        }
+        
         [self.robotTransformNode addChildNode:self.robotBoxNode];
         
         self.robotBoxUnfoldingAnim = [AnimationComponent animationWithSceneNamed:@"Robot_Unboxing.dae"];
+        self.robotBoxUnfoldingAnim.fillMode = kCAFillModeForwards;
+        self.robotBoxUnfoldingAnim.removedOnCompletion = NO;
         [_robotBoxUnfoldingAnim setFadeInDuration:0];
         [_robotBoxUnfoldingAnim setFadeOutDuration:0];
 
@@ -206,30 +225,51 @@
             RobotMeshControllerComponent *strongSelf = weakSelf;
             if( strongSelf ) {
                 strongSelf->_robotBoxUnfolded = YES;
+
                 [SCNTransaction begin];
                 [SCNTransaction disableActions];
                 [SCNTransaction setAnimationDuration:0];
-                [strongSelf->_robotBoxNode setHidden:YES];
-                [strongSelf->_robotBodyNode setHidden:NO];
-                [strongSelf->_headCtrl setHidden:NO];
                 
+                // Hide the box robot
+                [strongSelf->_robotBoxNode setHidden:YES];
+                
+                // Make sure we're positioned
                 self.robotBodyNode.position = SCNVector3Make(0, ROBOT_HOVER_HEIGHT, 0.f);
-                self.headCtrl.position = [self.rootCtrl convertPosition:self.animatedHeadCtrl.position toNode:self.robotTransformNode];
+                strongSelf.headCtrl.position = [self.rootCtrl convertPosition:self.animatedHeadCtrl.position toNode:self.robotTransformNode];
+                
+                // Make the real robot visible
+                [strongSelf.robotBodyNode setOpacity:1.0];
+                [strongSelf.headCtrl setOpacity:1.0];
+                strongSelf.robotBodyNode.categoryBitMask = BEShadowCategoryBitMaskCastShadowOntoEnvironment | BEShadowCategoryBitMaskCastShadowOntoSceneKit;
+                strongSelf.headCtrl.categoryBitMask = BEShadowCategoryBitMaskCastShadowOntoEnvironment | BEShadowCategoryBitMaskCastShadowOntoSceneKit;
 
-                [self handleLookAt:0];
+                [strongSelf handleLookAt:0];
                 [SCNTransaction commit];
                 
-                RobotActionComponent *actionComponent = (RobotActionComponent *)[self.entity componentForClass:[RobotActionComponent class]];
-                [actionComponent wait:0.1];
-                [actionComponent lookAtMainCamera];
-                [actionComponent wait:0.2];
-                [actionComponent idleBehaviours:YES];
+                // Doing a manual removal of the animation after a short delay keeps us from getting one
+                // frame of incorrectly placed objects.
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1), dispatch_get_main_queue(), ^{
+                    [_robotBoxNode removeAllAnimations];
+                });
+
+                if( _callbackWhenUnfolded ) {
+                    _callbackWhenUnfolded();
+                }
             }
         }];
         
         // Hide Bridget until we're ready to unfold.
-        [_robotBodyNode setHidden:YES];
-        [_headCtrl setHidden:YES];
+        // If we fully hide PBR Bridget then there is a delay
+        // when we show her. But if she is "techically" visible
+        // no delay.  That's why we just set a super low opacity.
+        //
+        // Since they are "technically" visible, they want to cast shadows. Disable that
+        // until we want them to be really visible.
+        [_robotBodyNode setOpacity:0.01];
+        [_headCtrl setOpacity:0.01];
+        _robotBodyNode.categoryBitMask = 0;
+        _headCtrl.categoryBitMask = 0;
+            
         [_robotBoxUnfoldingAnim setAnimationEvents:@[liftBodyToPositionEvent, finishUnboxingEvent]];
         _robotBoxUnfoldingAnim.speed = 0;
         [_robotBoxNode addAnimation:_robotBoxUnfoldingAnim forKey:ROBOT_BOX_ANIMATION_KEY];
@@ -251,6 +291,7 @@
                 [strongSelf setRobotBoxUnfolded:YES];
                 [strongSelf setupRobotPhysics];
                 strongSelf->_robotBoxSelectable.callbackBlock = nil;
+                [strongSelf loadIdleAnimation];
             }
         };
 
@@ -265,8 +306,9 @@
         // sets the robot above the light to avoid casting a shadow on the
         // ground when the session starts.
         self.node.position = SCNVector3Make(0, -4, 0);
+        
+        [self loadIdleAnimation];
     }
-
     //  [SceneKit printSceneHierarchy:self.node];
 }
                                                   
@@ -278,6 +320,17 @@
     colliderNode.name = @"Robot Collider";
     colliderNode.physicsBody = [SCNPhysicsBody bodyWithType:SCNPhysicsBodyTypeKinematic shape:nil];
     [self.robotBodyNode addChildNode:colliderNode];
+}
+                                                
+   
+#pragma mark - Animation
+                                                  
+- (void)loadIdleAnimation {
+    if (!self.robotIdleAnim) {
+        self.robotIdleAnim = [AnimationComponent animationWithSceneNamed:@"Robot_NonZeroed_Idle.dae"];
+        self.robotIdleAnim.repeatCount = HUGE_VALF;
+    }
+    [self.robotNode addAnimation:self.robotIdleAnim forKey:@"Idle_Animation"];
 }
                                                   
 #pragma mark - CAAnimation control
@@ -516,44 +569,30 @@ float angleDifference(float a, float b) {
     forward = GLKVector3Normalize(forward);
     
     float l = sqrtf( forward.x*forward.x +forward.z*forward.z);
+    float yRot = atan2f( forward.x, -forward.z ) + M_PI_2;
+    float xRot = atan2f( l, forward.y ) - M_PI_2;
+    if( isnan(yRot) || isnan(xRot) ) return; // NAN happens if there are any overlaps (zero,zero).
+
+    // Limit X rotation to just shy of M_PI_2 up and down.
+    if( xRot >= ROBOT_LOOK_X_ROTATION_LIMIT ) {
+        xRot = ROBOT_LOOK_X_ROTATION_LIMIT;
+    } else if( xRot <= -ROBOT_LOOK_X_ROTATION_LIMIT ) {
+        xRot = -ROBOT_LOOK_X_ROTATION_LIMIT;
+    }
     
-    if( [self isAnimated]
-        || ((l < ROBOT_LOOK_AT_MIN_DISTANCE || self.looking == NO) && self.lookAtCamera == NO)
-    ){
-        // Ease back to zero pose if we're too close or not looking.
-        self.targetHeadRotationX = [self lerpAngle:self.targetHeadRotationX endAngle:0 f:0.1];
-
-// DO NOT RETURN Y to zero, or robot always looks to the right.
-//        self.targetHeadRotationY = [self lerpAngle:self.targetHeadRotationY endAngle:0 f:0.1];
-        return;
+    // Constraint the relative Y rotation to the limits of body rotation.
+    float yRelRot = angleDifference(yRot, self.bodyRotationY);
+    if( yRelRot >= ROBOT_LOOK_Y_ROTATION_LIMIT) {
+        yRelRot = ROBOT_LOOK_Y_ROTATION_LIMIT;
+    } else if( yRelRot <= -ROBOT_LOOK_Y_ROTATION_LIMIT) {
+        yRelRot = -ROBOT_LOOK_Y_ROTATION_LIMIT;
     }
+    
+    yRot = fmodf( yRelRot + self.bodyRotationY + 6.28318530717959f, 6.28318530717959f);
+    xRot = fmodf(xRot + 6.28318530717959f, 6.28318530717959f);
 
-    if( [self isAnimated] == NO ) {
-        float yRot = atan2f( forward.x, -forward.z ) + M_PI_2;
-        float xRot = atan2f( l, forward.y ) - M_PI_2;
-        if( isnan(yRot) || isnan(xRot) ) return; // NAN happens if there are any overlaps (zero,zero).
-
-        // Limit X rotation to just shy of M_PI_2 up and down.
-        if( xRot >= ROBOT_LOOK_X_ROTATION_LIMIT ) {
-            xRot = ROBOT_LOOK_X_ROTATION_LIMIT;
-        } else if( xRot <= -ROBOT_LOOK_X_ROTATION_LIMIT ) {
-            xRot = -ROBOT_LOOK_X_ROTATION_LIMIT;
-        }
-        
-        // Constraint the relative Y rotation to the limits of body rotation.
-        float yRelRot = angleDifference(yRot, self.bodyRotationY);
-        if( yRelRot >= ROBOT_LOOK_Y_ROTATION_LIMIT) {
-            yRelRot = ROBOT_LOOK_Y_ROTATION_LIMIT;
-        } else if( yRelRot <= -ROBOT_LOOK_Y_ROTATION_LIMIT) {
-            yRelRot = -ROBOT_LOOK_Y_ROTATION_LIMIT;
-        }
-        
-        yRot = fmodf( yRelRot + self.bodyRotationY + 6.28318530717959f, 6.28318530717959f);
-        xRot = fmodf(xRot + 6.28318530717959f, 6.28318530717959f);
-
-        self.targetHeadRotationY = yRot;
-        self.targetHeadRotationX = xRot;
-    }
+    self.targetHeadRotationY = yRot;
+    self.targetHeadRotationX = xRot;
 }
 
 - (void) handleBodyTargetting:(NSTimeInterval)seconds {
@@ -725,14 +764,14 @@ float angleDifference(float a, float b) {
         return;
     
     _bodyEmojiDiffuse = bodyEmoji;
-    [self setNodeNamed:@"Boxy_Body_Mesh" materialNamed:@"EmojiSecondary_Material" withDiffuseImageNamed:bodyEmoji];
+    [self setNodeNamed:@"Body_Door_Mesh" materialNamed:@"EmojiSecondary_Material" withDiffuseImageNamed:bodyEmoji];
 }
 
 /**
- * this is used to make material settings on the hierarchy this is a pain to set manually in Xcode every time
+ * This is used to make material settings on the hierarchy this is a pain to set manually in Xcode every time
  * the character is exported from modo.
  */
-- (void)setLightingModelForChildren:(SCNNode*)robot
+- (void)setGLLightingModelForChildren:(SCNNode*)robot
 {
     [robot _enumerateHierarchyUsingBlock:^(SCNNode * _Nonnull node, BOOL * _Nonnull stop) {
         [node.geometry.materials enumerateObjectsUsingBlock:^(SCNMaterial * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

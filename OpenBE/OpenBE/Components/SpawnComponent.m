@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -60,22 +60,35 @@
     self.furniture = [[NSMutableArray alloc] init];
     
     // Load furniture Geometry here
+    SCNNode *chair;
+    SCNNode  *table;
+    if ([SceneManager.main renderingAPI] == BEViewRenderingAPIMetal) { // load pbr objects
+        chair = [[SCNScene sceneInFrameworkOrAppNamed:@"Objects/pbr/ClassicChairPBR.scn"].rootNode
+                 childNodeWithName:@"Mesh" recursively:YES];
+        
+        table = [[SCNScene sceneInFrameworkOrAppNamed:@"Objects/pbr/CarvedSideTablePBR.scn"].rootNode
+                 childNodeWithName:@"Table" recursively:YES];
+    } else {  // load diffuse objects
+        chair = [[SCNScene sceneInFrameworkOrAppNamed:@"Objects/ClassicChair.dae"].rootNode
+                          childNodeWithName:@"Mesh" recursively:YES];
+        
+        table = [[SCNScene sceneInFrameworkOrAppNamed:@"Objects/CarvedSideTable.dae"].rootNode
+                           childNodeWithName:@"Table" recursively:YES];
+    }
     
-    SCNNode *chair = [[SCNScene sceneInFrameworkOrAppNamed:@"Objects/ClassicChair.dae"].rootNode
-                            childNodeWithName:@"Mesh" recursively:YES];
-
     [self.furniture addObject:chair];
-    SCNNode  *table = [[SCNScene sceneInFrameworkOrAppNamed:@"Objects/CarvedSideTable.dae"].rootNode
-                            childNodeWithName:@"Table" recursively:YES];
-    
     [self.furniture addObject:table];
-
     
     // loop through set rendering / physics parameters
     for (int i = 0; i < [self.furniture count]; i++) {
         SCNNode *thing = [self.furniture objectAtIndex:i];
         
-        [thing setCategoryBitMaskRecursively: BEShadowCategoryBitMaskCastShadowOntoSceneKit | BEShadowCategoryBitMaskCastShadowOntoEnvironment|RAYCAST_IGNORE_BIT];
+        // Setting this in metal will wash out our PBR rendering
+        if ([SceneManager main].renderingAPI == BEViewRenderingAPIMetal) {
+            [thing setCategoryBitMaskRecursively: RAYCAST_IGNORE_BIT];
+        } else {
+            [thing setCategoryBitMaskRecursively: BEShadowCategoryBitMaskCastShadowOntoSceneKit | BEShadowCategoryBitMaskCastShadowOntoEnvironment|RAYCAST_IGNORE_BIT];
+        }
         thing.hidden = YES;
         
         SCNPhysicsShape *objectShape = [SCNPhysicsShape shapeWithNode:thing
@@ -154,7 +167,6 @@
 - (BOOL) placeObject:(SCNHitTestResult *) hit  {
     
     if( self.boxPoolIndex < [self.furniture count]){
-        NSLog(@"placing the thing");
         [_spawnSound play];
         
         SCNNode *node = [self.furniture objectAtIndex:self.boxPoolIndex];

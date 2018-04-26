@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -23,6 +23,26 @@
 @end
 
 @implementation SceneManager
+
+#pragma mark - Class
+
++ (SceneManager *) main {
+    static SceneManager * mainSceneManager;
+    if( mainSceneManager == NULL) {
+        mainSceneManager = [[SceneManager alloc] init];
+    }
+    
+    return mainSceneManager;
+}
+
+#pragma mark - Getters
+
+- (BEViewRenderingAPI)renderingAPI
+{
+    return self.mixedRealityMode.beView.renderingAPI;
+}
+
+#pragma mark - Init
 
 - (id) init {
     self = [super init];
@@ -49,11 +69,6 @@
     SCNLight *ambientLight = ambientLightNode.light;
     ambientLight.color = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1];
     
-    // Adjust physicsworld settings.
-    SCNPhysicsWorld *physicsWorld = mixedRealityMode.sceneKitScene.physicsWorld;
-//    physicsWorld.gravity = SCNVector3Make(0.0,9.8,0.0);
-    physicsWorld.speed = 1;  // FIXME: BE set speed to 0.5
-    
     SCNNode *rootNode = mixedRealityMode.sceneKitScene.rootNode;
     SCNNode *coarseMesh = [rootNode childNodeWithName:@"coarseMesh" recursively:YES];
     SCNPhysicsBody *worldBody = coarseMesh.physicsBody;
@@ -73,14 +88,7 @@
     [self updateSingletons:mixedRealityMode withDeltaTime:0.f];
 }
 
-+ (SceneManager *) main {
-    static SceneManager * mainSceneManager;
-    if( mainSceneManager == NULL) {
-        mainSceneManager = [[SceneManager alloc] init];
-    }
-    
-    return mainSceneManager;
-}
+#pragma mark - Components
 
 - (void) addEntity:(GKEntity * ) entity {
     [self.entities addObject:entity];

@@ -68,15 +68,11 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
 #endif
 
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    
-    // Show the settings UI, with a prepared set of debug settings.
-    NSBundle *beBundle = [NSBundle bundleForClass:BEDebugSettingsViewController.class];
-    UIStoryboard *beDebugSettingsStoryboard = [UIStoryboard storyboardWithName:@"BEDebugSettings" bundle:beBundle];
-    self.navController = [beDebugSettingsStoryboard instantiateInitialViewController];
-    BEDebugSettingsViewController *debugSettingsVC = (BEDebugSettingsViewController *)_navController.viewControllers.firstObject;
-    [self prepareDebugSettingsVC:debugSettingsVC];
-
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    _navController = [mainStoryboard instantiateInitialViewController];
+    [_navController setNavigationBarHidden:YES animated:YES];
     [_window setRootViewController:_navController];
+    [_window makeKeyAndVisible];
     return YES;
 }
 
@@ -119,30 +115,29 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
  * See AppDelegate.h for details
  */
 - (void) prepareDebugSettingsVC:(BEDebugSettingsViewController*)vc {
-    [vc addKey:SETTING_STEREO_SCANNING label:@"Stereo Scanning" defaultBool:NO];
-    [vc addKey:SETTING_STEREO_RENDERING label:@"Stereo Rendering" defaultBool:YES];
+    BOOL isiPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone);
+    [vc addKey:SETTING_STEREO_SCANNING label:@"Stereo Scanning" defaultBool:isiPhone];
+    [vc addKey:SETTING_STEREO_RENDERING label:@"Stereo Rendering" defaultBool:isiPhone];
     [vc addKey:SETTING_SHOW_RENDER_TYPES label:@"Show Render Types" defaultBool:NO];
     
-    [vc addKey:SETTING_USE_WVL label:@"Use Wide Vision Lens" defaultBool:YES];
+    [vc addKey:SETTING_USE_WVL label:@"Use Wide Vision Lens" defaultBool:isiPhone];
     [vc addKey:SETTING_COLOR_CAMERA_ONLY label:@"Color Camera Only" defaultBool:NO];
     
     [vc addKey:SETTING_REPLAY_CAPTURE label:@"Replay last OCC Recording" defaultBool:NO];
-    [vc addKey:SETTING_ENABLE_RECORDING label:@"Enable OCC In-Scene Recording" defaultBool:NO];
     [vc addKey:SETTING_SHOW_CONTROLLER label:@"Show Bridge Controller" defaultBool:NO];
-    
-    vc.delegate = self;
 }
 
 /**
  * Reset all the settings for release.
  */
 - (void) resetSettingsToDefaults {
-    [BEAppSettings setBooleanValue:YES forAppSetting:SETTING_STEREO_SCANNING];
-    [BEAppSettings setBooleanValue:YES forAppSetting:SETTING_STEREO_RENDERING];
-    [BEAppSettings setBooleanValue:YES forAppSetting:SETTING_USE_WVL];
+    BOOL isiPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone);
+    [BEAppSettings setBooleanValue:isiPhone forAppSetting:SETTING_STEREO_SCANNING];
+    [BEAppSettings setBooleanValue:isiPhone forAppSetting:SETTING_STEREO_RENDERING];
+    [BEAppSettings setBooleanValue:isiPhone forAppSetting:SETTING_USE_WVL];
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_COLOR_CAMERA_ONLY];
+    
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_REPLAY_CAPTURE];
-    [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_ENABLE_RECORDING];
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_SHOW_RENDER_TYPES];
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_SHOW_CONTROLLER];
 }
@@ -151,10 +146,7 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
  * User tapped on "Begin" to start the BE experience.
  */
 - (void) debugSettingsBegin {
-    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UIViewController *mainVC = [mainStoryboard instantiateInitialViewController];
-    [_navController pushViewController:mainVC animated:YES];
-    [_navController setNavigationBarHidden:YES animated:YES];
+    
 }
 
 @end

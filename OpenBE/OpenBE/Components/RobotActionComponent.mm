@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -25,6 +25,12 @@
 #import "BehaviourComponents/PathFindMoveToBehaviourComponent.h"
 #import "BehaviourComponents/ScanBehaviourComponent.h"
 
+#import "FetchEventComponent.h"
+#import "MoveRobotEventComponent.h"
+#import "ScanEventComponent.h"
+#import "SpawnComponent.h"
+#import "SpawnPortalComponent.h"
+
 #define ROBOT_ACTION_BUFFER_KEY @"RobotActionBufferKey"
 
 @interface RobotActionComponent ()
@@ -33,21 +39,29 @@
 @property (weak) GeometryComponent * geometryComponent;
 @property (weak) AnimationComponent * animationComponent;
 @property(nonatomic, strong) NSMutableArray *actionBuffer;
+
+@property(nonatomic, strong) NSMutableArray<ComponentProtocol> *componentsToDisableOnModeChange;
+
 @end
 
 @implementation RobotActionComponent
 @synthesize vemojiIdle = _vemojiIdle;
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.actionBuffer = [[NSMutableArray alloc] initWithCapacity:8];
+        self.componentsToDisableOnModeChange = [[NSMutableArray<ComponentProtocol> alloc] initWithCapacity:8];
+    }
+    return self;
+}
+
 - (void) start {
     [super start];
-
     self.robotBehaviour = (RobotBehaviourComponent * )[ComponentUtils getComponentFromEntity:self.entity ofClass:[RobotBehaviourComponent class]];
-    
     self.geometryComponent = (GeometryComponent * )[ComponentUtils getComponentFromEntity:self.entity ofClass:[GeometryComponent class]];
-
     self.animationComponent = (AnimationComponent *)[ComponentUtils getComponentFromEntity:self.entity ofClass:[AnimationComponent class]];
-
-    self.actionBuffer = [[NSMutableArray alloc] initWithCapacity:8];
 }
 
 /**
@@ -361,6 +375,7 @@
     return action;
 }
 
+
 - (SCNAction*)activateBeamUI {
     SCNAction *action = [SCNAction runBlock:^(SCNNode * _Nonnull node) {
         BeamUIBehaviourComponent *component = (BeamUIBehaviourComponent *)[self.entity componentForClass:[BeamUIBehaviourComponent class]];
@@ -370,6 +385,73 @@
     [self appendAction:action];
     return action;
 }
+
+/**
+ * Adds component that will be disabled every time we change modes below.
+ */
+- (void) addComponentsToDisableOnModeChange:(GKComponent<ComponentProtocol>*)component {
+    [_componentsToDisableOnModeChange addObject:component];
+}
+
+/**
+ * Disable all components on mode change
+ */
+- (void) disableAllComponentsOnModeChangeImmediate {
+    for( GKComponent<ComponentProtocol>* component in _componentsToDisableOnModeChange ) {
+        [component setEnabled:NO];
+    }
+}
+
+- (SCNAction*)activateMoveMode {
+    SCNAction *action = [SCNAction runBlock:^(SCNNode * _Nonnull node) {
+        [self disableAllComponentsOnModeChangeImmediate];
+        [_moveComponent setEnabled:YES];
+    }];
+    
+    [self appendAction:action];
+    return action;
+}
+
+- (SCNAction*)activateFetchMode {
+    SCNAction *action = [SCNAction runBlock:^(SCNNode * _Nonnull node) {
+        [self disableAllComponentsOnModeChangeImmediate];
+        [_fetchComponent setEnabled:YES];
+    }];
+    
+    [self appendAction:action];
+    return action;
+}
+
+- (SCNAction*)activateScanMode {
+    SCNAction *action = [SCNAction runBlock:^(SCNNode * _Nonnull node) {
+        [self disableAllComponentsOnModeChangeImmediate];
+        [_scanComponent setEnabled:YES];
+    }];
+    
+    [self appendAction:action];
+    return action;
+}
+
+- (SCNAction*)activateSpawnObjectMode {
+    SCNAction *action = [SCNAction runBlock:^(SCNNode * _Nonnull node) {
+        [self disableAllComponentsOnModeChangeImmediate];
+        [_spawnObjectComponent setEnabled:YES];
+    }];
+    
+    [self appendAction:action];
+    return action;
+}
+
+- (SCNAction*)activateSpawnPortalMode {
+    SCNAction *action = [SCNAction runBlock:^(SCNNode * _Nonnull node) {
+        [self disableAllComponentsOnModeChangeImmediate];
+        [_spawnPortalComponent setEnabled:YES];
+    }];
+    
+    [self appendAction:action];
+    return action;
+}
+
 
 
 - (SCNAction*) idleBehaviours:(BOOL)enabled {

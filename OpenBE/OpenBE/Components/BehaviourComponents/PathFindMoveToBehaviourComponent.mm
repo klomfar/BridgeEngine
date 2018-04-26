@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -15,7 +15,7 @@
 #import "../../Core/AudioEngine.h"
 #import "../../Utils/SceneKitExtensions.h"
 
-@import GLKit;
+#import <GLKit/GLKit.h>
 
 #define GROUND_HEIGHT (-0.02f);//roughly above the ground's scanned mesh result
 typedef void (^callback)(void);
@@ -62,7 +62,7 @@ typedef void (^callback)(void);
     NSUInteger width = CGImageGetWidth(imageRef);
     NSUInteger height = CGImageGetHeight(imageRef);
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    uint8_t *rawData = malloc(height * width * 4);
+    uint8_t *rawData = (uint8_t*)malloc(height * width * 4);
     NSUInteger bytesPerPixel = 4;
     NSUInteger bytesPerRow = bytesPerPixel * width;
     NSUInteger bitsPerComponent = 8;
@@ -110,44 +110,26 @@ typedef void (^callback)(void);
 
         NSString *documentsDirectory = [paths objectAtIndex:0];
         NSString *scenePath = [documentsDirectory stringByAppendingPathComponent:@"BridgeEngineScene"];
-        NSString *occupancyFloorImagePath = [scenePath stringByAppendingPathComponent:@"OccupancyFloorMap.png"];
-        NSString *occupancyCoveringImagePath = [scenePath stringByAppendingPathComponent:@"OccupancyCoverMap.png"];
-
-        if ([[NSFileManager defaultManager] fileExistsAtPath:occupancyFloorImagePath] &&
-            [[NSFileManager defaultManager] fileExistsAtPath:occupancyCoveringImagePath])
+        NSString *occupancyImagePath = [scenePath stringByAppendingPathComponent:@"occupancy_grid.png"];
+        NSString *occupancyMetadata = [scenePath stringByAppendingPathComponent:@"occupancy_grid_metadata.json"];
+        
+        BEOccupancyGrid *grid = [[BEOccupancyGrid alloc] init];
+        BEOccupancyGrid *obstacleGrid = [[BEOccupancyGrid alloc] init];
+        
+        bool couldLoad = [grid loadGridFromFilePath:occupancyImagePath metaDataPath:occupancyMetadata];
+        [BEOccupancyGrid convertToObstacleGrid:grid outputGrid:obstacleGrid];
+        
+        if (couldLoad)
         {
-            UIImage * coveringImage = [[UIImage alloc] initWithContentsOfFile:occupancyCoveringImagePath];
-            UIImage * floorImage = [[UIImage alloc] initWithContentsOfFile:occupancyFloorImagePath];
-            uint8_t* coverImageBuf = [PathFindMoveToBehaviourComponent unlockImage:coveringImage];
-            uint8_t* floorImageBuf = [PathFindMoveToBehaviourComponent unlockImage:floorImage];
-
-            CGImageRef imageRef = [floorImage CGImage];
-            NSUInteger width = CGImageGetWidth(imageRef);
-            NSUInteger height = CGImageGetHeight(imageRef);
-            for (int i = 0; i < width * height * 4; i+=4)
-            {
-                // Floor map == 255 where there is valid floor
-                // Cover map == 255 where there is a covering surface
-                // Occupied where there's no floor or cover
-                bool occupied = floorImageBuf[i] <= 2 || coverImageBuf[i] == 255;
-                coverImageBuf[i] = 255 * (occupied ? 1 : 0);
-                coverImageBuf[i+1] = 255 * (occupied ? 1 : 0);
-                coverImageBuf[i+2] = 255 * (occupied ? 1 : 0);
-                coverImageBuf[i+3] = 255;
-                
-                // Invert the floorImageBuf for our path finding to work.
-                floorImageBuf[i] = 255 - floorImageBuf[i];
-            }
-            [PathFindMoveToBehaviourComponent lockImage:&floorImage buffer:floorImageBuf];
-            self.pathFinding = [[PathFinding alloc] initWithImage:floorImage];
-
-            [PathFindMoveToBehaviourComponent lockImage:&coveringImage buffer:coverImageBuf];
-            self.noCoverPathFinding = [[PathFinding alloc] initWithImage:coveringImage];
+            self.pathFinding = [[PathFinding alloc] initWithGrid:obstacleGrid];
+            self.noCoverPathFinding = nil;
         }
         else
         {
-            self.pathFinding = [[PathFinding alloc] init];
-            self.noCoverPathFinding = nil;
+            be_assert(false, "Could not load occupancy grid and metadata from [%s] and [%s] respectively",
+                      [occupancyImagePath UTF8String], [occupancyMetadata UTF8String]);
+            NSLog(@"ERROR - Could not load occupancy grid and metadata from [%@] and [%@] respectively",
+                  occupancyImagePath, occupancyMetadata);
         }
     }
 

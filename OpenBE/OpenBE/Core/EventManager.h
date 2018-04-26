@@ -1,12 +1,13 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
 #import <BridgeEngine/BridgeEngine.h>
 #import "Core.h"
+#import "EventComponentProtocol.h"
 
 @interface EventManager : NSObject
 
@@ -21,7 +22,10 @@
 - (void) resumeGlobalEventComponents;
 
 - (void) updateWithDeltaTime:(NSTimeInterval)seconds;
-- (void) addGlobalEventComponent:(GKComponent *)component;
+
+/// Add a global event component
+/// such as move, look, beam UI, etc.
+- (void) addGlobalEventComponent:(GKComponent<EventComponentProtocol> *)component;
 
 - (void) controllerButtonDown;
 - (void) controllerButtonUp;

@@ -1,4 +1,4 @@
-Bridge Engine for Unity Package
+Bridge Engine 1.0 for Unity Package
 ===============================
 
 This folder contains the build components for assembling the full `BridgeEngine.unitypackage`

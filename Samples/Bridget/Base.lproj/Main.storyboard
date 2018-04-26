@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="V0m-nc-N76">
     <device id="retina4_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,10 +21,120 @@
                         <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="prefersMetalRenderingAPI" value="YES"/>
+                        </userDefinedRuntimeAttributes>
                     </view>
+                    <nil key="simulatedTopBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1035" y="369"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="qp3-qn-BQ0">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="V0m-nc-N76" sceneMemberID="viewController">
+                    <nil key="simulatedTopBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8P7-2S-Hbc">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="tkZ-mu-ew7" kind="relationship" relationship="rootViewController" id="kQG-rR-v1e"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vDP-Qo-ej8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-344" y="369"/>
+        </scene>
+        <!--Welcome View Controller-->
+        <scene sceneID="2Wg-Jv-ldp">
+            <objects>
+                <viewController id="tkZ-mu-ew7" customClass="WelcomeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gUU-Bw-aLD"/>
+                        <viewControllerLayoutGuide type="bottom" id="Gri-MT-6Cj"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="SOb-ut-q63">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Welcome_ScrollBG" translatesAutoresizingMaskIntoConstraints="NO" id="r3X-zF-mq9">
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gz8-Wy-41g">
+                                <rect key="frame" x="83.5" y="62.5" width="500" height="250"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Welcome_HelloBridget" translatesAutoresizingMaskIntoConstraints="NO" id="zs4-Zf-4rE">
+                                        <rect key="frame" x="16" y="167" width="70" height="67"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Bridge Engine" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7zq-3s-gf7">
+                                        <rect key="frame" x="60" y="16" width="379.5" height="38"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="32"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M94-61-jU7">
+                                        <rect key="frame" x="124.5" y="104.5" width="250" height="40"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="24"/>
+                                        <state key="normal" title="START" backgroundImage="Welcome_WhiteOutlineBG">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="BYZ-38-t0r" kind="show" identifier="start" id="4cS-zk-hoX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BGw-B6-sFe">
+                                        <rect key="frame" x="124.5" y="160.5" width="250" height="33"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                        <state key="normal" title="SETTINGS">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="settingsTapped:" destination="tkZ-mu-ew7" eventType="touchUpInside" id="QKb-Vk-w02"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="M94-61-jU7" firstAttribute="centerX" secondItem="gz8-Wy-41g" secondAttribute="centerX" id="5HZ-pU-m9w"/>
+                                    <constraint firstAttribute="width" constant="500" id="Adr-DT-9NO"/>
+                                    <constraint firstAttribute="bottom" secondItem="zs4-Zf-4rE" secondAttribute="bottom" constant="16" id="FQC-9d-9qI"/>
+                                    <constraint firstItem="BGw-B6-sFe" firstAttribute="width" secondItem="M94-61-jU7" secondAttribute="width" id="FfH-bb-i0p"/>
+                                    <constraint firstItem="7zq-3s-gf7" firstAttribute="top" secondItem="gz8-Wy-41g" secondAttribute="top" constant="16" id="Z9h-S6-rYH"/>
+                                    <constraint firstItem="M94-61-jU7" firstAttribute="centerY" secondItem="gz8-Wy-41g" secondAttribute="centerY" id="bLL-dM-ddZ"/>
+                                    <constraint firstItem="BGw-B6-sFe" firstAttribute="centerX" secondItem="M94-61-jU7" secondAttribute="centerX" id="gOs-Ra-5ST"/>
+                                    <constraint firstAttribute="height" constant="250" id="nOi-c3-rJP"/>
+                                    <constraint firstItem="BGw-B6-sFe" firstAttribute="top" secondItem="M94-61-jU7" secondAttribute="bottom" constant="16" id="ota-Dd-Hex"/>
+                                    <constraint firstItem="7zq-3s-gf7" firstAttribute="centerX" secondItem="gz8-Wy-41g" secondAttribute="centerX" id="xlh-1f-v3V"/>
+                                    <constraint firstItem="zs4-Zf-4rE" firstAttribute="leading" secondItem="gz8-Wy-41g" secondAttribute="leading" constant="16" id="zfY-XR-6iJ"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="r3X-zF-mq9" secondAttribute="trailing" id="Dh3-Wh-h1s"/>
+                            <constraint firstAttribute="bottom" secondItem="r3X-zF-mq9" secondAttribute="bottom" id="IWe-bP-3Wc"/>
+                            <constraint firstItem="r3X-zF-mq9" firstAttribute="leading" secondItem="SOb-ut-q63" secondAttribute="leading" id="IfQ-dq-XM5"/>
+                            <constraint firstItem="r3X-zF-mq9" firstAttribute="top" secondItem="gUU-Bw-aLD" secondAttribute="bottom" id="MPc-sz-TwZ"/>
+                            <constraint firstItem="gz8-Wy-41g" firstAttribute="centerX" secondItem="SOb-ut-q63" secondAttribute="centerX" id="gTo-MZ-ann"/>
+                            <constraint firstItem="gz8-Wy-41g" firstAttribute="centerY" secondItem="SOb-ut-q63" secondAttribute="centerY" id="xSX-Dz-huR"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="aAn-Hb-sHW"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="backgroundView" destination="gz8-Wy-41g" id="gNz-s2-yFH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nwp-r3-WeZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="356" y="370"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Welcome_HelloBridget" width="70" height="67"/>
+        <image name="Welcome_ScrollBG" width="1920" height="1080"/>
+        <image name="Welcome_WhiteOutlineBG" width="250" height="40"/>
+    </resources>
 </document>

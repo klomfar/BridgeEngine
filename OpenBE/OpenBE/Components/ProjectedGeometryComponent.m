@@ -3,7 +3,7 @@
 //  Bifrost
 //
 //  Created by Andrew Zimmer on 7/18/17.
-//  Copyright © 2017 Occipital. All rights reserved.
+//  Copyright © 2018 Occipital. All rights reserved.
 //
 
 #import "ProjectedGeometryComponent.h"
@@ -27,7 +27,15 @@
 
 // This recursive method sets the shader type for the component and all child nodes to the projection shader in combined shader.
 - (void)setShaderForChildren:(SCNNode *)rootNode {
-    SCNProgram * program = [SCNProgram programWithShader:@"Shaders/CombinedShader/combinedShader"];
+    SCNProgram * program;
+    
+    if( SceneManager.main.renderingAPI == BEViewRenderingAPIOpenGLES2) {
+        program = [SCNProgram programWithGLShader:@"Shaders/CombinedShader/combinedShader"];
+    } else {
+        program = [SCNProgram openbeMetalProgramWithVertexFunctionName:@"OBEProjectionVertex"
+                                                  fragmentFunctionName:@"OBEProjectionFragment"];
+    }
+    
     [program setOpaque:NO];
     
     [rootNode _enumerateHierarchyUsingBlock:^(SCNNode * _Nonnull node, BOOL * _Nonnull stop) {
@@ -35,15 +43,23 @@
         node.castsShadow = NO;
         
         [node.geometry.materials enumerateObjectsUsingBlock:^(SCNMaterial * _Nonnull material, NSUInteger idx, BOOL * _Nonnull stop) {
-            [material handleBindingOfSymbol:@"shaderType" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
-                glUniform1f(location, 3.f);
-            }];
+            
+            if( SceneManager.main.renderingAPI == BEViewRenderingAPIOpenGLES2) {
+                [material handleBindingOfSymbol:@"shaderType" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
+                    glUniform1f(location, 3.f);
+                }];
+
+                material.blendMode = SCNBlendModeReplace;
+            } else {
+                // Blending has fundamentally changes in Metal vs OpenGL ES2.
+                material.blendMode = SCNBlendModeAlpha;
+                material.doubleSided = YES;
+            }
             
             material.program = program;
-            material.blendMode = SCNBlendModeReplace;
             
-            material.readsFromDepthBuffer = false;
-            material.writesToDepthBuffer = false;
+            material.readsFromDepthBuffer = NO;
+            material.writesToDepthBuffer = NO;
         }];
     }];
 }

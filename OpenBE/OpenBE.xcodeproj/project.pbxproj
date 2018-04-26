@@ -19,6 +19,7 @@
 		2C5DA5451E00F06F00A60606 /* ScanEventComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C5DA5411E00F06F00A60606 /* ScanEventComponent.m */; };
 		2C5DA5481E00F12700A60606 /* ScanBehaviourComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C5DA5461E00F12700A60606 /* ScanBehaviourComponent.h */; };
 		2C5DA5491E00F12700A60606 /* ScanBehaviourComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C5DA5471E00F12700A60606 /* ScanBehaviourComponent.m */; };
+		2CC8D9702040B99500B00AAA /* openbe.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2CC8D96F2040B99500B00AAA /* openbe.metal */; };
 		2DC3E97E1E0005A2007C3C02 /* OpenBE.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DC3E97D1E0005A2007C3C02 /* OpenBE.scnassets */; };
 		2DC3EA431E005CC9007C3C02 /* BridgeEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DC3EA421E005CC9007C3C02 /* BridgeEngine.framework */; };
 		2DCD6FF21DFFEED3003691AE /* OpenBE.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCD6FF01DFFEED3003691AE /* OpenBE.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -59,7 +60,7 @@
 		2DCD70B31DFFEF8D003691AE /* MoveToBehaviourComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCD70661DFFEF8D003691AE /* MoveToBehaviourComponent.h */; };
 		2DCD70B41DFFEF8D003691AE /* MoveToBehaviourComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCD70671DFFEF8D003691AE /* MoveToBehaviourComponent.m */; };
 		2DCD70B51DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCD70681DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.h */; };
-		2DCD70B61DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCD70691DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.m */; };
+		2DCD70B61DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DCD70691DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.mm */; };
 		2DCD70B71DFFEF8D003691AE /* BlockDemoReticleComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCD706A1DFFEF8D003691AE /* BlockDemoReticleComponent.h */; };
 		2DCD70B81DFFEF8D003691AE /* BlockDemoReticleComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCD706B1DFFEF8D003691AE /* BlockDemoReticleComponent.m */; };
 		2DCD70B91DFFEF8D003691AE /* ButtonComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCD706C1DFFEF8D003691AE /* ButtonComponent.h */; };
@@ -105,10 +106,6 @@
 		2DCD73411DFFF2ED003691AE /* OpenBE.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 2DCD73401DFFF2ED003691AE /* OpenBE.xcconfig */; };
 		2DE0874A1DFFF8C4000FF474 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DE087491DFFF8C4000FF474 /* GameController.framework */; };
 		6D11A5421E4954EF00EA8F3C /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D11A5411E4954EF00EA8F3C /* CoreBluetooth.framework */; };
-		6D6050F61E4CEE9E006760F3 /* VRWorldComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 6D6050F41E4CEE9E006760F3 /* VRWorldComponent.h */; };
-		6D6050FE1E4CF0F4006760F3 /* PortalComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 6D6050FC1E4CF0F4006760F3 /* PortalComponent.h */; };
-		6D6051091E4D07FF006760F3 /* SpawnPortalComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 6D6051071E4D07FF006760F3 /* SpawnPortalComponent.h */; };
-		6D6051211E4D1702006760F3 /* ColorOverlayComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 6D60511F1E4D1702006760F3 /* ColorOverlayComponent.h */; };
 		6DD7C9391E5CF521006AAC6F /* VRWorldComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DD7C9351E5CF521006AAC6F /* VRWorldComponent.h */; };
 		6DD7C93A1E5CF521006AAC6F /* VRWorldComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6DD7C9361E5CF521006AAC6F /* VRWorldComponent.mm */; };
 		6DD7C93F1E5CF5A5006AAC6F /* SpawnPortalComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DD7C93D1E5CF5A5006AAC6F /* SpawnPortalComponent.h */; };
@@ -134,6 +131,7 @@
 		2C5DA5411E00F06F00A60606 /* ScanEventComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanEventComponent.m; sourceTree = "<group>"; };
 		2C5DA5461E00F12700A60606 /* ScanBehaviourComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanBehaviourComponent.h; sourceTree = "<group>"; };
 		2C5DA5471E00F12700A60606 /* ScanBehaviourComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanBehaviourComponent.m; sourceTree = "<group>"; };
+		2CC8D96F2040B99500B00AAA /* openbe.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = openbe.metal; sourceTree = "<group>"; };
 		2DC3E97D1E0005A2007C3C02 /* OpenBE.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = OpenBE.scnassets; sourceTree = "<group>"; };
 		2DC3EA421E005CC9007C3C02 /* BridgeEngine.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BridgeEngine.framework; path = ../Frameworks/BridgeEngine.framework; sourceTree = "<group>"; };
 		2DCD6FED1DFFEED3003691AE /* OpenBE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenBE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,7 +174,7 @@
 		2DCD70661DFFEF8D003691AE /* MoveToBehaviourComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveToBehaviourComponent.h; sourceTree = "<group>"; };
 		2DCD70671DFFEF8D003691AE /* MoveToBehaviourComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveToBehaviourComponent.m; sourceTree = "<group>"; };
 		2DCD70681DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathFindMoveToBehaviourComponent.h; sourceTree = "<group>"; };
-		2DCD70691DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathFindMoveToBehaviourComponent.m; sourceTree = "<group>"; };
+		2DCD70691DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PathFindMoveToBehaviourComponent.mm; sourceTree = "<group>"; };
 		2DCD706A1DFFEF8D003691AE /* BlockDemoReticleComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockDemoReticleComponent.h; sourceTree = "<group>"; };
 		2DCD706B1DFFEF8D003691AE /* BlockDemoReticleComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockDemoReticleComponent.m; sourceTree = "<group>"; };
 		2DCD706C1DFFEF8D003691AE /* ButtonComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonComponent.h; sourceTree = "<group>"; };
@@ -222,10 +220,6 @@
 		2DCD73401DFFF2ED003691AE /* OpenBE.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = OpenBE.xcconfig; sourceTree = "<group>"; };
 		2DE087491DFFF8C4000FF474 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		6D11A5411E4954EF00EA8F3C /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
-		6D6050F41E4CEE9E006760F3 /* VRWorldComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRWorldComponent.h; sourceTree = "<group>"; };
-		6D6050FC1E4CF0F4006760F3 /* PortalComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PortalComponent.h; sourceTree = "<group>"; };
-		6D6051071E4D07FF006760F3 /* SpawnPortalComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpawnPortalComponent.h; sourceTree = "<group>"; };
-		6D60511F1E4D1702006760F3 /* ColorOverlayComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorOverlayComponent.h; sourceTree = "<group>"; };
 		6DD7C9351E5CF521006AAC6F /* VRWorldComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VRWorldComponent.h; sourceTree = "<group>"; };
 		6DD7C9361E5CF521006AAC6F /* VRWorldComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VRWorldComponent.mm; sourceTree = "<group>"; };
 		6DD7C93D1E5CF5A5006AAC6F /* SpawnPortalComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpawnPortalComponent.h; sourceTree = "<group>"; };
@@ -255,6 +249,7 @@
 		2C5DA5391E00EF1900A60606 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				2CC8D96F2040B99500B00AAA /* openbe.metal */,
 				2C5DA53A1E00EF1900A60606 /* ScanEnvironmentShader.h */,
 				2C5DA53B1E00EF1900A60606 /* ScanEnvironmentShader.mm */,
 			);
@@ -402,7 +397,7 @@
 				2DCD70661DFFEF8D003691AE /* MoveToBehaviourComponent.h */,
 				2DCD70671DFFEF8D003691AE /* MoveToBehaviourComponent.m */,
 				2DCD70681DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.h */,
-				2DCD70691DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.m */,
+				2DCD70691DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.mm */,
 				2C5DA5461E00F12700A60606 /* ScanBehaviourComponent.h */,
 				2C5DA5471E00F12700A60606 /* ScanBehaviourComponent.m */,
 			);
@@ -454,7 +449,6 @@
 				2DCD70D21DFFEF8D003691AE /* NavigationComponent.h in Headers */,
 				6DD7C9431E5CF614006AAC6F /* PortalComponent.h in Headers */,
 				2DCD704A1DFFEF84003691AE /* GeometryComponent.h in Headers */,
-				6D6050F61E4CEE9E006760F3 /* VRWorldComponent.h in Headers */,
 				6DD7C94B1E5CF646006AAC6F /* SpawnComponent.h in Headers */,
 				2DCD70C51DFFEF8D003691AE /* GazePointerProtocol.h in Headers */,
 				2DCD704E1DFFEF84003691AE /* Scene.h in Headers */,
@@ -472,7 +466,6 @@
 				2DCD70BF1DFFEF8D003691AE /* FetchEventComponent.h in Headers */,
 				2DCD70A31DFFEF8D003691AE /* BeamComponent.h in Headers */,
 				2DCD70E41DFFEF8D003691AE /* SelectableModelComponent.h in Headers */,
-				6D6050FE1E4CF0F4006760F3 /* PortalComponent.h in Headers */,
 				2DCD6FF21DFFEED3003691AE /* OpenBE.h in Headers */,
 				2DCD70471DFFEF84003691AE /* EventComponentProtocol.h in Headers */,
 				2C5DA53C1E00EF1900A60606 /* ScanEnvironmentShader.h in Headers */,
@@ -492,10 +485,8 @@
 				2DCD70D81DFFEF8D003691AE /* RobotActionComponent.h in Headers */,
 				2DCD70B71DFFEF8D003691AE /* BlockDemoReticleComponent.h in Headers */,
 				2DCD70DC1DFFEF8D003691AE /* RobotBodyEmojiComponent.h in Headers */,
-				6D6051091E4D07FF006760F3 /* SpawnPortalComponent.h in Headers */,
 				2DCD70BB1DFFEF8D003691AE /* ButtonContainerComponent.h in Headers */,
 				2DCD70501DFFEF84003691AE /* SceneManager.h in Headers */,
-				6D6051211E4D1702006760F3 /* ColorOverlayComponent.h in Headers */,
 				2DCD70D01DFFEF8D003691AE /* MoveRobotEventComponent.h in Headers */,
 				2DCD70441DFFEF84003691AE /* ComponentProtocol.h in Headers */,
 				2DCD70A11DFFEF8D003691AE /* AnimationComponent.h in Headers */,
@@ -574,6 +565,7 @@
 			files = (
 				2DCD70C41DFFEF8D003691AE /* GazeComponent.m in Sources */,
 				2DCD70BA1DFFEF8D003691AE /* ButtonComponent.m in Sources */,
+				2CC8D9702040B99500B00AAA /* openbe.metal in Sources */,
 				2DCD70D51DFFEF8D003691AE /* PhysicsContactAudioComponent.m in Sources */,
 				2DCD73081DFFEF9D003691AE /* PathFinding.mm in Sources */,
 				2DCD70491DFFEF84003691AE /* EventManager.m in Sources */,
@@ -600,7 +592,7 @@
 				6DD7C9441E5CF614006AAC6F /* PortalComponent.mm in Sources */,
 				2DCD730E1DFFEF9D003691AE /* SceneKitTools.mm in Sources */,
 				2DCD70DF1DFFEF8D003691AE /* RobotMeshControllerComponent.mm in Sources */,
-				2DCD70B61DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.m in Sources */,
+				2DCD70B61DFFEF8D003691AE /* PathFindMoveToBehaviourComponent.mm in Sources */,
 				2DCD70DB1DFFEF8D003691AE /* RobotBehaviourComponent.m in Sources */,
 				6DD7C9481E5CF628006AAC6F /* ColorOverlayComponent.mm in Sources */,
 				2DCD70E51DFFEF8D003691AE /* SelectableModelComponent.mm in Sources */,

@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -59,9 +59,7 @@ typedef void (^callback)(void);
     _frontMaterial.emission.intensity = 2;
     
     _frontMaterial.litPerPixel = NO;
-    _frontMaterial.readsFromDepthBuffer = NO;
     _frontMaterial.blendMode = SCNBlendModeAlpha;
-    _frontMaterial.transparencyMode = SCNTransparencyModeAOne;
     
     // I would rather have one textured plane, rendering front and back side.
     // but setting this doesn't seem to work correctly in iOS 9. Only iOS 10.
@@ -80,11 +78,14 @@ typedef void (^callback)(void);
     
     SCNMaterial * otherMaterial = [SCNMaterial material];
     otherMaterial.diffuse.contents = [UIColor clearColor];
-    
+
     self.node.geometry.materials = @[_frontMaterial, otherMaterial,_frontMaterial, otherMaterial, otherMaterial, otherMaterial];
     
+    // Default to no depth testing.
+    [self setDepthTesting:NO];
+    
     // wanted to make sure the buttons are rendered AFTER everything in the scene.
-    // however the beam is not respecting depth buffer drawing state so we have to draw if before the beam.
+    // however the beam is not respecting depth buffer drawing state so we have to draw before the beam.
     // This has little effect because both items are transparent.
     self.node.renderingOrder = TRANSPARENCY_RENDERING_ORDER + 80;
 

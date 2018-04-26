@@ -69,7 +69,14 @@ namespace {
 #endif
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    
+
+    // Detect first-run and explicitely set the default settings.
+    BOOL hasAppliedSettingsOnFirstRun = [BEAppSettings booleanValueFromAppSetting:SETTING_FIRST_RUN defaultValueIfSettingIsNotInBundle:NO];
+    if(hasAppliedSettingsOnFirstRun == NO) {
+        [BEAppSettings setBooleanValue:YES forAppSetting:SETTING_FIRST_RUN];
+        [self resetSettingsToDefaults];
+    }
+
     // Show the settings UI, with a prepared set of debug settings.
     NSBundle *beBundle = [NSBundle bundleForClass:BEDebugSettingsViewController.class];
     UIStoryboard *beDebugSettingsStoryboard = [UIStoryboard storyboardWithName:@"BEDebugSettings" bundle:beBundle];
@@ -120,15 +127,15 @@ namespace {
  * See AppDelegate.h for details
  */
 - (void) prepareDebugSettingsVC:(BEDebugSettingsViewController*)vc {
-    [vc addKey:SETTING_STEREO_SCANNING label:@"Stereo Scanning" defaultBool:YES];
-    [vc addKey:SETTING_STEREO_RENDERING label:@"Stereo Rendering" defaultBool:YES];
+    BOOL isiPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone);
+    [vc addKey:SETTING_STEREO_SCANNING label:@"Stereo Scanning" defaultBool:isiPhone];
+    [vc addKey:SETTING_STEREO_RENDERING label:@"Stereo Rendering" defaultBool:isiPhone];
+    [vc addKey:SETTING_USE_WVL label:@"Use Wide Vision Lens" defaultBool:isiPhone];
+
     [vc addKey:SETTING_SHOW_RENDER_TYPES label:@"Show Render Types" defaultBool:NO];
-    
-    [vc addKey:SETTING_USE_WVL label:@"Use Wide Vision Lens" defaultBool:YES];
     [vc addKey:SETTING_COLOR_CAMERA_ONLY label:@"Color Camera Only" defaultBool:NO];
     
     [vc addKey:SETTING_REPLAY_CAPTURE label:@"Replay last OCC Recording" defaultBool:NO];
-    [vc addKey:SETTING_ENABLE_RECORDING label:@"Enable OCC In-Scene Recording" defaultBool:NO];
     vc.delegate = self;
 }
 
@@ -136,12 +143,12 @@ namespace {
  * Reset all the settings for release.
  */
 - (void) resetSettingsToDefaults {
-    [BEAppSettings setBooleanValue:YES forAppSetting:SETTING_STEREO_SCANNING];
-    [BEAppSettings setBooleanValue:YES forAppSetting:SETTING_STEREO_RENDERING];
+    BOOL isiPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone);
+    [BEAppSettings setBooleanValue:isiPhone forAppSetting:SETTING_STEREO_SCANNING];
+    [BEAppSettings setBooleanValue:isiPhone forAppSetting:SETTING_STEREO_RENDERING];
     [BEAppSettings setBooleanValue:YES forAppSetting:SETTING_USE_WVL];
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_COLOR_CAMERA_ONLY];
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_REPLAY_CAPTURE];
-    [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_ENABLE_RECORDING];
     [BEAppSettings setBooleanValue:NO forAppSetting:SETTING_SHOW_RENDER_TYPES];
 }
 

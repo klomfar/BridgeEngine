@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -61,8 +61,8 @@ namespace {
 
 @interface PathFinding ()
 {
-    matrix map;
     matrix topoMap;
+    matrix convMap;
     float** scores;
     matrix connectedComponentMap;
     
@@ -170,101 +170,35 @@ struct setNode
     return connectedComponentMap.data[sx][sy] == connectedComponentMap.data[gx][gy] && connectedComponentMap.data[sx][sy] != 0;
 }
 
-- (instancetype) init
-{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
-                                                         NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *scenePath = [documentsDirectory stringByAppendingPathComponent:@"BridgeEngineScene"];
-    NSString *occupancyImagePath = [scenePath stringByAppendingPathComponent:@"OccupancyMap.png"];
-
-    UIImage * mapImage = [[UIImage alloc] initWithContentsOfFile:occupancyImagePath];
-    if( mapImage == nil ) {
-        NSLog(@"Failed to load the OccupancyMap.png from %@", occupancyImagePath);
-        return nil;
-    }
-    return [self initWithImage:mapImage];
-}
-
-- (instancetype) initWithImage:(UIImage*) mapImage
+- (instancetype) initWithGrid:(BEOccupancyGrid*) grid
 {
     self = [super init];
     if (self) {
-        robotRadiusInPixels = 2; // 7.0;
-        pixelSizeInMeters = 0.04; // 0.04;
+        robotRadiusInPixels = 5;
+        pixelSizeInMeters = 0.04;
         worldCenterX = -2.89995;
         worldCenterY= -2.90582;
-        
-        //Load occupancy map
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
-                                                             NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString *scenePath = [documentsDirectory stringByAppendingPathComponent:@"BridgeEngineScene"];
-        NSString *occupancyMetadata = [scenePath stringByAppendingPathComponent:@"OccupancyMap.metadata"];
 
-        // Parse the metadata file for three values, OriginX, OriginZ, PixelSize.
-        // Example:
-        // { "OriginX" :-3.5293,
-        //   "OriginZ": -1.42487,
-        //   "MetersPerPixel" : 0.04 }
-        NSString *metadata = [[NSString alloc] initWithContentsOfFile:occupancyMetadata encoding:NSUTF8StringEncoding error:nil];
-        if( metadata != nil && [metadata length] > 0 ) {
-            NSMutableDictionary<NSString*,NSNumber*> *dict = [[NSMutableDictionary alloc] initWithCapacity:3];
-            NSScanner *mdScanner = [NSScanner scannerWithString:metadata];
-            
-            int i = 0;
-            while(mdScanner.isAtEnd == NO) {
-                NSString *key = nil;
-                double dblValue = NAN;
-                
-                [mdScanner scanCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:&key];
-                [mdScanner scanDouble:&dblValue];
-                if( key != nil && isnan(dblValue) == false ) {
-                    dict[key] = @(dblValue);
-                }
-            }
-            
-            worldCenterX = dict[@"OriginX"].doubleValue;
-            worldCenterY = dict[@"OriginZ"].doubleValue;
-            pixelSizeInMeters = dict[@"PixelSize"].doubleValue;
-            NSAssert(++i < 10, @"The path planner can't read the Occupancy Metadata file");
-        } else {
-            NSLog(@"Failed to load the OccupancyMap.metadata from %@", occupancyMetadata);
-            return nil;
-        }
+        worldCenterX = [grid originX];
+        worldCenterY = [grid originY];
+        pixelSizeInMeters = [grid metersPerPixel];
         
         //do initialization
-        map.resize(mapImage.size.width, mapImage.size.height);
+        matrix map;
+        map.resize([grid width], [grid height]);
         
-        CGImageRef image = [mapImage CGImage];
-        NSUInteger width = CGImageGetWidth(image);
-        NSUInteger height = CGImageGetHeight(image);
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        unsigned char *rawData = (unsigned char *)malloc(height * width * 4);
-        NSUInteger bytesPerPixel = 4;
-        NSUInteger bytesPerRow = bytesPerPixel * width;
-        NSUInteger bitsPerComponent = 8;
-        CGContextRef context = CGBitmapContextCreate(rawData, width, height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
-        CGColorSpaceRelease(colorSpace);
-        
-        CGContextDrawImage(context, CGRectMake(0, 0, width, height), image);
-        CGContextRelease(context);
-        
-        for(int y = 0; y < mapImage.size.height; y++)
+        for (int x = 0; x < [grid width]; x++)
         {
-            for(int x = 0; x < mapImage.size.width; x++)
+            for (int y = 0; y < [grid height]; y++)
             {
-                map.data[x][y] = rawData[(bytesPerRow * y) + x * bytesPerPixel];  //map images should be B&W; use red channel.
+                //TODO: Profile and make sure this is as fast as:
+                // rawData[(bytesPerRow * y) + x * bytesPerPixel];
+                map.data[x][y] = [grid getPixelAtXIndex:x yIndex:y];
             }
         }
         
-        free(rawData);
-
-
-        matrix mapCopy;
-        mapCopy.resize(map.width, map.height);
-        mapCopy.copy(map);
+        convMap.resize(map.width, map.height);
+        convMap.copy(map);
 
         // Dialate the occupied regions by the radius
         for (int y = 0; y < map.height; ++y)
@@ -281,16 +215,15 @@ struct setNode
 
                 if(py < 0 || py >= map.height || px < 0 || px >= map.width) continue;
 
-
-                if (mapCopy.data[px][py] == 255)
-                    map.data[x][y] = 255;
+                if (map.data[px][py] == 255)
+                    convMap.data[x][y] = 255;
             }
         }
         
         // ------------ Create 1/r^2 topological map ------------
         
-        topoMap.resize(map.width, map.height);
-        topoMap.copy(map);
+        topoMap.resize(convMap.width, convMap.height);
+        topoMap.copy(convMap);
         
         int accumulateSize = robotRadiusInPixels*2;
         
@@ -308,21 +241,21 @@ struct setNode
                         
                         if(dx == 0 && dy == 0) continue;
                         
-                        if(py < 0 || py >= map.height || px < 0 || px >= map.width)
+                        if(py < 0 || py >= convMap.height || px < 0 || px >= convMap.width)
                         {
                             accumulator += 255.0f / (dx*dx + dy*dy);
                             continue;
                         }
                         
-                        if(map.data[px][py] >= 254)
+                        if(convMap.data[px][py] >= 254)
                         {
-                            accumulator += ((float)map.data[px][py]) / (dx*dx + dy*dy);
+                            accumulator += ((float)convMap.data[px][py]) / (dx*dx + dy*dy);
                         }
                     }
                 }
                 
                 accumulator = accumulator / (accumulateSize/1.414);
-                accumulator += map.data[x][y];
+                accumulator += convMap.data[x][y];
                 if(accumulator > 254) accumulator = 255;
                 topoMap.data[x][y] = (unsigned char) accumulator;
             }
@@ -375,12 +308,12 @@ struct setNode
     unsigned char nextLabel = 1;
     
     //Pass 1: Generate labels
-    for(int y = 0; y < map.height; y++)
+    for(int y = 0; y < convMap.height; y++)
     {
-        for(int x = 0; x < map.width; x++)
+        for(int x = 0; x < convMap.width; x++)
         {
 //            NSLog(@"Labeling at: (%d, %d)\n", x, y);
-            if (map.data[x][y] == 255)
+            if (convMap.data[x][y] == 255)
                 continue;
 
             //find neighbors that are not obstacles
@@ -395,9 +328,9 @@ struct setNode
                     int px = x+dx;
                     int py = y+dy;
                     
-                    if(px < 0 || px >= map.width || py < 0 || py >= map.height) continue;
+                    if(px < 0 || px >= convMap.width || py < 0 || py >= convMap.height) continue;
                     
-                    if(map.data[px][py] <= 254)
+                    if(convMap.data[px][py] <= 254)
                     {
                         point p;
                         p.x = px;
@@ -468,13 +401,13 @@ struct setNode
     int posx, posy;
     [self worldCoordToPixCoordWithWx:target.x Wy:target.z Pxp:&posx Pyp:&posy];
     
-    if( posx < 0 || posx >= map.width
-        || posy < 0 || posy >= map.height )
+    if( posx < 0 || posx >= convMap.width
+        || posy < 0 || posy >= convMap.height )
     {
         // Outer world is always occupied.
          return YES;
     } else {
-        return map.data[posx][posy] >= 254;
+        return convMap.data[posx][posy] >= 254;
     }
 }
 
@@ -516,11 +449,11 @@ struct setNode
 - (NSMutableArray<NSValue*> *) occupiedPoints {
     NSMutableArray<NSValue*> *points = [NSMutableArray arrayWithCapacity:1024];
    
-    for(int y = 0; y < map.height; y++)
+    for(int y = 0; y < convMap.height; y++)
     {
-        for(int x = 0; x < map.width; x++)
+        for(int x = 0; x < convMap.width; x++)
         {
-            if( map.data[x][y] >= 254 ) {
+            if( convMap.data[x][y] >= 254 ) {
                 float wx, wy;
                 [self pixCoordToWorldXYWithPx:x Py:y Wxp:&wx Wyp:&wy];
                 GLKVector3 p = GLKVector3Make( wx, 0.f,  wy);
@@ -604,9 +537,9 @@ struct setNode
     float minDistSq = FLT_MAX;
     
     int bestPointX=0, bestPointY=0;
-    for(int y = 0; y < map.height; y++)
+    for(int y = 0; y < convMap.height; y++)
     {
-        for(int x = 0; x < map.width; x++)
+        for(int x = 0; x < convMap.width; x++)
         {
             unsigned char component = connectedComponentMap.data[x][y];
             if( component == targetComponent )
@@ -662,9 +595,9 @@ struct setNode
     float minDistSq = FLT_MAX;
     
     int bestPointX=0, bestPointY=0;
-    for(int y = 0; y < map.height; y++)
+    for(int y = 0; y < convMap.height; y++)
     {
-        for(int x = 0; x < map.width; x++)
+        for(int x = 0; x < convMap.width; x++)
         {
             if([self canPathFromStartPointX:sourcePointX startPointY:sourcePointY goalPointX:x goalPointY:y])
             {
@@ -809,7 +742,7 @@ struct setNode
             std::tie(x, y) = ni;
             GraphLocation neighborCandidate(currentLocation.first + x, currentLocation.second + y);
             if (inRange(neighborCandidate)
-                && (map.data[neighborCandidate.first][neighborCandidate.second] < 254))
+                && (convMap.data[neighborCandidate.first][neighborCandidate.second] < 254))
                 neighborCandidates.push_back(neighborCandidate);
         }
         return neighborCandidates;

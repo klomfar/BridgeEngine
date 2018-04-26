@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -9,7 +9,7 @@
 #import <BridgeEngine/BEMixedRealityMode.h>
 #import <BridgeEngine/BEShader.h>
 
-@interface ScanEnvironmentShader : NSObject <BridgeEngineShaderDelegate>
+@interface ScanEnvironmentShader : NSObject <BridgeEngineShaderDelegate, BridgeEngineGLShaderDelegate, BridgeEngineMetalShaderDelegate>
 
 @property (atomic) float scanTime;
 @property (atomic) float duration;
@@ -19,6 +19,7 @@
 
 - (void) setActive:(bool)active;
 
+/* BridgeEngineGLShaderDelegate Methods */
 - (void) compile;
 - (void) prepareWithProjection:(const float*)projection
                      modelview:(const float*)modelView

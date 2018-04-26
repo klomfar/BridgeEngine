@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -14,6 +14,13 @@
 #import "../Utils/SceneKitExtensions.h"
 
 #include <OpenGLES/ES2/gl.h>
+
+struct OBEScanEnvironmentUniformsMetal {
+    float scanTime;
+    float scanDuration;
+    float scanRadius;
+    simd_float3 scanLocation;
+};
 
 @interface ScanEnvironmentShader()
 
@@ -47,7 +54,8 @@
     }
 }
 
-//delegate methods
+#pragma mark - BridgeEngineGLShaderDelegate
+
 - (void) compile
 {
     const int NUM_ATTRIBS = 2;
@@ -128,6 +136,40 @@
                                                               encoding:NSUTF8StringEncoding
                                                                  error:NULL];
     return [fragmentShader UTF8String];
+}
+
+
+#pragma mark - BridgeEngineGLShaderDelegate
+
++ (id<MTLLibrary>)metalLibrary
+{
+    NSBundle *bundle = [NSBundle bundleForClass:SceneKit.class];
+    static id<MTLLibrary> lib = nil;
+    if( lib == nil ) {
+        lib = [MTLCreateSystemDefaultDevice() newDefaultLibraryWithBundle:bundle error:nil];
+    }
+    
+    return lib;
+}
+
+- (id<MTLFunction>)vertexFunction
+{
+    return [[self.class metalLibrary] newFunctionWithName:@"OBEScanEnvironmentVertex"];
+}
+
+- (id<MTLFunction>)fragmentFunction
+{
+    return [[self.class metalLibrary] newFunctionWithName:@"OBEScanEnvironmentFragment"];
+}
+
+- (NSData *)customUniforms {
+    OBEScanEnvironmentUniformsMetal custom;
+    custom.scanTime = self.scanTime;
+    custom.scanDuration = self.duration;
+    custom.scanRadius = self.scanRadius;
+    custom.scanLocation = { self.scanOrigin.x, self.scanOrigin.y, self.scanOrigin.z };
+    
+    return [NSData dataWithBytes:&custom length:sizeof(OBEScanEnvironmentUniformsMetal)];
 }
 
 @end

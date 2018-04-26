@@ -6,6 +6,7 @@
  */
 
 #import "ViewController.h"
+#import "AppDelegate.h"
 
 #import <SceneKit/SceneKit.h>
 #import <BridgeEngine/BridgeEngine.h>
@@ -45,7 +46,7 @@
     // We aren't using markup in this sample.
     
     BECaptureReplayMode replayMode = BECaptureReplayModeDisabled;
-    if ([BEAppSettings booleanValueFromAppSetting:@"replayCapture"
+    if ([BEAppSettings booleanValueFromAppSetting:SETTING_REPLAY_CAPTURE
              defaultValueIfSettingIsNotInBundle:NO])
     {
         replayMode = BECaptureReplayModeDeterministic;
@@ -58,19 +59,16 @@
                                      kBECaptureReplayMode:
                                          @(replayMode),
                                      kBEUsingWideVisionLens:
-                                         @([BEAppSettings booleanValueFromAppSetting:@"useWVL"
+                                         @([BEAppSettings booleanValueFromAppSetting:SETTING_USE_WVL
                                                 defaultValueIfSettingIsNotInBundle:YES]),
                                      kBEStereoRenderingEnabled:
-                                         @([BEAppSettings booleanValueFromAppSetting:@"stereoRendering"
+                                         @([BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_RENDERING
                                                 defaultValueIfSettingIsNotInBundle:YES]),
                                      kBEUsingColorCameraOnly:
-                                         @([BEAppSettings booleanValueFromAppSetting:@"colorCameraOnly"
-                                                defaultValueIfSettingIsNotInBundle:NO]),
-                                     kBERecordingOptionsEnabled:
-                                         @([BEAppSettings booleanValueFromAppSetting:@"enableRecording"
+                                         @([BEAppSettings booleanValueFromAppSetting:SETTING_COLOR_CAMERA_ONLY
                                                 defaultValueIfSettingIsNotInBundle:NO]),
                                      kBEEnableStereoScanningBeta:
-                                         @([BEAppSettings booleanValueFromAppSetting:@"stereoScanning"
+                                         @([BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_SCANNING
                                                 defaultValueIfSettingIsNotInBundle:NO]),
                                      }
                      markupNames:nil
@@ -100,7 +98,7 @@
     
     // Setup the Scene and Audio Managers
     
-    BOOL stereo = [BEAppSettings booleanValueFromAppSetting:@"stereoRendering" defaultValueIfSettingIsNotInBundle:YES];
+    BOOL stereo = [BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_RENDERING defaultValueIfSettingIsNotInBundle:YES];
     [[SceneManager main] initWithMixedRealityMode:_mixedReality stereo:stereo];
     [AudioEngine main];
     

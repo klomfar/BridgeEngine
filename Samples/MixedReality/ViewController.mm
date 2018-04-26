@@ -119,9 +119,6 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
             kBEUsingColorCameraOnly:
                 @([BEAppSettings booleanValueFromAppSetting:SETTING_COLOR_CAMERA_ONLY
                        defaultValueIfSettingIsNotInBundle:NO]),
-            kBERecordingOptionsEnabled:
-                @([BEAppSettings booleanValueFromAppSetting:SETTING_ENABLE_RECORDING
-                       defaultValueIfSettingIsNotInBundle:NO]),
             kBEEnableStereoScanningBeta:
                 @([BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_SCANNING
                        defaultValueIfSettingIsNotInBundle:NO]),
@@ -135,8 +132,13 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
     [BEController sharedController].delegate = self;
 
     _mixedReality.delegate = self;
-
-    [_mixedReality start];
+    
+    // If we are using an OCC we can skip the scanning state
+    if (replayMode == BECaptureReplayModeRealTime) {
+        [_mixedReality startWithSavedScene];
+    } else {
+        [_mixedReality start];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -152,12 +154,12 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
 - (void)startExperience
 {
     // For this experience, let's switch to a mode with AR objects composited with the passthrough camera.
-    
     [_mixedReality setRenderStyle:BERenderStyleSceneKitAndColorCamera withDuration:0.5];
-
     _experienceIsRunning = YES;
     
-    [self addGestureRecognizers];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self addGestureRecognizers];
+    });
 }
 
 - (void)updateObjectPositionWithMarkupName:(NSString*)markupName
@@ -192,7 +194,7 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
         // The gift's rotation will be determined in the updateAtTime method.
 
         objectNode = self.giftNode;
-        objectNode.position = markupNode.position;
+        objectNode.transform = markupNode.transform;
     }
     
     // Regardless of which object was moved, let's set it visible now.
@@ -490,12 +492,14 @@ static const SCNMatrix4 defaultPivot = SCNMatrix4MakeRotation(M_PI, 1.0, 0.0, 0.
 - (void) changeRenderMode
 {
     // Increment through render styles, with fading transitions.
-    
     BERenderStyle renderStyle = [_mixedReality renderStyle];
     BERenderStyle nextRenderStyle = BERenderStyle((renderStyle + 1) % NumBERenderStyles);
     
-    [_mixedReality setRenderStyle:nextRenderStyle withDuration:0.5];
+    if (nextRenderStyle == BERenderStyle::BERenderStyleSceneKitAndCustomEnvironmentShader) {
+        nextRenderStyle = BERenderStyle::BERenderStyleSceneKitAndCollisionAvoidance;
+    }
     
+    [_mixedReality setRenderStyle:nextRenderStyle withDuration:0.5];
 }
 
 - (void) userSelection:(CGPoint)tapPoint

@@ -1,12 +1,13 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
 #import <GameplayKit/GameplayKit.h>
 #import <SceneKit/SceneKit.h>
+#import "ComponentProtocol.h"
 
 @class GazeComponent;
 
@@ -15,7 +16,7 @@
  * Button = 0, if touch input
  * Button = 1, for controller clicking
  */
-@protocol EventComponentProtocol
+@protocol EventComponentProtocol <ComponentProtocol>
 
 /**
  * @return not used

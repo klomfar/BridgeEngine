@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -12,6 +12,7 @@
 
 @import GLKit.GLKVector3;
 @import OpenGLES;
+@import Metal;
 
 @interface FixedSizeReticleComponent ()
 
@@ -23,7 +24,15 @@
 
 @end
 
+// Metal Struct
+typedef struct  {
+    float active;
+} OBEFixedSizeReticleProperties;
+
 @implementation FixedSizeReticleComponent
+{
+    OBEFixedSizeReticleProperties _reticleProperties; // Metal render properties
+}
 
 - (id) init {
     self = [super init];
@@ -72,23 +81,33 @@
                                                     elements:@[element]];
     self.node.geometry = geometry;
     self.node.categoryBitMask |= RAYCAST_IGNORE_BIT;
+    SCNProgram *program;
     
-    [self.node.geometry.firstMaterial handleBindingOfSymbol:@"shaderType" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
-        glUniform1f(location, 1.f);
-    }];
+    if ([SceneManager main].renderingAPI == BEViewRenderingAPIMetal) {  // Uses Metal
+        program = [SCNProgram openbeMetalProgramWithVertexFunctionName:@"OBEFixedSizeReticleVertex"
+                                                              fragmentFunctionName:@"OBEFixedSizeReticleFragment"];
+    }
+    else  // uses OpenGLES2
+    {
+        [self.node.geometry.firstMaterial handleBindingOfSymbol:@"shaderType" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
+            glUniform1f(location, 1.f);
+        }];
+        
+        [self.node.geometry.firstMaterial handleBindingOfSymbol:@"active" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
+            glUniform1f(location, self.interactive);
+        }];
+        
+        program = [SCNProgram programWithGLShader:@"Shaders/CombinedShader/combinedShader"];
+    }
     
-    [self.node.geometry.firstMaterial handleBindingOfSymbol:@"active" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
-        glUniform1f(location, self.interactive);
-    }];
-    
-    SCNProgram * program = [SCNProgram programWithShader:@"Shaders/CombinedShader/combinedShader"];
     [program setOpaque:NO];
-    
-    self.node.geometry.firstMaterial.program = program;
-    self.node.geometry.firstMaterial.blendMode = SCNBlendModeReplace;
 
-    self.node.geometry.firstMaterial.readsFromDepthBuffer = false;
-    self.node.geometry.firstMaterial.writesToDepthBuffer = false;
+    SCNMaterial *material = self.node.geometry.firstMaterial;
+    material.program = program;
+    material.blendMode = SCNBlendModeAlpha;
+    material.readsFromDepthBuffer = false;
+    material.writesToDepthBuffer = false;
+
     self.node.renderingOrder = TRANSPARENCY_RENDERING_ORDER + 1000;
     
     [self.node setCastsShadowRecursively:NO];
@@ -133,6 +152,13 @@
     BOOL hideReticle = hideReticleNotTracking || (self.isEnabled==NO);
     if( self.node.hidden != hideReticle) {
         self.node.hidden = hideReticle;
+    }
+
+    if ([SceneManager main].renderingAPI == BEViewRenderingAPIMetal)
+    {
+        _reticleProperties.active = self.interactive;
+        NSData* data = [NSData dataWithBytes:&_reticleProperties length:sizeof(OBEFixedSizeReticleProperties)];
+        [self.node.geometry.firstMaterial setValue:data forKey:@"reticle_properties"];
     }
 }
 

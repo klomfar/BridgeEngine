@@ -1,12 +1,13 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
+#import <BridgeEngine/BEOccupancyGrid.h>
 
 @class PathFinding;
 
@@ -22,13 +23,9 @@
 @interface PathFinding : NSObject
 
 /**
- * Default initializer: Reads occupancy map from default location
- */
-- (instancetype) init;
-/**
  * Initializer accepts user provided occupancy map
  */
-- (instancetype) initWithImage:(UIImage*) mapImage;
+- (instancetype) initWithGrid:(BEOccupancyGrid *) grid;
 
 /**
  * Check if the target location is occupied.

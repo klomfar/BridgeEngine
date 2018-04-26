@@ -4,14 +4,14 @@
   <contributor>
    <authoring_tool>SceneKit Collada Exporter v1.0</authoring_tool>
   </contributor>
-  <created>2017-08-16T17:40:53Z</created>
-  <modified>2017-08-16T17:40:53Z</modified>
+  <created>2018-02-22T01:09:05Z</created>
+  <modified>2018-02-22T01:09:05Z</modified>
   <unit meter="0.001000"/>
   <up_axis>Y_UP</up_axis>
  </asset>
  <library_images>
   <image id="image1">
-   <init_from>SphereToy_AO.png</init_from>
+   <init_from>SphereToy_AO.jpg</init_from>
   </image>
  </library_images>
  <library_materials>

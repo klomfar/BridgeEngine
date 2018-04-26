@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -11,6 +11,13 @@
 #import <JavascriptCore/JavascriptCore.h>
 
 #import "../Core/AudioEngine.h"
+
+@class MoveRobotEventComponent;
+@class FetchEventComponent;
+@class ScanEventComponent;
+@class SpawnComponent;
+@class SpawnPortalComponent;
+
 
 // Make the RobotActionComponent JavaScriptable
 @protocol RobotActionJSExports <JSExport>
@@ -137,6 +144,42 @@ JSExportAs(playAudio,
 - (SCNAction*)activateBeamUI;
 
 /**
+ * Adds component that will be disabled every time we change modes below.
+ */
+- (void) addComponentsToDisableOnModeChange:(GKComponent<ComponentProtocol>*)component;
+
+/**
+ * Disable all components on mode change
+ */
+- (void) disableAllComponentsOnModeChangeImmediate;
+
+/**
+ * Activate Bridget move mode.
+ */
+- (SCNAction*)activateMoveMode;
+
+/**
+ * Activate Bridget fetch mode.
+ */
+- (SCNAction*)activateFetchMode;
+
+/**
+ * Activate Bridget scan mode.
+ */
+- (SCNAction*)activateScanMode;
+
+/**
+ * Activate Bridget spawn object mode.
+ */
+- (SCNAction*)activateSpawnObjectMode;
+
+/**
+ * Activate Bridget spawn portal mode.
+ */
+- (SCNAction*)activateSpawnPortalMode;
+
+
+/**
  * Enable/disable the robot's idle behaviour.
  */
 - (SCNAction*)idleBehaviours:(BOOL)enabled;
@@ -192,6 +235,14 @@ JSExportAs(playBodyEmojiSequence,
  * Remove the created action from buffer.
  */
 - (void) removeAction:(SCNAction*)action;
+
+#pragma mark - Robot Action Components
+@property(nonatomic, weak) MoveRobotEventComponent  *moveComponent;
+@property(nonatomic, weak) FetchEventComponent      *fetchComponent;
+@property(nonatomic, weak) ScanEventComponent       *scanComponent;
+@property(nonatomic, weak) SpawnComponent           *spawnObjectComponent;
+@property(nonatomic, weak) SpawnPortalComponent     *spawnPortalComponent;
+
 
 #pragma mark - Robot Immediate Methods
 

@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -91,6 +91,7 @@ typedef NS_ENUM (NSUInteger, PortalState) {
 @property(nonatomic, strong) AudioNode *emergencyExitPowerAbort;
 @property(nonatomic) float emergencyExitTimer;
 
+@property(nonatomic) BOOL isInsideAR_1FrameDelayedSwitch;
 
 @end
 
@@ -183,7 +184,7 @@ typedef NS_ENUM (NSUInteger, PortalState) {
 
         [self.portalFrameNode setCategoryBitMaskRecursively:RAYCAST_IGNORE_BIT | CATEGORY_BIT_MASK_LIGHTING];
     } else {
-        // round frame for portal ont he wall.
+        // Round frame for portal ont he wall.
         self.portalFrameNode = [SCNNode nodeWithGeometry:[SCNTorus torusWithRingRadius:PORTAL_CIRCLE_RADIUS pipeRadius:0.0075f]];
         [self.portalFrameNode.geometry.firstMaterial.diffuse setContents:[UIColor colorWithRed:0.678f green:0.678f blue:0.678f alpha:1]];
         self.portalFrameNode.rotation = SCNVector4Make(1, 0, 0, M_PI_2);
@@ -226,7 +227,7 @@ typedef NS_ENUM (NSUInteger, PortalState) {
     position.y = 0; // Anchor to ground.
     self.node.position = position;
     
-    // rotate portal towards target (on ground)
+    // Rotate portal towards target (on ground)
     target.y = 0;
     GLKVector3 forward = GLKVector3Subtract( SCNVector3ToGLKVector3(position), SCNVector3ToGLKVector3(target) );
     float yRot = atan2f(forward.x, forward.z);
@@ -251,13 +252,13 @@ typedef NS_ENUM (NSUInteger, PortalState) {
     GLKVector3 hitPos = SCNVector3ToGLKVector3(position);
     GLKVector3 hitNormal = SCNVector3ToGLKVector3(normal);
 
-    // offset from the wall a bit
+    // Offset from the wall a bit
     GLKVector3 portalPos = GLKVector3Add(hitPos, GLKVector3MultiplyScalar(hitNormal, PORTAL_FRUSTUM_CROSSING_WIDTH + 0.1));
     
-    // position portal node
+    // Position portal node
     self.node.position = SCNVector3FromGLKVector3(portalPos);
 
-    // rotate portal to face away from the wall
+    // Rotate portal to face away from the wall
     float yRot = atan2f(hitNormal.x, hitNormal.z);
     self.node.rotation = SCNVector4Make(0, 1, 0, yRot);
 
@@ -421,7 +422,7 @@ typedef NS_ENUM (NSUInteger, PortalState) {
     
     GLKVector3 newCameraPos = [Camera main].position;
 
-    // check if you have entered the portal
+    // Check if you have entered the portal
     SCNVector3 from = [[Scene main].rootNode convertPosition:SCNVector3FromGLKVector3(self.oldCameraPos) toNode:self.portalCrossingTransformNode];
     GLKVector3 forward = GLKVector3Subtract(newCameraPos, self.oldCameraPos);
     forward = GLKVector3Normalize(forward);
@@ -430,9 +431,19 @@ typedef NS_ENUM (NSUInteger, PortalState) {
     SCNVector3 to = [[Scene main].rootNode convertPosition:SCNVector3FromGLKVector3(newCameraPos) toNode:self.portalCrossingTransformNode];
     
     NSArray<SCNHitTestResult *> *hitTestResults = [self.portalCrossingTransformNode hitTestWithSegmentFromPoint:from toPoint:to options:nil];
+
+    // Next loop through, watch for this flag and apply the actual render order swap.
+    if( _isInsideAR_1FrameDelayedSwitch ) {
+        _isInsideAR_1FrameDelayedSwitch = NO;
+        [self isInsideARApplyRenderOrder];
+    }
     
     if( [hitTestResults count] ) {
         self.isInsideAR = !self.isInsideAR;
+
+        // Delay the render order swap 1 Frame.
+        _isInsideAR_1FrameDelayedSwitch = YES;
+
         NSLog( _isInsideAR ? @"Inside AR" : @"Inside VR" );
     }
     
@@ -462,27 +473,13 @@ typedef NS_ENUM (NSUInteger, PortalState) {
     [SCNTransaction disableActions];
     [SCNTransaction setAnimationDuration:0];
 
-    SCNNode *scanNode = [_mixedReality.sceneKitScene.rootNode childNodeWithName:@"customVizNode" recursively:YES];
     if (_isInsideAR)
     {
-        [scanNode setRenderingOrder:BEEnvironmentScanRenderingOrder];
-        [((GeometryComponent *)[self.robotEntity componentForClass:[GeometryComponent class]]).node
-            setRenderingOrderRecursively:1];
         // Restore normal rendering mode and order.
         [_mixedReality setRenderStyle:BERenderStyleSceneKitAndColorCamera withDuration:0];
     }
     else
     {
-        // make the room mesh render after the vr world so that we get transparency on collision avoidance to work
-        [scanNode setRenderingOrder:VR_WORLD_RENDERING_ORDER + 100];
-
-        // Make sure Robot and Controller appear after world render.
-        [((GeometryComponent *)[self.robotEntity componentForClass:[GeometryComponent class]]).node
-            setRenderingOrderRecursively:(VR_WORLD_RENDERING_ORDER+6)];
-            
-        [self.bridgeControllerComponent.node
-            setRenderingOrderRecursively:(VR_WORLD_RENDERING_ORDER+6)];
-
         // Set inside VR rendering mode and order.
         [_mixedReality setRenderStyle:BERenderStyleSceneKitAndCollisionAvoidance withDuration:0];
     }
@@ -503,13 +500,42 @@ typedef NS_ENUM (NSUInteger, PortalState) {
         [beamUI setEnabled:_isInsideAR];
         if( _isInsideAR == NO && _open == NO ) {
             be_dbg("We're inside VR, and portal is open, re-open and stop BeamUI");
-            self.open = YES; // re-open on entering VR.
+            self.open = YES; // Re-open on entering VR.
             
             if( [beamUI isRunning] ) {  // Also close up the BeamUI if it's currently running.
                 [beamUI stopRunning];
             }
         }
     }
+}
+
+/// Switch our rendering order to support Collision Mesh Avoidance rendering over the virtual scene.
+- (void) isInsideARApplyRenderOrder {
+    [SCNTransaction begin];
+    [SCNTransaction disableActions];
+    [SCNTransaction setAnimationDuration:0];
+    
+    SCNNode *scanNode = [_mixedReality.sceneKitScene.rootNode childNodeWithName:@"customVizNode" recursively:YES];
+    if (_isInsideAR)
+    {
+        [scanNode setRenderingOrder:BEEnvironmentScanRenderingOrder];
+        [((GeometryComponent *)[self.robotEntity componentForClass:[GeometryComponent class]]).node
+         setRenderingOrderRecursively:1];
+    }
+    else
+    {
+        // Make the room mesh render after the vr world so that we get transparency on collision avoidance to work
+        [scanNode setRenderingOrder:VR_WORLD_RENDERING_ORDER + 100];
+        
+        // Make sure Robot and Controller appear after world render.
+        [((GeometryComponent *)[self.robotEntity componentForClass:[GeometryComponent class]]).node
+         setRenderingOrderRecursively:(VR_WORLD_RENDERING_ORDER+6)];
+        
+        [self.bridgeControllerComponent.node
+         setRenderingOrderRecursively:(VR_WORLD_RENDERING_ORDER+6)];
+    }
+    
+    [SCNTransaction commit];
 }
 
 # ifdef USE_OLD_PORTAL_FRAME
@@ -584,7 +610,7 @@ typedef NS_ENUM (NSUInteger, PortalState) {
     
     // Render _depth node
     // Write the portal depth over the portal plane
-    // so that the environment isn't rendered back in there
+    // so that the environment isn't rendered back in there.
     // This may not be necessary but can't figure out a smarter way...
 
     self.portalDone = [SCNNode node];
@@ -602,15 +628,15 @@ typedef NS_ENUM (NSUInteger, PortalState) {
 #pragma mark - SceneKit Node Renderer Methods
 
 
-// invoked by SceneKit just before portal will be rendered
+// Invoked by SceneKit just before portal will be rendered
 -(void)renderNode:(SCNNode *)node
          renderer:(SCNRenderer *)renderer
         arguments:(NSDictionary *)arguments
 {
     NSString *passName = arguments[@"kRenderPassName"];
     
-    // don't render in the light pass, or any other pass
-    // note in stereo this gets called twice with pass names sceneLeft and sceneRight
+    // Don't render in the light pass, or any other pass
+    // NOTE: in stereo this gets called twice with pass names sceneLeft and sceneRight
     if ([passName isEqualToString:@"SceneKit_renderSceneFromLight"] )
         return;
     
@@ -621,23 +647,27 @@ typedef NS_ENUM (NSUInteger, PortalState) {
         glStencilFunc(GL_ALWAYS, PORTAL_STENCIL_VALUE, 0xFF);
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-        // only write to stencil, not depth or color
+        // Only write to stencil, not depth or color
         glStencilMask(0xFF);
         glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
         glDepthMask(GL_FALSE);
+        
+        glClearStencil(0);
+        glClear(GL_STENCIL_BUFFER_BIT);
     }
     
-    // portal renders to stencil here
+    // Portal renders to stencil here
     if ([node.name isEqualToString:@"PostPortal"] )
     {
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
         glDepthMask(GL_TRUE);
         glStencilMask(0x0);
         
-        glClear(GL_DEPTH_BUFFER_BIT); // always clear now that stencil buffer has ben rendered to
+        // This clears the depth buffer which breaks MR occulsion for all rendering.  Needs to be reworked.
+        // glClear(GL_DEPTH_BUFFER_BIT); // always clear now that stencil buffer has ben rendered to
 
         if(self.isInsideAR) {
-            // only draw where the stencil == PORTAL_STENCIL_VALUE
+            // Only draw where the stencil == PORTAL_STENCIL_VALUE
             glStencilFunc(GL_EQUAL, PORTAL_STENCIL_VALUE, 0xFF);
         } else {
             glStencilFunc(GL_NOTEQUAL, PORTAL_STENCIL_VALUE, PORTAL_STENCIL_VALUE);

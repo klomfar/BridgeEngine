@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -21,8 +21,21 @@
 
 @interface SCNProgram (OpenBEExtensions)
 
-+ (SCNProgram *)programWithShader:(NSString *)shaderName;
+/// Deprecated: Please use programWithGLShader
+/// And be aware this won't work if running in Metal render mode.
+/// Will be removed in later releases.
++ (SCNProgram *)programWithShader:(NSString *)shaderName __attribute__((deprecated));
 
+/// Auto load the shaderName.vsh and shaderName.fsh
+/// and prepare the program with attribute semantics
+/// Attributes: position, normal, textureCoordinate
+/// Uniforms: modelViewProjection, modelView, normalTransform, projection
++ (SCNProgram*)programWithGLShader:(NSString *)shaderName;
+
+/// Auto load the OpenBE metal shader from
+/// the openbe.metal library
++ (SCNProgram*)openbeMetalProgramWithVertexFunctionName:(NSString*)vertexName
+                                   fragmentFunctionName:(NSString*)fragmentName;
 @end
 
 @interface SCNScene (OpenBEExtensions)

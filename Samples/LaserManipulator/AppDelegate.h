@@ -7,6 +7,9 @@
 
 #import <UIKit/UIKit.h>
 
+/// Catch if we're running for the first time, and reset all settings to defaults.
+#define SETTING_FIRST_RUN                       @"HasAppliedSettingOnFirstRun"
+
 /// Use the 120° Wide View Lens
 #define SETTING_USE_WVL                         @"useWVL"
 
@@ -24,9 +27,6 @@
 
 /// Replay the last OCC recording.  This is useful for debugging and highly repeatable.
 #define SETTING_REPLAY_CAPTURE                  @"replayCapture"
-
-/// Enable the OCC in-scene recording interface.
-#define SETTING_ENABLE_RECORDING                @"enableRecording"
 
 /// Check to make sure we are executing on device
 #if TARGET_IPHONE_SIMULATOR

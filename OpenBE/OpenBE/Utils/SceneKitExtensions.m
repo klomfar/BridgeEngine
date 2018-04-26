@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -11,6 +11,7 @@
 #import <BridgeEngine/BridgeEngine.h>
 
 @import GLKit;
+@import Metal;
 
 #pragma mark - SceneKit
 
@@ -85,7 +86,18 @@
 
 @implementation SCNProgram (OpenBEExtensions)
 
+/// Deprecated: use programWithGLShader
+/// Will be removed in later releases.
 + (SCNProgram *)programWithShader:(NSString *)shaderName {
+    return [SCNProgram programWithGLShader:shaderName];
+}
+
+
+/// Auto load the shaderName.vsh and shaderName.fsh
+/// and prepare the program with attribute semantics
+/// Attributes: position, normal, textureCoordinate
+/// Uniforms: modelViewProjection, modelView, normalTransform, projection
++ (SCNProgram *)programWithGLShader:(NSString *)shaderName {
     NSURL *vertexShaderURL   = [SceneKit URLForResource:shaderName withExtension:@"vsh"];
     NSURL *fragmentShaderURL = [SceneKit URLForResource:shaderName withExtension:@"fsh"];
     NSString *vertexShader   = [[NSString alloc] initWithContentsOfURL:vertexShaderURL
@@ -125,6 +137,26 @@
                forSymbol:@"projection"
                  options:nil];
     
+    return program;
+}
+
+
+/// Auto load the OpenBE metal shader from
+/// the openbe.metal library
++ (SCNProgram*)openbeMetalProgramWithVertexFunctionName:(NSString*)vertexName
+                             fragmentFunctionName:(NSString*)fragmentName {
+
+    // Use the bundle holds the SceneKit -Extensions- class, like the OpenBE.framework.
+    NSBundle *bundle = [NSBundle bundleForClass:SceneKit.class];
+    static id<MTLLibrary> openbeLib = nil;
+    if( openbeLib == nil ) {
+        openbeLib = [MTLCreateSystemDefaultDevice() newDefaultLibraryWithBundle:bundle error:nil];
+    }
+    
+    SCNProgram * program = [SCNProgram program];
+    program.vertexFunctionName = vertexName;
+    program.fragmentFunctionName = fragmentName;
+    program.library = openbeLib;
     return program;
 }
 

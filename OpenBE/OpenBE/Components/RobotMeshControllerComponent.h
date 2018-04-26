@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -27,6 +27,8 @@ typedef NS_ENUM (NSUInteger, RobotBodies) {
 @interface RobotMeshControllerComponent : GeometryComponent <ComponentProtocol>
 
 @property (nonatomic, strong) NavigationComponent * navigationComponent;
+@property (nonatomic, copy) void (^callbackWhenUnfolded)();
+
 @property (nonatomic) float scale;
 
 @property (nonatomic, strong) AudioNode *movementAudio;

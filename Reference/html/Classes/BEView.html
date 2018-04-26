@@ -48,13 +48,31 @@
 
 	
 	
+	<option value="tasks">Tasks</option>
+	
 	
 
 	
 	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/prefersMetalRenderingAPI">prefersMetalRenderingAPI</option>
+		
+		<option value="//api/name/preferredRenderingAPI">preferredRenderingAPI</option>
+		
+		<option value="//api/name/renderingAPI">renderingAPI</option>
+		
+	</optgroup>
+	
 
 	
 
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/initWithRenderingAPI:">- initWithRenderingAPI:</option>
+		
+	</optgroup>
 	
 	
 </select>
@@ -88,13 +106,165 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>UIView subclass to wrap a CoreAnimation <code>CAEAGLLayer</code>.
-The view content is basically an EAGL surface you can render your OpenGL scene into.</p><div class="note"><p><strong>Note:</strong> setting the view non-opaque will only work if the EAGL surface has an alpha channel.</p></div>
+						<p>@class BEView</p>
 					</div>
 					
 					
 
 					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/prefersMetalRenderingAPI" title="prefersMetalRenderingAPI"></a>
+	<h3 class="method-title"><code><a href="#//api/name/prefersMetalRenderingAPI">&nbsp;&nbsp;prefersMetalRenderingAPI</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The prefersMetalRenderingAPI BOOL is used to set <a href="#//api/name/preferredRenderingAPI">preferredRenderingAPI</a> from interface builder.
+Default is NO</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) IBInspectable BOOL prefersMetalRenderingAPI</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEView.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/preferredRenderingAPI" title="preferredRenderingAPI"></a>
+	<h3 class="method-title"><code><a href="#//api/name/preferredRenderingAPI">&nbsp;&nbsp;preferredRenderingAPI</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The preferred rendering API for the view, using during setup.  This may be rejected if your hardware doesn&rsquo;t support the API.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) BEViewRenderingAPI preferredRenderingAPI</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEView.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/renderingAPI" title="renderingAPI"></a>
+	<h3 class="method-title"><code><a href="#//api/name/renderingAPI">&nbsp;&nbsp;renderingAPI</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>The actual rendering API selected by the view.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) BEViewRenderingAPI renderingAPI</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEView.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/initWithRenderingAPI:" title="initWithRenderingAPI:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithRenderingAPI:">&ndash;&nbsp;initWithRenderingAPI:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithRenderingAPI:(BEViewRenderingAPI)<em>preferredRenderingAPI</em></code></div>
+
+		    
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
 					
 					
 
@@ -104,7 +274,7 @@ The view content is basically an EAGL surface you can render your OpenGL scene i
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2018 Occipital. All rights reserved. Updated: 2018-01-02</p>
+						<p class="copyright">Copyright &copy; 2018 Occipital. All rights reserved. Updated: 2018-04-25</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>

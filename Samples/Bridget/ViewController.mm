@@ -106,6 +106,8 @@
         replayMode = BECaptureReplayModeRealTime;
     }
     
+    BOOL isiPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone);
+
     _mixedReality = [[BEMixedRealityMode alloc]
         initWithView:(BEView*)self.view
         engineOptions:@{
@@ -115,17 +117,14 @@
             kBEUsingWideVisionLens:
                 @([BEAppSettings booleanValueFromAppSetting:SETTING_USE_WVL
                        defaultValueIfSettingIsNotInBundle:YES]),
-            kBEStereoRenderingEnabled:
-                @([BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_RENDERING
-                       defaultValueIfSettingIsNotInBundle:YES]),
-            kBEUsingColorCameraOnly:
-                @([BEAppSettings booleanValueFromAppSetting:SETTING_COLOR_CAMERA_ONLY
-                       defaultValueIfSettingIsNotInBundle:NO]),
-            kBERecordingOptionsEnabled:
-                @([BEAppSettings booleanValueFromAppSetting:SETTING_ENABLE_RECORDING
-                       defaultValueIfSettingIsNotInBundle:NO]),
             kBEEnableStereoScanningBeta:
                 @([BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_SCANNING
+                         defaultValueIfSettingIsNotInBundle:isiPhone]),
+            kBEStereoRenderingEnabled:
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_STEREO_RENDERING
+                       defaultValueIfSettingIsNotInBundle:isiPhone]),
+            kBEUsingColorCameraOnly:
+                @([BEAppSettings booleanValueFromAppSetting:SETTING_COLOR_CAMERA_ONLY
                        defaultValueIfSettingIsNotInBundle:NO]),
         }
         markupNames:_markupNameList
@@ -197,7 +196,13 @@
     // main Audio engine and Scene Manager
     [[SceneManager main] initWithMixedRealityMode:_mixedReality stereo:stereo];
     [AudioEngine main];
-
+    
+    // Set up our PBR Lighting Environment
+    SCNScene *scene = [Scene main].scene;
+    UIImage *lighting = [UIImage imageNamed:[SceneKit pathForImageResourceNamed:@"environment.jpg"]];
+    scene.lightingEnvironment.contents = lighting;
+    scene.lightingEnvironment.intensity = 3.0;
+    
     // Selection UI
     GazeComponent *gazeComponent = [[GazeComponent alloc] init];
     GKEntity * gazeEntity = [[SceneManager main] createEntity];
@@ -215,7 +220,6 @@
         GKEntity *controllerEntity = [[SceneManager main] createEntity];
         [controllerEntity addComponent:self.bControllerComponent];
         [self.bControllerComponent setEnabled:YES];
-        
     }
 
     [self updateReticleInputMode];
@@ -228,6 +232,9 @@
     
     // Appearance Components
     RobotMeshControllerComponent * robotMeshControllerComponent = [[RobotMeshControllerComponent alloc] initWithUnboxingExperience:YES];
+    robotMeshControllerComponent.callbackWhenUnfolded = ^{
+        [self bridgetUnfolded];
+    };
     [self.robotEntity addComponent:robotMeshControllerComponent];
     
     [self.robotEntity addComponent:[[AnimationComponent alloc] init]];
@@ -262,16 +269,25 @@
     //---------------------------------------------------------------------
     // Event components that need to be added to the main event manager.
     MoveRobotEventComponent * moveComponent = [[MoveRobotEventComponent alloc] init];
-    FetchEventComponent *fetchComponent = [[FetchEventComponent alloc] init];
-    ScanEventComponent * scanEventComponent = [[ScanEventComponent alloc] init];
-    SpawnComponent * spawnObjectComponent = [[SpawnComponent alloc] init];
-
-    // add components to the main Event Manager
     [[EventManager main] addGlobalEventComponent:moveComponent];
-    [[EventManager main] addGlobalEventComponent:fetchComponent];
-    [[EventManager main] addGlobalEventComponent:scanEventComponent];
-    [[EventManager main] addGlobalEventComponent:spawnObjectComponent];
+    [_robot addComponentsToDisableOnModeChange:moveComponent];
+    _robot.moveComponent = moveComponent;
     
+    FetchEventComponent *fetchComponent = [[FetchEventComponent alloc] init];
+    [[EventManager main] addGlobalEventComponent:fetchComponent];
+    [_robot addComponentsToDisableOnModeChange:fetchComponent];
+    _robot.fetchComponent = fetchComponent;
+
+    ScanEventComponent * scanEventComponent = [[ScanEventComponent alloc] init];
+    [[EventManager main] addGlobalEventComponent:scanEventComponent];
+    [_robot addComponentsToDisableOnModeChange:scanEventComponent];
+    _robot.scanComponent = scanEventComponent;
+
+    SpawnComponent * spawnObjectComponent = [[SpawnComponent alloc] init];
+    [[EventManager main] addGlobalEventComponent:spawnObjectComponent];
+    [_robot addComponentsToDisableOnModeChange:spawnObjectComponent];
+    _robot.spawnObjectComponent = spawnObjectComponent;
+
     // portal
     ColorOverlayComponent *colorOverlay = [[ColorOverlayComponent alloc] init];
     [[[SceneManager main] createEntity] addComponent:colorOverlay];
@@ -294,6 +310,8 @@
     spawnPortalComponent.portalComponent = _portal;
     spawnPortalComponent.robotActionSequencer = _robot;
     [[EventManager main] addGlobalEventComponent:spawnPortalComponent];
+    [_robot addComponentsToDisableOnModeChange:spawnPortalComponent];
+    _robot.spawnPortalComponent = spawnPortalComponent;
 
     // The event components are hooked to the robot Behaviour to trigger animations and movements.
     moveComponent.robotBehaviourComponent = behaviourComponent;
@@ -315,17 +333,12 @@
     customEnvironmentShader.mixedRealityMode = _mixedReality;
     [customEnvironmentShader compile];
     scanComponent.scanEnvironmentShader = customEnvironmentShader;
-    
-    // diable behaviors to start
-    [fetchComponent setEnabled:NO];
-    [moveComponent setEnabled:NO];
-    [scanEventComponent setEnabled:NO];
-    [spawnObjectComponent setEnabled:NO];
-    
+
     // Here is where we hook up the menu buttons to components
     ButtonContainerComponent * bridgetMenu = [[ButtonContainerComponent alloc] init];
     GKEntity * uiEntity = [[SceneManager main] createEntity];
     [uiEntity addComponent:bridgetMenu];
+    [_robot addComponentsToDisableOnModeChange:bridgetMenu];
 
     // hook the menu up to the robot, with a little projector beam
     BeamUIBehaviourComponent * beamUIComponent = [[BeamUIBehaviourComponent alloc] initWithIdleWeight:0.f andAllowCameraMovementTriggerAttention:NO];
@@ -334,69 +347,59 @@
     
     ButtonComponent * buttonMoveComponent = [[ButtonComponent alloc] initWithImage:[SceneKit pathForImageResourceNamed:@"button_move.png"] andBlock:^{
         [behaviourComponent stopAllBehaviours];
-        [bridgetMenu setEnabled:NO];
+        [_robot disableAllComponentsOnModeChangeImmediate];
         [moveComponent setEnabled:YES];
-        [fetchComponent setEnabled:NO];
-        [scanEventComponent setEnabled:NO];
+
+        // Add a relevant point (YOU!) to the PoIs of the robot.
         [behaviourComponent addPointOfInterest:[Camera main].position];
-        [spawnObjectComponent setEnabled:NO];
-        [spawnPortalComponent setEnabled:NO];
     }];
+    [[[SceneManager main] createEntity] addComponent:buttonMoveComponent];
+
     
     ButtonComponent * buttonScanComponent = [[ButtonComponent alloc] initWithImage:[SceneKit pathForImageResourceNamed:@"button_scan.png"] andBlock:^{
         [behaviourComponent stopAllBehaviours];
-        [bridgetMenu setEnabled:NO];
-        [fetchComponent setEnabled:NO];
+        [_robot disableAllComponentsOnModeChangeImmediate];
         [scanEventComponent setEnabled:YES];
-        [moveComponent setEnabled:NO];
-        [spawnObjectComponent setEnabled:NO];
-        [spawnPortalComponent setEnabled:NO];
     }];
-    
+    [[[SceneManager main] createEntity] addComponent:buttonScanComponent];
+
     ButtonComponent * buttonSpawnObjectComponent = [[ButtonComponent alloc] initWithImage:[SceneKit pathForImageResourceNamed:@"button_chair.png"] andBlock:^{
         [behaviourComponent stopAllBehaviours];
-        [bridgetMenu setEnabled:NO];
-        [fetchComponent setEnabled:NO];
-        [scanEventComponent setEnabled:NO];
-        [moveComponent setEnabled:NO];
+        [_robot disableAllComponentsOnModeChangeImmediate];
         [spawnObjectComponent setEnabled:YES];
-        [spawnPortalComponent setEnabled:NO];
     }];
-    
+    [[[SceneManager main] createEntity] addComponent:buttonSpawnObjectComponent];
+
     ButtonComponent * buttonFetchComponent = [[ButtonComponent alloc] initWithImage:[SceneKit pathForImageResourceNamed:@"button_bone.png"] andBlock:^{
         [behaviourComponent stopAllBehaviours];
-        [bridgetMenu setEnabled:NO];
-        [moveComponent setEnabled:NO];
+        [_robot disableAllComponentsOnModeChangeImmediate];
         [fetchComponent setEnabled:YES];
-        [scanEventComponent setEnabled:NO];
-        [spawnObjectComponent setEnabled:NO];
-        [spawnPortalComponent setEnabled:NO];
     }];
-    
-    ButtonComponent * buttonPortalComponent = [[ButtonComponent alloc] initWithImage:[SceneKit pathForImageResourceNamed:@"button_wallPortal.png"] andBlock:^{
-        [behaviourComponent stopAllBehaviours];
-        [bridgetMenu setEnabled:NO];
-        [fetchComponent setEnabled:NO];
-        [spawnPortalComponent setEnabled:YES];
-        [spawnObjectComponent setEnabled:NO];
-        [scanEventComponent setEnabled:NO];
-        [moveComponent setEnabled:NO];
-    }];
-
-    [[[SceneManager main] createEntity] addComponent:buttonMoveComponent];
-    [[[SceneManager main] createEntity] addComponent:buttonScanComponent];
-    [[[SceneManager main] createEntity] addComponent:buttonSpawnObjectComponent];
     [[[SceneManager main] createEntity] addComponent:buttonFetchComponent];
-    [[[SceneManager main] createEntity] addComponent:buttonPortalComponent];
-
+    
     // Determines the order in which the buttons appear on the hologram menu projected by the robot
     bridgetMenu.buttonComponents = @[
         buttonMoveComponent,
         buttonScanComponent,
         buttonSpawnObjectComponent,
         buttonFetchComponent,
-        buttonPortalComponent,
         ].mutableCopy;
+        
+    // Portal is temporarily disabled while we sort out some rendering order issues.
+    if ((false) && [SceneManager main].renderingAPI != BEViewRenderingAPIMetal)
+    {
+        ButtonComponent * buttonPortalComponent = [[ButtonComponent alloc] initWithImage:[SceneKit pathForImageResourceNamed:@"button_wallPortal.png"] andBlock:^{
+            [behaviourComponent stopAllBehaviours];
+            [_robot disableAllComponentsOnModeChangeImmediate];
+            [spawnPortalComponent setEnabled:YES];
+        }];
+        
+        [[[SceneManager main] createEntity] addComponent:buttonPortalComponent];
+        [bridgetMenu.buttonComponents addObject:buttonPortalComponent];
+    }
+    
+    // Deactivate all mode change component by default on start.
+    [_robot disableAllComponentsOnModeChangeImmediate];
     
     if ([BEAppSettings booleanValueFromAppSetting:SETTING_SHOW_RENDER_TYPES defaultValueIfSettingIsNotInBundle:NO]) {
         [self setupRenderingMenu];
@@ -409,14 +412,17 @@
     //---------------------------------------------------------------------
     [bridgetMenu setEnabled:NO];
     [spawnPortalComponent setEnabled:NO];
+    [_portal setEnabled:NO];
     
+    // Note: This very short zNear is needed for hopping through the portal plane.
+    _mixedReality.sceneKitCamera.zNear = 0.005;
+
     float scale = .13f;
     bridgetMenu.node.scale = SCNVector3Make(scale, scale, scale);
     bridgetMenu.node.position = SCNVector3Make(0, -0.8, .7);
     
     scale = 0.4;
     [_renderMenu.node setScale:SCNVector3Make(scale, scale, scale)];
-    
     
     // Find a roughly good starting position. If available, this will load floor and cover maps
     // and find an open and uncovered area. Otherwise we'll use the normal obstacle occupancy map
@@ -658,6 +664,15 @@
 
     // Only show Bridge Controller if it's specifically connected. 
     [_bControllerComponent setEnabled:BEController.sharedController.isBridgeControllerConnected];
+}
+
+/// Bridget Robot has completed unfolding.
+- (void) bridgetUnfolded {
+    [_robot activateMoveMode];
+    [_robot wait:0.1];
+    [_robot lookAtMainCamera];
+    [_robot wait:0.2];
+    [_robot idleBehaviours:YES];
 }
 
 @end

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>BEOccupancyGrid Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">Bridge Engine SDK </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Occipital</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+	<optgroup label="Class Methods">
+		
+		<option value="//api/name/convertToFloorGrid:outputGrid:">+ convertToFloorGrid:outputGrid:</option>
+		
+		<option value="//api/name/convertToCoveredGrid:outputGrid:">+ convertToCoveredGrid:outputGrid:</option>
+		
+		<option value="//api/name/convertToObstacleGrid:outputGrid:">+ convertToObstacleGrid:outputGrid:</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/init">- init</option>
+		
+		<option value="//api/name/loadGridFromFilePath:metaDataPath:">- loadGridFromFilePath:metaDataPath:</option>
+		
+		<option value="//api/name/originX">- originX</option>
+		
+		<option value="//api/name/originY">- originY</option>
+		
+		<option value="//api/name/metersPerPixel">- metersPerPixel</option>
+		
+		<option value="//api/name/width">- width</option>
+		
+		<option value="//api/name/height">- height</option>
+		
+		<option value="//api/name/getPixelAtXIndex:yIndex:">- getPixelAtXIndex:yIndex:</option>
+		
+		<option value="//api/name/setPixelAtXIndex:yIndex:toValue:">- setPixelAtXIndex:yIndex:toValue:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">BEOccupancyGrid Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>BEOccupancyGrid.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/init" title="init"></a>
+	<h3 class="method-title"><code><a href="#//api/name/init">&ndash;&nbsp;init</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Initializes new Occupancy Grid.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)init</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/loadGridFromFilePath:metaDataPath:" title="loadGridFromFilePath:metaDataPath:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/loadGridFromFilePath:metaDataPath:">&ndash;&nbsp;loadGridFromFilePath:metaDataPath:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Loads the default bitmask grid from disk.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)loadGridFromFilePath:(NSString *)<em>gridPath</em> metaDataPath:(NSString *)<em>metaDataPath</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>gridPath</code></th>
+						<td><ul>
+<li>the full path of the grid saved on the disk.</li>
+<li>default file name: occupancy_grid.png</li>
+</ul>
+</td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>metaDataPath</code></th>
+						<td><ul>
+<li>the full path of the metadata for the grid.</li>
+<li>default file name: occupancy_grid_metadata.json</li>
+</ul>
+</td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/originX" title="originX"></a>
+	<h3 class="method-title"><code><a href="#//api/name/originX">&ndash;&nbsp;originX</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the position of the center of pixel (0, 0) along the x-axis in meters.
+    Use ((xPoseInMeters * <a href="#//api/name/metersPerPixel">metersPerPixel</a>) + originX) to get the x pixel value for a given pose</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (float)originX</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/originY" title="originY"></a>
+	<h3 class="method-title"><code><a href="#//api/name/originY">&ndash;&nbsp;originY</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the position of the center of pixel (0, 0) along the y-axis in meters.
+    Use ((yPoseInMeters * <a href="#//api/name/metersPerPixel">metersPerPixel</a>) + originY) to get the y pixel value for a given pose</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (float)originY</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/metersPerPixel" title="metersPerPixel"></a>
+	<h3 class="method-title"><code><a href="#//api/name/metersPerPixel">&ndash;&nbsp;metersPerPixel</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the meters represented by each grid pixel.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (float)metersPerPixel</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/width" title="width"></a>
+	<h3 class="method-title"><code><a href="#//api/name/width">&ndash;&nbsp;width</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the width of the grid in pixels.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (int)width</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/height" title="height"></a>
+	<h3 class="method-title"><code><a href="#//api/name/height">&ndash;&nbsp;height</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the height of the grid in pixels.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (int)height</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getPixelAtXIndex:yIndex:" title="getPixelAtXIndex:yIndex:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getPixelAtXIndex:yIndex:">&ndash;&nbsp;getPixelAtXIndex:yIndex:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Returns the value of a grid pixel (0-255).</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (int)getPixelAtXIndex:(int)<em>x</em> yIndex:(int)<em>y</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>x</code></th>
+						<td><ul>
+<li>collumn index of pixel</li>
+</ul>
+</td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>y</code></th>
+						<td><ul>
+<li>row index of pixel</li>
+</ul>
+</td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setPixelAtXIndex:yIndex:toValue:" title="setPixelAtXIndex:yIndex:toValue:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setPixelAtXIndex:yIndex:toValue:">&ndash;&nbsp;setPixelAtXIndex:yIndex:toValue:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Sets the value of a grid pixel (0-255) and returns the set success.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (bool)setPixelAtXIndex:(int)<em>x</em> yIndex:(int)<em>y</em> toValue:(int)<em>value</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>x</code></th>
+						<td><ul>
+<li>column index of pixel</li>
+</ul>
+</td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>y</code></th>
+						<td><ul>
+<li>row index of pixel</li>
+</ul>
+</td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>value</code></th>
+						<td><ul>
+<li>value to set pixel to</li>
+</ul>
+</td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/convertToFloorGrid:outputGrid:" title="convertToFloorGrid:outputGrid:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/convertToFloorGrid:outputGrid:">+&nbsp;convertToFloorGrid:outputGrid:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Convert the grid so that all pixels represeting the floor are set to 255.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)convertToFloorGrid:(BEOccupancyGrid *)<em>inGrid</em> outputGrid:(BEOccupancyGrid *)<em>outGrid</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>inGrid</code></th>
+						<td><ul>
+<li>loaded using LoadGridFromFile</li>
+</ul>
+</td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>outGrid</code></th>
+						<td><ul>
+<li>to load the new floor grid in to</li>
+</ul>
+</td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/convertToCoveredGrid:outputGrid:" title="convertToCoveredGrid:outputGrid:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/convertToCoveredGrid:outputGrid:">+&nbsp;convertToCoveredGrid:outputGrid:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Convert the grid so that all pixels represeting a covered area are set to 255.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)convertToCoveredGrid:(BEOccupancyGrid *)<em>inGrid</em> outputGrid:(BEOccupancyGrid *)<em>outGrid</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>inGrid</code></th>
+						<td><ul>
+<li>loaded using LoadGridFromFile</li>
+</ul>
+</td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>outGrid</code></th>
+						<td><ul>
+<li>to load the new covered grid in to</li>
+</ul>
+</td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/convertToObstacleGrid:outputGrid:" title="convertToObstacleGrid:outputGrid:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/convertToObstacleGrid:outputGrid:">+&nbsp;convertToObstacleGrid:outputGrid:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Convert the grid so that all pixels represeting an obstacle are set to 255.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)convertToObstacleGrid:(BEOccupancyGrid *)<em>inGrid</em> outputGrid:(BEOccupancyGrid *)<em>outGrid</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>inGrid</code></th>
+						<td><ul>
+<li>loaded using LoadGridFromFile</li>
+</ul>
+</td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>outGrid</code></th>
+						<td><ul>
+<li>to load the new obstacle grid in to</li>
+</ul>
+</td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">BEOccupancyGrid.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2018 Occipital. All rights reserved. Updated: 2018-04-25</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

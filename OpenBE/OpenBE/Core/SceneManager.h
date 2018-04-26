@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -18,6 +18,8 @@
 
 - (void) initWithMixedRealityMode:(BEMixedRealityMode *)mixedRealityMode stereo:(BOOL)stereo;
 - (BOOL) isStereo;
+
+- (BEViewRenderingAPI)renderingAPI;
 
 - (void) addEntity:(GKEntity *) entity;
 - (void) removeEntity:(GKEntity *)entity;

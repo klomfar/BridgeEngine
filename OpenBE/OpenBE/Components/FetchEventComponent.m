@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -455,10 +455,19 @@ typedef NS_ENUM (NSUInteger, FetchPositionState) {
 }
 
 - (SCNNode *) createCube {
-    SCNNode *cube = [SCNNode firstNodeFromSceneNamed:@"Objects/SphereToy.dae"];
+    SCNNode *cube;
+    // Load PBR ball if we're in metal
+    if ([SceneManager main].renderingAPI == BEViewRenderingAPIMetal) {
+        cube = [SCNNode firstNodeFromSceneNamed:@"Objects/pbr/SphereToyPBR.scn"];
+        cube.categoryBitMask = RAYCAST_IGNORE_BIT;
+    } else {
+        cube = [SCNNode firstNodeFromSceneNamed:@"Objects/SphereToy.dae"];
+        cube.categoryBitMask |= RAYCAST_IGNORE_BIT | BEShadowCategoryBitMaskCastShadowOntoSceneKit | BEShadowCategoryBitMaskCastShadowOntoEnvironment;
+    }
+    
     cube.name = @"ball";
     cube.scale = SCNVector3Make(0.65, 0.65, 0.65);
-    cube.categoryBitMask |= RAYCAST_IGNORE_BIT | BEShadowCategoryBitMaskCastShadowOntoSceneKit | BEShadowCategoryBitMaskCastShadowOntoEnvironment;
+    
     return cube;
 }
 

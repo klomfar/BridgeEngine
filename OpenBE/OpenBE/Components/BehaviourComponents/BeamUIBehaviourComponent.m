@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -95,7 +95,9 @@ bool menuSoundPlayed;
     
     self.beamComponent.startPos = robotSensorPos; //[[self getRobot] getBeamStartPosition];
     
-    self.beamComponent.endPos = uiPos;
+    // End the beam about 90% of the way to the UI interface.
+    GLKVector3 beamEndPos = GLKVector3Add(robotSensorPos, GLKVector3MultiplyScalar(uiFwd, 0.9));
+    self.beamComponent.endPos = beamEndPos;
     
     if( self.timer > UI_LOOKAT_DURATION && self.beamUIState == BEAM_UI_LOOK_AT ) {
         self.beamUIState = BEAM_UI_BEAM;
@@ -113,7 +115,7 @@ bool menuSoundPlayed;
         
         float active = MAX(0.f,MIN(1.f, (self.timer-UI_LOOKAT_DURATION)/UI_ACTIVATION_DURATION));
         
-        [self.beamComponent setActive:active*.075f beamWidth:.1f * (float)[self.uiComponent activeButtonsCount] beamHeight:.05f*active];
+        [self.beamComponent setActive:active*.075f beamWidth:.09f * (float)[self.uiComponent activeButtonsCount] beamHeight:.05f*active];
         self.uiComponent.node.opacity = active * .5f;
     } else {
         [self.beamComponent setEnabled:NO];

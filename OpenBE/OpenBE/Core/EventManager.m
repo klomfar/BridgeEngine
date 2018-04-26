@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -29,9 +29,9 @@
 
 
 @interface EventManager ()
-@property (strong) NSMutableArray* touchEventResponders;
-@property (strong) NSMutableArray* globalEventComponents;
-@property (strong) UITouch* controllerButtonTouch;
+@property (strong) NSMutableArray<TouchEventResponders*> *touchEventResponders;
+@property (strong) NSMutableArray<EventComponentProtocol> *globalEventComponents;
+@property (strong) UITouch *controllerButtonTouch;
 @property (atomic) bool globalEventComponentsPaused;
 @end
 
@@ -43,8 +43,8 @@
     
     if(self) {
         self.controllerButtonTouch = [[UITouch alloc] init];
-        self.touchEventResponders = [[NSMutableArray alloc] initWithCapacity:32];
-        self.globalEventComponents = [[NSMutableArray alloc] initWithCapacity:32];
+        self.touchEventResponders = [[NSMutableArray<TouchEventResponders*> alloc] initWithCapacity:32];
+        self.globalEventComponents = [[NSMutableArray<EventComponentProtocol> alloc] initWithCapacity:32];
         
         self.useReticleAsTouchLocation = NO;
         self.globalEventComponentsPaused = NO;
@@ -147,7 +147,7 @@
 #endif // ENABLE_COMPONENT_PROFILING
 }
 
-- (void) addGlobalEventComponent:(GKComponent *)component {
+- (void) addGlobalEventComponent:(GKComponent<EventComponentProtocol> *)component {
     if( [component conformsToProtocol:@protocol(EventComponentProtocol)]) {
         [self.globalEventComponents addObject:component];
     } else {
@@ -459,7 +459,20 @@
     float maxDistance = 100.;
     
     NSArray<SCNHitTestResult *> *hitTestResults;
-    
+
+    // Common set of hit-test options, including work-around for iOS 11 and Xcode 8 compatibility.
+    NSDictionary *options = @{SCNHitTestBackFaceCullingKey:@NO};
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
+    if (@available(iOS 11.0, *)) {
+        options = @{SCNHitTestOptionSortResults:@YES,
+                    SCNHitTestBackFaceCullingKey:@NO,
+                    SCNHitTestOptionSearchMode:@1 /*SCNHitTestSearchModeAll*/};
+    } else {
+        options = @{SCNHitTestOptionSortResults:@YES,
+                    SCNHitTestBackFaceCullingKey:@NO};
+    }
+#endif
+
     if( self.useReticleAsTouchLocation ) {
         SCNVector3 from = SCNVector3FromGLKVector3( [Camera main].position );
         SCNVector3 to = SCNVector3FromGLKVector3( GLKVector3Add( [Camera main].position, GLKVector3MultiplyScalar([Camera main].reticleForward, maxDistance) ) );
@@ -475,19 +488,10 @@
             return nil;
         }
         
-        NSDictionary *options = @{SCNHitTestBackFaceCullingKey:@NO};
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
-        options = @{SCNHitTestOptionSortResults:@YES, SCNHitTestBackFaceCullingKey:@NO};
-        if (@available(iOS 11.0, *)) {
-            options = @{SCNHitTestOptionSearchMode:@1 /*SCNHitTestSearchModeAll*/,
-                        SCNHitTestBackFaceCullingKey:@NO};
-        }
-#endif
         hitTestResults = [[Scene main].scene.rootNode hitTestWithSegmentFromPoint:from toPoint:to options:options];
 //        NSLog(@"%ld reticle intersection hits", hitTestResults.count);
     } else {
         CGPoint tapPoint = [touch locationInView:touch.view];
-        NSDictionary *options = @{SCNHitTestSortResultsKey:@YES, SCNHitTestBackFaceCullingKey:@NO};
         hitTestResults = [_mixedRealityMode hitTestSceneKitFrom2DScreenPoint:tapPoint options:options];
     }
     

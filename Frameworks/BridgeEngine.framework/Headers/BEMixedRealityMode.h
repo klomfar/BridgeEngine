@@ -1,6 +1,6 @@
 /*
     This file is part of the Structure SDK.
-    Copyright © 2016 Occipital, Inc. All rights reserved.
+    Copyright © 2018 Occipital, Inc. All rights reserved.
     http://structure.io
 */
 
@@ -191,6 +191,9 @@ BE_API
 /// Return the last tracker hints.
 @property (readonly) BETrackerHints lastTrackerHints;
 
+/// The view used to render the mixed reality content.
+@property (readonly) BEView *beView;
+
 /// @name Rendering style
 
 /// Current rendering style.
@@ -295,6 +298,9 @@ These coordinates can be used for UIKit operations like moving a UIView to a spe
  
     This struct is designed to be used primarily in headless mode, although it can be used to retrieve camera texture
     data in non-headless mode as well.
+ 
+    NOTE: mixedRealityRgbaTexture and mixedRealityRgbaTextureBuffer hold the same information, the only difference is the
+    ability to use mixedRealityRgbaTextureBuffer in non openGL use cases.
  */
 @interface BEMixedRealityRenderData : NSObject
 
@@ -305,6 +311,7 @@ These coordinates can be used for UIKit operations like moving a UIView to a spe
 @property (nonatomic,readonly) GLKMatrix4 rightEyeGLProjection;
 
 @property (nonatomic,readonly) GLuint mixedRealityRgbaTexture;
+@property (nonatomic,readonly) CVPixelBufferRef mixedRealityRgbaTextureBuffer;
 @property (nonatomic,readonly) int mixedRealityRgbaTextureWidth;
 @property (nonatomic,readonly) int mixedRealityRgbaTextureHeight;
 

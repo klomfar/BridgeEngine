@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -13,9 +13,9 @@
 #import "../Core/Core.h"
 #import "../Core/AudioEngine.h"
 
-
 @import GLKit.GLKVector3;
 @import OpenGLES;
+@import Metal;
 
 @interface BeamComponent ()
 @property (atomic) float beamActive;
@@ -25,7 +25,19 @@
 
 @end
 
+// Metal Struct
+typedef struct  {
+    vector_float3 startPos;// Starting beam position
+    vector_float3 endPos;  // End beam position
+    float width;    // Max beam displacement width
+    float height;   // Max beam displacement height
+    float active;   // How bright and active is the beam
+} OBEScanBeamProperties;
+
 @implementation BeamComponent
+{
+    OBEScanBeamProperties _shaderProperties; // Metal shader properties
+}
 
 - (id) init {
     self = [super init];
@@ -93,34 +105,41 @@
     material.doubleSided = YES;
     
     self.node.geometry.materials = @[ material ];
+
+    SCNProgram *program;
+    if( SceneManager.main.renderingAPI == BEViewRenderingAPIMetal ) {
+        program = [SCNProgram openbeMetalProgramWithVertexFunctionName:@"OBEScanBeamVertex"
+                                                  fragmentFunctionName:@"OBEScanBeamFragment"];
+    } else {
+        [self.node.geometry.firstMaterial handleBindingOfSymbol:@"width" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
+            glUniform1f(location, self.beamWidth);
+        }];
+        
+        [self.node.geometry.firstMaterial handleBindingOfSymbol:@"height" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
+            glUniform1f(location, self.beamHeight);
+        }];
+        
+        [self.node.geometry.firstMaterial handleBindingOfSymbol:@"active" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
+            glUniform1f(location, self.beamActive);
+        }];
+        
+        [self.node.geometry.firstMaterial handleBindingOfSymbol:@"startPos" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
+            glUniform3fv(location, 1, self.startPos.v);
+        }];
+        
+        [self.node.geometry.firstMaterial handleBindingOfSymbol:@"endPos" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
+            glUniform3fv(location, 1, self.endPos.v);
+        }];
+        
+        [self.node.geometry.firstMaterial handleBindingOfSymbol:@"shaderType" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
+            glUniform1f(location, 0.f);
+        }];
+        
+        program = [SCNProgram programWithGLShader:@"Shaders/CombinedShader/combinedShader"];
+    }
     
-    [self.node.geometry.firstMaterial handleBindingOfSymbol:@"width" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
-        glUniform1f(location, self.beamWidth);
-    }];
-    
-    [self.node.geometry.firstMaterial handleBindingOfSymbol:@"height" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
-        glUniform1f(location, self.beamHeight);
-    }];
-    
-    [self.node.geometry.firstMaterial handleBindingOfSymbol:@"active" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
-        glUniform1f(location, self.beamActive);
-    }];
-    
-    [self.node.geometry.firstMaterial handleBindingOfSymbol:@"startPos" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
-        glUniform3fv(location, 1, self.startPos.v);
-    }];
-    
-    [self.node.geometry.firstMaterial handleBindingOfSymbol:@"endPos" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
-        glUniform3fv(location, 1, self.endPos.v);
-    }];
-    
-    [self.node.geometry.firstMaterial handleBindingOfSymbol:@"shaderType" usingBlock:^(unsigned int programID, unsigned int location, SCNNode *renderedNode, SCNRenderer *renderer) {
-        glUniform1f(location, 0.f);
-    }];
-    
-    SCNProgram * program = [SCNProgram programWithShader:@"Shaders/CombinedShader/combinedShader"];
     [program setOpaque:NO];
-    
+
     self.node.geometry.firstMaterial.program = program;
     self.node.geometry.firstMaterial.blendMode = SCNBlendModeAdd;
     self.node.renderingOrder = TRANSPARENCY_RENDERING_ORDER + 90;
@@ -132,6 +151,19 @@
         self.node.hidden = YES;
     } else {
         _audioLoop.position = self.node.position;
+    }
+    
+    // Update Beam Metal shader parameters.
+    if( SceneManager.main.renderingAPI == BEViewRenderingAPIMetal ) {
+        GLKVector3 start = self.startPos;
+        _shaderProperties.startPos = simd_make_float3(start.x, start.y, start.z);
+        GLKVector3 end = self.endPos;
+        _shaderProperties.endPos = simd_make_float3(end.x, end.y, end.z);
+        _shaderProperties.width = self.beamWidth;
+        _shaderProperties.height = self.beamHeight;
+        _shaderProperties.active = self.beamActive;
+        NSData* data = [NSData dataWithBytes:&_shaderProperties length:sizeof(OBEScanBeamProperties)];
+        [self.node.geometry.firstMaterial setValue:data forKey:@"beam"];
     }
 }
 

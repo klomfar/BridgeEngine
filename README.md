@@ -1,11 +1,49 @@
-# Welcome to the Bridge Engine Beta 6.3!
+# Welcome to Bridge Engine 1.0!
 
 We're glad to have you onboard. We're committed to enhancing Bridge Engine, so we take all of your feedback and support very earnestly.
 
-Check out the <a href="https://www.youtube.com/watch?v=qbkwew3bfWU&list=PLxCu2yuPufWPjCthmZYOOJG9ieRnGAL79" target="_blank">Occipital YouTube Playlist for recent videos on Bridge Engine</a>.  
+Check out the <a href="https://www.youtube.com/watch?v=mHWyOKi8PNs&list=PLxCu2yuPufWNoxGeoUJbHIFj7XXO3ILvV" target="_blank">Occipital YouTube Playlist for recent videos on Bridge and the Bridge Engine</a>.  
 
 #### KNOWN ISSUES
-- iOS 11 contains a bug that makes it occasionally take up to 30 seconds to detect the Structure Sensor. You may be able to accelerate this by unplugging and reconnecting the sensor.
+- iOS 11 contains an issue that makes sensor connectivity unreliable. The issue has been improved in recent iOS 11 releases, but you may still see it occasionally. You may be able to rectify connectivity issues by disconnecting and reconnecting your Structure Sensor.
+
+### New in Bridge Engine 1.0
+
+We're incredibly excited to announce that after nearly 18 months of updates; Bridge Engine is leaving beta!  The 1.0 version of Bridge Engine comes with support for a whole new rendering language (Metal) and many stability and performance fixes.
+
+Additionally, with the inclusion of Metal in both SceneKit and Unity, we have access to physical shaders and have updated the Bridget sample and the Unity MR sample to take full advantage of PBR support.
+
+**Improvements**
+
+- Choose your rendering API: OpenGL ES2 or Metal.
+    - Locate your BEView subclass in your Storyboard. In the Attributes Inspector, select "Prefers Metal" = On.
+    - Alternatively, You can programmatically create your BEView and select a rendering mode using `-initWithRenderingAPI:`.
+- Upgraded Unity to support GoogleVR 1.120.0.
+- Auto-hides the Home button on iPhone X (no more home bar in your Bridge Headset).
+- Better lighting through full Linear Color Space support in Metal + SceneKit / Unity.
+- Added a welcome screen example with start / settings button in Bridget Sample.
+- Access a CVPixelBuffer from the color camera to color your own environment mesh in OpenGL or Metal.
+- Unity : Objects no longer fall through the world.
+
+**Fixes**
+
+- Apps no longer crash after resuming from the background.
+- Improved iPad support.
+    - UI is better aligned in Mono render mode.
+    - iPads without the Wide Vision Lens attachment are now supported. Previous versions of Bridge Engine would not run without a Wide Vision Lens calibration.
+- Touch-screen hit testing now works correctly on iOS 9 & 10 when running with Mono rendering mode.
+- All OpenBE samples and Unity do a first-run check, to explicitly set their default settings. This solves certain situations such as mono-mode selection not being respected.
+- Better warnings in the Debug Settings screen for low-volume and disabled bluetooth.
+- Bridget will no longer run into real world geometry.
+- Resolved an issue where color only tracking could crash the app.
+- Fixed environment / camera sync issues while in placing objects.
+- Normalized instructional sign images.
+- Fixed Physics time step in Mono.
+- Unity : Resolved a bug in Unity where disabling the settings screen would crash the app.
+- Unity : Better color camera alignment to 3D mesh.
+- Unity : BridgeEngine.unitypackage will offers to upgrade if there is a GoogleVR version mismatch.
+- Unity : Fixed stereo FOV for iPhone X Unity projects.
+- Unity : Resolved a bug in Unity where disabling the settings screen would crash the app.
 
 ### New in Beta 6.3: iPhone X Support
 

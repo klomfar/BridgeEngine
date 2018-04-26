@@ -1,7 +1,7 @@
 /*
  Bridge Engine Open Source
  This file is part of the Structure SDK.
- Copyright © 2016 Occipital, Inc. All rights reserved.
+ Copyright © 2018 Occipital, Inc. All rights reserved.
  http://structure.io
  */
 
@@ -13,5 +13,7 @@
 varying lowp float rim;
 void main()
 {
-    gl_FragColor = vec4(55.0/255.0, 179.0/255.0, 246.0/255.0, 1.0) * 0.2 + 2 * vec4(55.0/255.0, 179.0/255.0, 246.0/255.0, 1) * pow(rim, 1.5);
+    lowp vec4 ambientLight = vec4(55.0/255.0, 179.0/255.0, 246.0/255.0, 1.0) * 0.35;
+    lowp vec4 rimLight = vec4(1.0, 1.0, 1.0, 0.5) * pow(rim, 1.5);
+    gl_FragColor = ambientLight + rimLight;
 }

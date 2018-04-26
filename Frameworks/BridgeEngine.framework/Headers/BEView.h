@@ -1,6 +1,6 @@
 /*
     This file is part of the Structure SDK.
-    Copyright © 2016 Occipital, Inc. All rights reserved.
+    Copyright © 2018 Occipital, Inc. All rights reserved.
     http://structure.io
 */
 
@@ -11,10 +11,29 @@
 
 //------------------------------------------------------------------------------
 
-/** UIView subclass to wrap a CoreAnimation `CAEAGLLayer`.
- The view content is basically an EAGL surface you can render your OpenGL scene into.
- @note setting the view non-opaque will only work if the EAGL surface has an alpha channel.
-*/
+typedef NS_ENUM(NSUInteger, BEViewRenderingAPI) {
+    BEViewRenderingAPIOpenGLES2,
+    BEViewRenderingAPIMetal
+};
+//------------------------------------------------------------------------------
+
+/**
+ @class BEView
+ @abstract A BEView is a subclass of UIView that can display a Mixed Reality Scene through Bridge Engine.
+ */
 BE_API
 @interface BEView : UIView
+
+/// The prefersMetalRenderingAPI BOOL is used to set preferredRenderingAPI from interface builder.
+/// Default is NO
+@property (nonatomic) IBInspectable BOOL prefersMetalRenderingAPI;
+
+/// The preferred rendering API for the view, using during setup.  This may be rejected if your hardware doesn't support the API.
+@property (nonatomic) BEViewRenderingAPI preferredRenderingAPI;
+
+/// The actual rendering API selected by the view.
+@property (nonatomic, readonly) BEViewRenderingAPI renderingAPI;
+
+- (instancetype)initWithRenderingAPI:(BEViewRenderingAPI)preferredRenderingAPI;
+
 @end
