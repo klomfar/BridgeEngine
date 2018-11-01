@@ -284,4 +284,3 @@ fragment half4 OBEScanEnvironmentFragment(OBEScanEnvironmentOut fragIn [[stage_i
     
     return half4(float4(color, alpha));
 }
-

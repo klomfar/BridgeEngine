@@ -111,11 +111,16 @@
         objBody.velocity = SCNVector3Make(0, 1.0, 0);
         
         objBody.categoryBitMask = SCNPhysicsCollisionCategoryDefault | BECollisionCategoryVirtualObjects;
+
         // Want spawned objects to only collide with the floor and each other?  Uncomment this line:
         // WARNING: due to unhandled collision events with the world mesh, this can run slowly when objects intersect the world.
-        
+
         objBody.collisionBitMask = BECollisionCategoryFloor | SCNPhysicsCollisionCategoryDefault| BECollisionCategoryVirtualObjects;
         objBody.contactTestBitMask = BECollisionCategoryFloor | SCNPhysicsCollisionCategoryDefault | BECollisionCategoryVirtualObjects; 
+        // Want to collide with everything?
+        // (This can run a bit slower because of the world mesh collision test)
+//        objBody.collisionBitMask = SCNPhysicsCollisionCategoryAll;
+//        objBody.contactTestBitMask = SCNPhysicsCollisionCategoryAll;
         
         // Associate furniture hitting things with ball Bounce.
         [_physicsContactAudio addNodeName:thing.name audioName:@"BallBounce.caf"];

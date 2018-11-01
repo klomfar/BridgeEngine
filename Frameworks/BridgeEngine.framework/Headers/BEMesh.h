@@ -73,11 +73,11 @@ BE_API
  */
 - (GLKVector2 *)meshPerVertexUVTextureCoords:(int)meshIndex;
 
-/** Pointer to a contiguous chunk of `(3 * numberOfMeshFaces:meshIndex)` 16 bits `unsigned short` values representing vertex indices. Each face is represented by three vertex indices.
+/** Pointer to a contiguous chunk of `(3 * numberOfMeshFaces:meshIndex)` 16 bits `unsigned int` values representing vertex indices. Each face is represented by three vertex indices.
  
  @param meshIndex Index to the partial mesh.
  */
-- (unsigned short *)meshFaces:(int)meshIndex;
+- (unsigned int *)meshFaces:(int)meshIndex;
 
 /** Optional texture associated with the mesh.
  

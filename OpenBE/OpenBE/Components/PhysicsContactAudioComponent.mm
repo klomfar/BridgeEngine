@@ -8,6 +8,7 @@
 #import "PhysicsContactAudioComponent.h"
 #import "../Utils/ComponentUtils.h"
 #import "../Utils/Math.h"
+#import "../Utils/SceneKitTools.h"
 
 #define PHYSICS_BOUNCE_IMPULSE_POWER 0.7f
 
@@ -163,7 +164,15 @@
     SCNPhysicsBody *bodyB = contact.nodeB.physicsBody;
     if( (bodyA.collisionBitMask & bodyB.categoryBitMask) == 0 )
     {
-        be_NSDbg(@"Unecessary contact on %@, check your contactTestBitMask", contact.nodeA.name);
+        be_NSDbg(@"=========\nUnecessary contact on '%@' - '%@', check your contactTestBitMask", contact.nodeA.name, contact.nodeB.name);
+
+        be_NSDbg(@"==== NodeA: %@ ====", contact.nodeA.name);
+        [SceneKitTools printParentHierarchyOfNode:contact.nodeA];
+
+        be_NSDbg(@"==== NodeB: %@ ====", contact.nodeB.name);
+        [SceneKitTools printParentHierarchyOfNode:contact.nodeB];
+        be_NSDbg(@"=========");
+
         return; //Reject non-mutual collision.
     } 
 

@@ -423,6 +423,7 @@
     
     scale = 0.4;
     [_renderMenu.node setScale:SCNVector3Make(scale, scale, scale)];
+    [_renderMenu.node setPosition:SCNVector3Make(0, -0.4 * 0.6, 0)];
     
     // Find a roughly good starting position. If available, this will load floor and cover maps
     // and find an open and uncovered area. Otherwise we'll use the normal obstacle occupancy map

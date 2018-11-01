@@ -131,8 +131,8 @@ typedef NS_ENUM (NSUInteger, FetchPositionState) {
     cubeBody.angularDamping = 0.50;
     cubeBody.allowsResting = YES;
 
-    cubeBody.categoryBitMask = SCNPhysicsCollisionCategoryDefault | BECollisionCategoryVirtualObjects;
-    cubeBody.collisionBitMask = BECollisionCategoryRealWorld | BECollisionCategoryVirtualObjects | BECollisionCategoryFloor;
+    cubeBody.categoryBitMask = BECollisionCategoryVirtualObjects;
+    cubeBody.collisionBitMask = SCNPhysicsCollisionCategoryAll;
     cubeBody.contactTestBitMask = SCNPhysicsCollisionCategoryAll;
     self.physicsCube.physicsBody = cubeBody;
     

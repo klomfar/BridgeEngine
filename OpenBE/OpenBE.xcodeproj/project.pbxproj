@@ -79,7 +79,7 @@
 		2DCD70D21DFFEF8D003691AE /* NavigationComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCD70851DFFEF8D003691AE /* NavigationComponent.h */; };
 		2DCD70D31DFFEF8D003691AE /* NavigationComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCD70861DFFEF8D003691AE /* NavigationComponent.m */; };
 		2DCD70D41DFFEF8D003691AE /* PhysicsContactAudioComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCD70871DFFEF8D003691AE /* PhysicsContactAudioComponent.h */; };
-		2DCD70D51DFFEF8D003691AE /* PhysicsContactAudioComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCD70881DFFEF8D003691AE /* PhysicsContactAudioComponent.m */; };
+		2DCD70D51DFFEF8D003691AE /* PhysicsContactAudioComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DCD70881DFFEF8D003691AE /* PhysicsContactAudioComponent.mm */; };
 		2DCD70D81DFFEF8D003691AE /* RobotActionComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCD708B1DFFEF8D003691AE /* RobotActionComponent.h */; };
 		2DCD70D91DFFEF8D003691AE /* RobotActionComponent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DCD708C1DFFEF8D003691AE /* RobotActionComponent.mm */; };
 		2DCD70DA1DFFEF8D003691AE /* RobotBehaviourComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DCD708D1DFFEF8D003691AE /* RobotBehaviourComponent.h */; };
@@ -193,7 +193,7 @@
 		2DCD70851DFFEF8D003691AE /* NavigationComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationComponent.h; sourceTree = "<group>"; };
 		2DCD70861DFFEF8D003691AE /* NavigationComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationComponent.m; sourceTree = "<group>"; };
 		2DCD70871DFFEF8D003691AE /* PhysicsContactAudioComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicsContactAudioComponent.h; sourceTree = "<group>"; };
-		2DCD70881DFFEF8D003691AE /* PhysicsContactAudioComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhysicsContactAudioComponent.m; sourceTree = "<group>"; };
+		2DCD70881DFFEF8D003691AE /* PhysicsContactAudioComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PhysicsContactAudioComponent.mm; sourceTree = "<group>"; };
 		2DCD708B1DFFEF8D003691AE /* RobotActionComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotActionComponent.h; sourceTree = "<group>"; };
 		2DCD708C1DFFEF8D003691AE /* RobotActionComponent.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RobotActionComponent.mm; sourceTree = "<group>"; };
 		2DCD708D1DFFEF8D003691AE /* RobotBehaviourComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotBehaviourComponent.h; sourceTree = "<group>"; };
@@ -346,7 +346,7 @@
 				2DCD70851DFFEF8D003691AE /* NavigationComponent.h */,
 				2DCD70861DFFEF8D003691AE /* NavigationComponent.m */,
 				2DCD70871DFFEF8D003691AE /* PhysicsContactAudioComponent.h */,
-				2DCD70881DFFEF8D003691AE /* PhysicsContactAudioComponent.m */,
+				2DCD70881DFFEF8D003691AE /* PhysicsContactAudioComponent.mm */,
 				6DD7C9411E5CF614006AAC6F /* PortalComponent.h */,
 				6DD7C9421E5CF614006AAC6F /* PortalComponent.mm */,
 				2C4C7F0D1F27487200E69154 /* ProjectedGeometryComponent.h */,
@@ -566,7 +566,7 @@
 				2DCD70C41DFFEF8D003691AE /* GazeComponent.m in Sources */,
 				2DCD70BA1DFFEF8D003691AE /* ButtonComponent.m in Sources */,
 				2CC8D9702040B99500B00AAA /* openbe.metal in Sources */,
-				2DCD70D51DFFEF8D003691AE /* PhysicsContactAudioComponent.m in Sources */,
+				2DCD70D51DFFEF8D003691AE /* PhysicsContactAudioComponent.mm in Sources */,
 				2DCD73081DFFEF9D003691AE /* PathFinding.mm in Sources */,
 				2DCD70491DFFEF84003691AE /* EventManager.m in Sources */,
 				2DCD70B81DFFEF8D003691AE /* BlockDemoReticleComponent.m in Sources */,

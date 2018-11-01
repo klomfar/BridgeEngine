@@ -526,7 +526,7 @@ struct setNode
 /**
  * Searchs the connectedComponentMap for nearest reachable goal point in component.
  * @param goalPoint goal we're trying to get to
- * @param component that is being searched
+ * @param targetComponent that is being searched
  * @param result If successfull result is stored here
  * @return Success if a valid nearest point is found.
  */ 

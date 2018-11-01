@@ -69,21 +69,28 @@
     SCNLight *ambientLight = ambientLightNode.light;
     ambientLight.color = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1];
     
+    // Get all the coarseMesh nodes that define the world, and apply our own physics to it.
     SCNNode *rootNode = mixedRealityMode.sceneKitScene.rootNode;
-    SCNNode *coarseMesh = [rootNode childNodeWithName:@"coarseMesh" recursively:YES];
-    SCNPhysicsBody *worldBody = coarseMesh.physicsBody;
-    worldBody.mass = 100000;  // Super heavy world.
-    worldBody.type = SCNPhysicsBodyTypeStatic;
-    worldBody.categoryBitMask = BECollisionCategoryRealWorld;
-    worldBody.contactTestBitMask = BECollisionCategoryRealWorld;
-    worldBody.collisionBitMask = SCNPhysicsCollisionCategoryAll;
-    worldBody.friction = 0.9; // Lots of friction.
-    worldBody.rollingFriction = 0.5; // soft surface prevents rolling.
-    worldBody.restitution = 0.1;  // Very little bounciness.
-    worldBody.damping = 1; // Don't allow motion due to movement.
-    worldBody.angularDamping = 1; // Don't roll due to movement.
-    [worldBody resetTransform];
-    [worldBody clearAllForces];
+    NSArray<SCNNode*> *coarseMeshNodes = [rootNode childNodesPassingTest:
+    ^BOOL(SCNNode * _Nonnull child, BOOL * _Nonnull stop) {
+        return child.name != nil && [child.name isEqualToString:@"coarseMesh"];
+    }];
+  
+    for(SCNNode *coarseMesh in coarseMeshNodes ) {
+        SCNPhysicsBody *worldBody = coarseMesh.physicsBody;
+        worldBody.mass = 100000;  // Super heavy world.
+        worldBody.type = SCNPhysicsBodyTypeStatic;
+        worldBody.categoryBitMask = BECollisionCategoryRealWorld;
+        worldBody.contactTestBitMask = BECollisionCategoryRealWorld;
+        worldBody.collisionBitMask = SCNPhysicsCollisionCategoryAll;
+        worldBody.friction = 0.5; // Default, some friction.
+        worldBody.rollingFriction = 0.1; // Hard surface allows lots of rolling.
+        worldBody.restitution = 0.9;  // Lots of bounciness. (hard surfaces)
+        worldBody.damping = 0.1; // Default, allow motion due to movement.
+        worldBody.angularDamping = 0.1; // Default, allow regular rolling due to movement.
+        [worldBody resetTransform];
+        [worldBody clearAllForces];
+    }
 
     [self updateSingletons:mixedRealityMode withDeltaTime:0.f];
 }
@@ -129,7 +136,7 @@
     // update scene
     [Scene main].scene = mixedRealityMode.sceneKitScene;
     [Scene main].rootNode = mixedRealityMode.worldNodeWhenRelocalized;
-    
+
     // event manager
     [[EventManager main] start];
 }
